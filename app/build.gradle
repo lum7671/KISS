@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id 'com.android.application'
-    id 'net.ltgt.errorprone' version '4.3.0'
+    id 'net.ltgt.errorprone' version '4.1.0'  // 안정된 버전으로 설정
 }
 
 android {
@@ -21,11 +21,17 @@ android {
     }
     defaultConfig {
         applicationId 'fr.neamar.kiss'
-        minSdkVersion 15
+        minSdkVersion 35  // Android 15+ 지원
         targetSdkVersion 35
+        compileSdk 35
         versionCode 213
-        versionName "3.22.0"
+        versionName "3.22.0-profile"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // 프로파일링을 위한 설정 (Android 15+에서 모든 기능 지원)
+        manifestPlaceholders = [
+            profileable: "true"
+        ]
     }
     buildTypes {
         release {
@@ -36,10 +42,25 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
+        profile {
+            // Android 15+ 고급 프로파일링을 위한 빌드 타입
+            applicationIdSuffix ".profile"
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            // 프로파일링을 위해 최적화 비활성화
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            
+            // Android 15+ 프로파일링 최적화
+            manifestPlaceholders.putAll([
+                profileable: "true",
+                enableOnDeviceAbi: "true"
+            ])
+        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     lint {
@@ -51,18 +72,34 @@ android {
 }
 
 dependencies {
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.6.2'         // 1.5.2 → 1.6.2
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'  // 3.5.1 → 3.6.1
+    androidTestImplementation 'androidx.test:rules:1.6.1'          // 1.5.0 → 1.6.1
 
     implementation 'androidx.annotation:annotation:1.9.1'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.4'
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.11.4')
-    testImplementation 'org.hamcrest:hamcrest-library:3.0'
+    // 성능 분석 & 디버깅 도구들
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'  // 메모리 누수 탐지
+    debugImplementation 'com.facebook.flipper:flipper:0.265.0'             // Facebook Flipper - 종합 디버깅
+    debugImplementation 'com.facebook.soloader:soloader:0.12.1'            // Flipper 의존성
+    debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.265.0' // 네트워크 분석
+    
+    // 성능 모니터링
+    implementation 'androidx.benchmark:benchmark-macro-junit4:1.3.3'        // 벤치마크 테스트
+    implementation 'androidx.tracing:tracing:1.2.0'                         // 시스템 추적
+    
+    // ANR (Application Not Responding) 탐지
+    debugImplementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'         // ANR 감지
+    
+    // 메모리 분석 도구
+    debugImplementation 'com.squareup.curtains:curtains:1.2.5'             // 액티비티 라이프사이클 모니터링
 
-    errorprone('com.google.errorprone:error_prone_core:2.40.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'      // 최신 버전 유지
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.4'   // 최신 버전 유지
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.11.4')      // 최신 버전 유지
+    testImplementation 'org.hamcrest:hamcrest-library:3.0'               // 최신 버전 유지
+
+    errorprone('com.google.errorprone:error_prone_core:2.42.0')          // 2.40.0 → 2.42.0
 }
 
 tasks.withType(JavaCompile).configureEach {

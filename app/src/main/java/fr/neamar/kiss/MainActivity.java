@@ -28,6 +28,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
+
+// 성능 추적을 위한 import
+import androidx.tracing.Trace;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -432,6 +435,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      */
     @SuppressLint("CommitPrefEdits")
     protected void onResume() {
+        Trace.beginSection("MainActivity.onResume");  // 성능 추적 시작
         Log.d(TAG, "onResume()");
 
         if (prefs.getBoolean("require-layout-update", false)) {
@@ -441,6 +445,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             // may require using a new UI
             prefs.edit().putBoolean("require-layout-update", false).apply();
             this.recreate();
+            Trace.endSection();  // 성능 추적 종료
             return;
         }
 
@@ -478,6 +483,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         }
 
         super.onResume();
+        Trace.endSection();  // 성능 추적 종료
     }
 
 

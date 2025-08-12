@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import fr.neamar.kiss.utils.IconPackCache;
 
+// 성능 분석 도구 imports (DEBUG 빌드에만 포함)
+import com.github.anrwatchdog.ANRWatchDog;
+import curtains.Curtains;
+
 public class KissApplication extends Application {
     /**
      * Number of ms to wait, after a click occurred, to record a launch
@@ -26,6 +30,28 @@ public class KissApplication extends Application {
 
     public static IconPackCache iconPackCache(Context ctx) {
         return getApplication(ctx).mIconPackCache;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        // 성능 분석 도구 초기화 (DEBUG 빌드에만)
+        if (BuildConfig.DEBUG) {
+            initializePerformanceTools();
+        }
+    }
+    
+    private void initializePerformanceTools() {
+        // ANR (Application Not Responding) 감지 도구
+        new ANRWatchDog(5000) // 5초 응답 없으면 ANR로 간주
+            .setANRListener(error -> {
+                // ANR 발생 시 로그 출력
+                android.util.Log.e("KISS_ANR", "ANR detected!", error);
+            })
+            .start();
+            
+        android.util.Log.i("KISS_PERF", "Performance monitoring tools initialized");
     }
 
     public DataHandler getDataHandler() {
