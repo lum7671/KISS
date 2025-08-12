@@ -1,9 +1,19 @@
 KISS
 ======
 
-## 📋 Change Log
+## 📋 Changes
 
 ### 🚀 v4.0.0 - Optimized Performance Edition (2025-08-12)
+
+#### 🔀 Merged Upstream v3.22.1 Features
+- **⚙️ UI Improvements**: Icon settings moved to user interface section
+- **🎯 Better Alignment**: Notification dots align with app names (no-icon mode)
+- **🔧 Widget Management**: Allow reconfigure of widgets
+- **📱 Contact Search**: Improved contact name search functionality
+- **🛡️ Crash Prevention**: Fixed crashes from oversize icons
+- **📞 Contact Data**: Initial support for non-phone contact data
+- **📺 Display Options**: Larger display options (thanks @nikhold)
+- **🏢 Work Profile**: Allow uninstalling work profile apps
 
 #### 🎯 Major Performance Optimizations
 - **🏃‍♂️ 3-Tier Icon Caching System**: Glide + LRU Cache implementation
@@ -29,6 +39,13 @@ KISS
 - **Proven Libraries**: Glide, AndroidX LruCache, LeakCanary (debug)
 - **Multi-Build Support**: Release, Debug, Profile configurations
 - **Memory Management**: Smart trimming and background optimization
+
+#### 📋 Version Information Display
+- **🏷️ Enhanced Version Name**: `4.0.0-based-on-3.22.1` (shows upstream version)
+- **📊 BuildConfig Fields**: Added upstream version, build date, optimizer info
+- **⚙️ Settings Integration**: New "Version Information" section in About
+- **🔍 Transparent Attribution**: Shows original author version and optimization details
+- **📱 Runtime Access**: `VersionInfo` utility class for programmatic access
 
 #### 📊 Performance Metrics
 - **App Launch Time**: 30-50% faster icon loading

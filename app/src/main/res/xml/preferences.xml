@@ -542,6 +542,13 @@
             android:summary="@string/restart_desc"
             android:title="@string/restart_name" />
     </PreferenceScreen>
+    <PreferenceCategory
+        android:title="About">
+        <Preference
+            android:key="version-info"
+            android:title="Version Information"
+            android:selectable="false" />
+    </PreferenceCategory>
     <Preference
         android:key="rate-app"
         android:title="@string/rate_the_app" />

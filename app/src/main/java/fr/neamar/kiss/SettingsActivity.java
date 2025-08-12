@@ -55,6 +55,7 @@ import fr.neamar.kiss.utils.MimeTypeUtils;
 import fr.neamar.kiss.utils.Permission;
 import fr.neamar.kiss.utils.ShortcutUtil;
 import fr.neamar.kiss.utils.SystemUiVisibilityHelper;
+import fr.neamar.kiss.utils.VersionInfo;
 
 @SuppressWarnings("FragmentInjection")
 public class SettingsActivity extends PreferenceActivity implements
@@ -195,6 +196,17 @@ public class SettingsActivity extends PreferenceActivity implements
         AsyncTask.execute(alwaysAsync);
 
         permissionManager = new Permission(this);
+        
+        // 버전 정보 설정
+        setupVersionInfo();
+    }
+    
+    private void setupVersionInfo() {
+        Preference versionPref = findPreference("version-info");
+        if (versionPref != null) {
+            versionPref.setTitle("Version: " + VersionInfo.getSimpleVersionInfo());
+            versionPref.setSummary(VersionInfo.getFullVersionInfo());
+        }
     }
 
     private void setAdditionalContactsData() {

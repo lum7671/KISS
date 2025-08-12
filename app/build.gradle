@@ -25,8 +25,14 @@ android {
         targetSdkVersion 35
         compileSdk 35
         versionCode 400
-        versionName "4.0.0"
+        versionName "4.0.0-based-on-3.22.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // BuildConfig에 업스트림 버전 정보 추가
+        buildConfigField "String", "UPSTREAM_VERSION", '"3.22.1"'
+        buildConfigField "String", "UPSTREAM_VERSION_CODE", '"214"'
+        buildConfigField "String", "OPTIMIZED_BY", '"lum7671"'
+        buildConfigField "String", "BUILD_DATE", '"2025-08-12"'
         
         // 프로파일링을 위한 설정 (Android 15+에서 모든 기능 지원)
         manifestPlaceholders = [
