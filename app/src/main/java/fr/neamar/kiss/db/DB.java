@@ -8,7 +8,7 @@ import android.util.Log;
 class DB extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "kiss.s3db";
-    private final static int DB_VERSION = 8;
+    private final static int DB_VERSION = 9;  // 성능 최적화를 위해 버전 업그레이드
 
     DB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -23,6 +23,9 @@ class DB extends SQLiteOpenHelper {
         createTags(database);
         addTimeStamps(database);
         addAppsTable(database);
+        
+        // 성능 최적화를 위한 인덱스 추가
+        addPerformanceIndexes(database);
     }
 
     private void createTags(SQLiteDatabase database) {
@@ -37,6 +40,17 @@ class DB extends SQLiteOpenHelper {
     private void addAppsTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS custom_apps ( _id INTEGER PRIMARY KEY AUTOINCREMENT, custom_flags INTEGER DEFAULT 0, component_name TEXT NOT NULL UNIQUE, name TEXT NOT NULL DEFAULT '' )");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_component ON custom_apps(component_name);");
+    }
+
+    private void addPerformanceIndexes(SQLiteDatabase db) {
+        // 히스토리 쿼리 성능 최적화를 위한 인덱스들
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_history_record ON history(record);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_history_timestamp ON history(timeStamp DESC);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_history_record_timestamp ON history(record, timeStamp DESC);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_history_id_desc ON history(_id DESC);");
+        
+        // 기본 ANALYZE 실행으로 쿼리 플래너 최적화
+        db.execSQL("ANALYZE;");
     }
 
     @Override
@@ -61,6 +75,9 @@ class DB extends SQLiteOpenHelper {
                 case 6:
                 case 7:
                     addAppsTable(database);
+                    // fall through
+                case 8:
+                    addPerformanceIndexes(database);
                     // fall through
                 default:
                     break;

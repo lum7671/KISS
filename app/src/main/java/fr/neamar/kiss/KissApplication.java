@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import fr.neamar.kiss.utils.IconPackCache;
 
-// 성능 분석 도구 imports (DEBUG 빌드에만 포함)
-import com.github.anrwatchdog.ANRWatchDog;
-import curtains.Curtains;
-
 public class KissApplication extends Application {
     /**
      * Number of ms to wait, after a click occurred, to record a launch
@@ -42,15 +38,26 @@ public class KissApplication extends Application {
         }
     }
     
+    @Override
+    public void onTerminate() {
+        // 앱 종료 시 메모리 DB 동기화
+        fr.neamar.kiss.db.DBHelper.forceSync(this);
+        super.onTerminate();
+    }
+    
     private void initializePerformanceTools() {
-        // ANR (Application Not Responding) 감지 도구
-        new ANRWatchDog(5000) // 5초 응답 없으면 ANR로 간주
-            .setANRListener(error -> {
-                // ANR 발생 시 로그 출력
-                android.util.Log.e("KISS_ANR", "ANR detected!", error);
-            })
-            .start();
-            
+        // 디버그 빌드에서만 성능 모니터링 도구 활성화
+        if (BuildConfig.DEBUG) {
+            try {
+                // ANR (Application Not Responding) 감지 도구
+                Class<?> anrWatchDogClass = Class.forName("com.github.anrwatchdog.ANRWatchDog");
+                Object anrWatchDog = anrWatchDogClass.getConstructor(int.class).newInstance(5000);
+                anrWatchDogClass.getMethod("start").invoke(anrWatchDog);
+                android.util.Log.i("KISS_PERF", "ANR monitoring started");
+            } catch (Exception e) {
+                android.util.Log.w("KISS_PERF", "ANR monitoring not available", e);
+            }
+        }
         android.util.Log.i("KISS_PERF", "Performance monitoring tools initialized");
     }
 
@@ -123,6 +130,24 @@ public class KissApplication extends Application {
             SQLiteDatabase.releaseMemory();
             mIconPackCache.clearCache(this);
             mimeTypeCache.clearCache();
+            
+            // IconCacheManager 메모리 정리
+            if (iconsPackHandler != null) {
+                iconsPackHandler.onScreenStateChanged(false);
+            }
+        }
+        
+        // 메모리 부족 시 즉시 동기화 및 정리
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+            fr.neamar.kiss.db.DBHelper.forceSync(this);
+            
+            // 아이콘 캐시 추가 정리
+            fr.neamar.kiss.utils.IconCacheManager.getInstance(this).trimMemory(level);
+        }
+        
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
+            // 심각한 메모리 부족 시 디스크 모드로 전환
+            fr.neamar.kiss.db.DBHelper.switchToDiskMode(this);
         }
     }
 }

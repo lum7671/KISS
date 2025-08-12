@@ -19,6 +19,8 @@ import android.database.DataSetObserver;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
@@ -90,6 +92,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * Receive events from providers
      */
     private BroadcastReceiver mReceiver;
+    
+    /**
+     * 화면 상태 변화 모니터링 리시버
+     */
+    private BroadcastReceiver screenStateReceiver;
 
     /**
      * View for the Search text
@@ -118,6 +125,109 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * Menu button
      */
     public View menuButton;
+    
+    // 화면 재구성 최적화를 위한 필드들
+    private long lastRecreateTime = 0;
+    private boolean isScreenOn = true;
+    
+    /**
+     * 액티비티 재구성이 필요한지 스마트하게 판단
+     */
+    private boolean shouldRecreateActivity() {
+        // 1. 레이아웃 업데이트 플래그 확인
+        boolean requireLayoutUpdate = prefs.getBoolean("require-layout-update", false);
+        if (!requireLayoutUpdate) {
+            return false;
+        }
+        
+        // 2. 너무 빈번한 재구성 방지 (5초 이내 재구성 방지)
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastRecreateTime < 5000) {
+            Log.d(TAG, "Preventing frequent recreation, waiting...");
+            return false;
+        }
+        
+        // 3. 화면이 꺼진 상태에서는 재구성하지 않음
+        if (!isScreenOn) {
+            Log.d(TAG, "Screen off, delaying recreation");
+            return false;
+        }
+        
+        lastRecreateTime = currentTime;
+        return true;
+    }
+    
+    /**
+     * 화면 상태 모니터링 리시버 초기화
+     */
+    private void initScreenStateReceiver() {
+        screenStateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                    Log.d(TAG, "Screen turned ON");
+                    isScreenOn = true;
+                    
+                    // 아이콘 핸들러에 화면 상태 알림
+                    IconsHandler iconsHandler = KissApplication.getApplication(MainActivity.this).getIconsHandler();
+                    if (iconsHandler != null) {
+                        iconsHandler.onScreenStateChanged(true);
+                    }
+                    
+                    // 화면이 켜졌을 때 지연된 레이아웃 업데이트 처리
+                    handleDelayedLayoutUpdate();
+                } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                    Log.d(TAG, "Screen turned OFF");
+                    isScreenOn = false;
+                    // 화면이 꺼졌을 때 불필요한 작업 정리
+                    onScreenOff();
+                }
+            }
+        };
+        
+        // 화면 상태 변화 Intent 필터 등록
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenStateReceiver, filter);
+    }
+    
+    /**
+     * 지연된 레이아웃 업데이트 처리
+     */
+    private void handleDelayedLayoutUpdate() {
+        // 화면이 켜진 후 잠시 기다려서 레이아웃 업데이트 확인
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (prefs.getBoolean("require-layout-update", false) && isScreenOn) {
+                Log.i(TAG, "Processing delayed layout update after screen on");
+                recreate();
+                prefs.edit().putBoolean("require-layout-update", false).apply();
+            }
+        }, 500); // 500ms 지연
+    }
+    
+    /**
+     * 화면이 꺼졌을 때 처리
+     */
+    private void onScreenOff() {
+        // 진행 중인 애니메이션 정리
+        dismissPopup();
+        
+        // 아이콘 핸들러에 화면 상태 알림
+        IconsHandler iconsHandler = KissApplication.getApplication(this).getIconsHandler();
+        if (iconsHandler != null) {
+            iconsHandler.onScreenStateChanged(false);
+        }
+        
+        // 메모리 정리 (필요시)
+        if (adapter != null) {
+            adapter.notifyDataSetChanged(); // 뷰 갱신 중단
+        }
+        
+        // 백그라운드 작업 최적화
+        System.gc(); // 가비지 컬렉션 유도
+    }
     /**
      * Kiss bar
      */
@@ -181,6 +291,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         Log.d(TAG, "onCreate()");
 
         KissApplication.getApplication(this).initDataHandler();
+
+        // 화면 상태 모니터링 리시버 초기화
+        initScreenStateReceiver();
 
         /*
          * Initialize preferences
@@ -438,7 +551,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         Trace.beginSection("MainActivity.onResume");  // 성능 추적 시작
         Log.d(TAG, "onResume()");
 
-        if (prefs.getBoolean("require-layout-update", false)) {
+        // 화면 재구성 최적화: 필요한 경우에만 재구성 수행
+        if (shouldRecreateActivity()) {
             super.onResume();
             Log.i(TAG, "Restarting app after setting changes");
             // Restart current activity to refresh view, since some preferences
@@ -503,6 +617,17 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     protected void onDestroy() {
         super.onDestroy();
         this.unregisterReceiver(this.mReceiver);
+        
+        // 화면 상태 리시버 해제
+        if (screenStateReceiver != null) {
+            try {
+                unregisterReceiver(screenStateReceiver);
+                Log.d(TAG, "Screen state receiver unregistered");
+            } catch (IllegalArgumentException e) {
+                Log.w(TAG, "Screen state receiver was not registered", e);
+            }
+        }
+        
         forwarderManager.onDestroy();
     }
 

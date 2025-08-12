@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import fr.neamar.kiss.IconsHandler;
@@ -30,6 +32,7 @@ import fr.neamar.kiss.utils.Utilities;
 
 public class TagDummyResult extends Result<TagDummyPojo> {
     private static volatile Drawable gBackground = null;
+    private static final Map<String, Drawable> tagIconCache = new HashMap<>(); // 태그 아이콘 캐시
 
     private volatile Drawable icon = null;
 
@@ -54,6 +57,10 @@ public class TagDummyResult extends Result<TagDummyPojo> {
 
     public static void resetShape() {
         gBackground = null;
+        // 태그 아이콘 캐시도 함께 정리
+        synchronized (tagIconCache) {
+            tagIconCache.clear();
+        }
     }
 
     @NonNull

@@ -26,6 +26,11 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.LinkedHashMap;
 
 import fr.neamar.kiss.db.AppRecord;
 import fr.neamar.kiss.db.DBHelper;
@@ -37,6 +42,7 @@ import fr.neamar.kiss.result.AppResult;
 import fr.neamar.kiss.result.TagDummyResult;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.IconShape;
+import fr.neamar.kiss.utils.IconCacheManager;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.UserHandle;
 import fr.neamar.kiss.utils.Utilities;
@@ -61,11 +67,82 @@ public class IconsHandler {
     private boolean mForceShape = false;
     private Utilities.AsyncRun mLoadIconsPackTask = null;
     private volatile Map<String, Long> customIconIds = null;
+    
+        // 아이콘 성능 최적화를 위한 필드들
+    private IconCacheManager iconCacheManager;
+    private volatile boolean isScreenOn = true;
+    private long lastCacheCleanTime = 0;
+    private final AtomicLong accessCounter = new AtomicLong(0);
+    
+    /**
+     * LRU 기반 아이콘 캐시 구현 (LinkedHashMap 상속 대신 조합 사용)
+     */
+    private static class LruIconCache {
+        private final LinkedHashMap<String, Drawable> cache;
+        private final int maxSize;
+        private final AtomicLong hitCount = new AtomicLong(0);
+        private final AtomicLong missCount = new AtomicLong(0);
+        
+        LruIconCache(int maxSize) {
+            this.maxSize = maxSize;
+            this.cache = new LinkedHashMap<String, Drawable>(maxSize + 1, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(java.util.Map.Entry<String, Drawable> eldest) {
+                    boolean shouldRemove = size() > LruIconCache.this.maxSize;
+                    if (shouldRemove) {
+                        Log.d(TAG, "LRU evicting icon: " + eldest.getKey());
+                    }
+                    return shouldRemove;
+                }
+            };
+        }
+        
+        public synchronized Drawable get(String key) {
+            Drawable value = cache.get(key);
+            if (value != null) {
+                hitCount.incrementAndGet();
+            } else {
+                missCount.incrementAndGet();
+            }
+            return value;
+        }
+        
+        public synchronized Drawable put(String key, Drawable value) {
+            return cache.put(key, value);
+        }
+        
+        public synchronized int size() {
+            return cache.size();
+        }
+        
+        public synchronized void clear() {
+            cache.clear();
+        }
+        
+        public synchronized void logStats() {
+            long hits = hitCount.get();
+            long misses = missCount.get();
+            long total = hits + misses;
+            if (total > 0) {
+                Log.i(TAG, String.format("Icon Cache Stats - Size: %d/%d, Hit Rate: %.1f%% (%d/%d)", 
+                    size(), maxSize, (hits * 100.0f / total), hits, total));
+            }
+        }
+        
+        public synchronized void clearStats() {
+            hitCount.set(0);
+            missCount.set(0);
+        }
+    }
 
     public IconsHandler(Context ctx) {
         super();
         this.ctx = ctx;
         this.pm = ctx.getPackageManager();
+        
+        // 고성능 아이콘 캐시 매니저 초기화
+        this.iconCacheManager = IconCacheManager.getInstance(ctx);
+        
         clearOldCache();
         loadAvailableIconsPacks();
         loadIconsPack();
@@ -168,36 +245,56 @@ public class IconsHandler {
     public Drawable getDrawableIconForPackage(ComponentName componentName, UserHandle userHandle, boolean useCache, boolean useCustomIcons) {
         final String cacheKey = AppPojo.getComponentName(componentName.getPackageName(), componentName.getClassName(), userHandle);
 
-        // Search in cache
+        // IconCacheManager를 통한 스마트 캐싱
         if (useCache) {
-            Drawable cacheIcon = cacheGetDrawable(cacheKey);
-            if (cacheIcon != null) {
-                return cacheIcon;
+            Drawable cachedIcon = iconCacheManager.getIcon(cacheKey);
+            if (cachedIcon != null) {
+                return cachedIcon;
             }
         }
 
+        // 실제 아이콘 생성
+        Drawable drawable = loadIconWithFallback(componentName, userHandle, cacheKey, useCache, useCustomIcons);
+        
+        // IconCacheManager에 저장
+        if (drawable != null && useCache) {
+            iconCacheManager.putIcon(cacheKey, drawable);
+        }
+        
+        return drawable;
+    }
+    
+    /**
+     * 폴백과 함께 아이콘 로딩 (성능 최적화)
+     */
+    private Drawable loadIconWithFallback(ComponentName componentName, UserHandle userHandle, 
+                                        String cacheKey, boolean useCache, boolean useCustomIcons) {
         Drawable drawable = null;
 
         // search for custom icon
         if (useCustomIcons) {
             Map<String, Long> customIconIds = getCustomIconIds();
-            if (customIconIds == null)
-                return null;
-
-            Long customIconId = customIconIds.get(cacheKey);
-            if (customIconId != null) {
-                drawable = getCustomIcon(cacheKey, customIconId);
+            if (customIconIds != null) {
+                Long customIconId = customIconIds.get(cacheKey);
+                if (customIconId != null) {
+                    drawable = getCustomIcon(cacheKey, customIconId);
+                }
             }
         }
 
         // check the icon pack for a resource
         if (drawable == null && mIconPack != null) {
-            // just checking will make this thread wait for the icon pack to load
-            if (!mIconPack.isLoaded())
-                return null;
-            drawable = mIconPack.getComponentDrawable(ctx, componentName, userHandle);
-            if (drawable != null) {
-                drawable = applyIconMask(ctx, drawable, true);
+            // 아이콘팩 로딩 중이면 시스템 아이콘 우선 반환 (번뜩임 방지)
+            if (!mIconPack.isLoaded()) {
+                drawable = mSystemPack.getComponentDrawable(ctx, componentName, userHandle);
+                if (drawable != null) {
+                    drawable = applyIconMask(ctx, drawable, false);
+                }
+            } else {
+                drawable = mIconPack.getComponentDrawable(ctx, componentName, userHandle);
+                if (drawable != null) {
+                    drawable = applyIconMask(ctx, drawable, true);
+                }
             }
         }
 
@@ -208,14 +305,25 @@ public class IconsHandler {
                 drawable = applyIconMask(ctx, drawable, false);
             }
         }
-        if (drawable == null)
+        
+        if (drawable == null) {
             return null;
+        }
 
         drawable = applyBadge(drawable, userHandle);
-        if (useCache) {
-            storeDrawable(cacheGetFileName(cacheKey), drawable);
-        }
         return drawable;
+    }
+    
+    /**
+     * 화면 상태 업데이트 (MainActivity에서 호출)
+     */
+    public void onScreenStateChanged(boolean screenOn) {
+        isScreenOn = screenOn;
+        
+        if (!screenOn) {
+            // 화면이 꺼지면 IconCacheManager를 통한 메모리 정리
+            iconCacheManager.trimMemory(android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN);
+        }
     }
 
     public Drawable getBackgroundDrawable(@ColorInt int backgroundColor) {

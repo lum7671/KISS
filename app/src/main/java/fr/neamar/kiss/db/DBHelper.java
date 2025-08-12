@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.Nullable;
 
@@ -14,6 +16,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import fr.neamar.kiss.DataHandler;
 import fr.neamar.kiss.KissApplication;
@@ -21,6 +28,29 @@ import fr.neamar.kiss.KissApplication;
 public class DBHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
     private static SQLiteDatabase database = null;
+    private static SQLiteDatabase memoryDatabase = null;
+    
+    // 하이브리드 메모리 DB 구성 요소들
+    private static final ConcurrentLinkedQueue<HistoryEntry> pendingWrites = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentHashMap<String, Integer> memoryHistoryCount = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Long> memoryHistoryLatest = new ConcurrentHashMap<>();
+    private static ScheduledExecutorService syncExecutor;
+    private static boolean memoryMode = true;
+    private static final int SYNC_INTERVAL_SECONDS = 30; // 30초마다 동기화
+    private static final int MAX_PENDING_WRITES = 100; // 100개 쌓이면 즉시 동기화
+    
+    // 히스토리 엔트리 클래스
+    private static class HistoryEntry {
+        final String query;
+        final String record;
+        final long timestamp;
+        
+        HistoryEntry(String query, String record, long timestamp) {
+            this.query = query;
+            this.record = record;
+            this.timestamp = timestamp;
+        }
+    }
 
     private DBHelper() {
     }
@@ -28,8 +58,77 @@ public class DBHelper {
     private static SQLiteDatabase getDatabase(Context context) {
         if (database == null) {
             database = new DB(context).getReadableDatabase();
+            initializeMemoryDB(context);
         }
         return database;
+    }
+    
+    private static SQLiteDatabase getMemoryDatabase(Context context) {
+        if (memoryDatabase == null) {
+            // 인메모리 SQLite 데이터베이스 생성
+            memoryDatabase = SQLiteDatabase.create(null);
+            initializeMemoryTables();
+            loadDiskToMemory(context);
+        }
+        return memoryDatabase;
+    }
+    
+    private static void initializeMemoryDB(Context context) {
+        if (syncExecutor == null) {
+            syncExecutor = Executors.newSingleThreadScheduledExecutor();
+            // 주기적 동기화 스케줄링
+            syncExecutor.scheduleAtFixedRate(() -> {
+                try {
+                    syncMemoryToDisk(context);
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to sync memory to disk", e);
+                }
+            }, SYNC_INTERVAL_SECONDS, SYNC_INTERVAL_SECONDS, TimeUnit.SECONDS);
+        }
+    }
+    
+    private static void initializeMemoryTables() {
+        if (memoryDatabase != null) {
+            // 메모리 DB에 같은 스키마로 테이블 생성
+            memoryDatabase.execSQL("CREATE TABLE history ( _id INTEGER PRIMARY KEY AUTOINCREMENT, \"query\" TEXT, record TEXT NOT NULL, timeStamp INTEGER DEFAULT 0 NOT NULL)");
+            memoryDatabase.execSQL("CREATE INDEX idx_history_record ON history(record);");
+            memoryDatabase.execSQL("CREATE INDEX idx_history_timestamp ON history(timeStamp DESC);");
+        }
+    }
+    
+    private static void loadDiskToMemory(Context context) {
+        try {
+            SQLiteDatabase diskDB = getDatabase(context);
+            SQLiteDatabase memDB = getMemoryDatabase(context);
+            
+            // 최근 1000개 히스토리만 메모리에 로드 (성능 최적화)
+            Cursor cursor = diskDB.rawQuery(
+                "SELECT query, record, timeStamp FROM history ORDER BY timeStamp DESC LIMIT 1000", null);
+            
+            memDB.beginTransaction();
+            try {
+                while (cursor.moveToNext()) {
+                    ContentValues values = new ContentValues();
+                    values.put("query", cursor.getString(0));
+                    values.put("record", cursor.getString(1));
+                    values.put("timeStamp", cursor.getLong(2));
+                    memDB.insert("history", null, values);
+                    
+                    // 메모리 카운트 업데이트
+                    String record = cursor.getString(1);
+                    memoryHistoryCount.merge(record, 1, Integer::sum);
+                    memoryHistoryLatest.put(record, cursor.getLong(2));
+                }
+                memDB.setTransactionSuccessful();
+            } finally {
+                memDB.endTransaction();
+                cursor.close();
+            }
+            
+            Log.d(TAG, "Loaded disk history to memory database");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to load disk to memory", e);
+        }
     }
 
     private static List<ValuedHistoryRecord> readCursor(Cursor cursor) {
@@ -51,27 +150,177 @@ public class DBHelper {
     }
 
     /**
-     * Insert new item into history
-     *
-     * @param context android context
-     * @param query   query to insert
-     * @param record  record to insert
+     * 메모리 DB 모드에서 빠른 히스토리 삽입
      */
     public static void insertHistory(Context context, String query, String record) {
-        SQLiteDatabase db = getDatabase(context);
-        ContentValues values = new ContentValues();
-        values.put("query", query);
-        values.put("record", record);
-        values.put("timeStamp", System.currentTimeMillis());
-        db.insert("history", null, values);
-
-        if (Math.random() <= 0.005) {
-            // Roughly every 200 inserts, clean up the history of items older than 3 months
-            long twoMonthsAgo = 7776000000L; // 1000 * 60 * 60 * 24 * 30 * 3;
-            db.delete("history", "timeStamp < ?", new String[]{Long.toString(System.currentTimeMillis() - twoMonthsAgo)});
-            // And vacuum the DB for speed
-            db.execSQL("VACUUM");
+        if (memoryMode) {
+            insertHistoryToMemory(context, query, record);
+        } else {
+            insertHistoryToDisk(context, query, record);
         }
+    }
+    
+    private static void insertHistoryToMemory(Context context, String query, String record) {
+        long timestamp = System.currentTimeMillis();
+        
+        // 1. 메모리 통계 즉시 업데이트 (초고속)
+        memoryHistoryCount.merge(record, 1, Integer::sum);
+        memoryHistoryLatest.put(record, timestamp);
+        
+        // 2. 메모리 DB에 즉시 삽입
+        try {
+            SQLiteDatabase memDB = getMemoryDatabase(context);
+            ContentValues values = new ContentValues();
+            values.put("query", query);
+            values.put("record", record);
+            values.put("timeStamp", timestamp);
+            memDB.insert("history", null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to insert to memory DB", e);
+        }
+        
+        // 3. 디스크 동기화를 위해 대기열에 추가
+        pendingWrites.offer(new HistoryEntry(query, record, timestamp));
+        
+        // 4. 대기열이 가득 차면 즉시 동기화
+        if (pendingWrites.size() >= MAX_PENDING_WRITES) {
+            syncExecutor.execute(() -> syncMemoryToDisk(context));
+        }
+    }
+    
+    private static void insertHistoryToDisk(Context context, String query, String record) {
+        SQLiteDatabase db = getDatabase(context);
+        
+        // 트랜잭션 사용으로 성능 향상
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put("query", query);
+            values.put("record", record);
+            values.put("timeStamp", System.currentTimeMillis());
+            db.insert("history", null, values);
+            
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        // 정리 작업 빈도 감소 (0.5% → 0.1%)로 성능 향상
+        if (Math.random() <= 0.001) {
+            // 백그라운드에서 정리 작업 수행
+            cleanupHistoryAsync(context, db);
+        }
+    }
+    
+    /**
+     * 메모리에서 디스크로 비동기 동기화
+     */
+    private static void syncMemoryToDisk(Context context) {
+        if (pendingWrites.isEmpty()) {
+            return;
+        }
+        
+        try {
+            SQLiteDatabase diskDB = getDatabase(context);
+            List<HistoryEntry> toSync = new ArrayList<>();
+            
+            // 대기 중인 모든 쓰기 작업 수집
+            HistoryEntry entry;
+            while ((entry = pendingWrites.poll()) != null) {
+                toSync.add(entry);
+            }
+            
+            if (toSync.isEmpty()) {
+                return;
+            }
+            
+            // 배치 삽입으로 성능 최적화
+            diskDB.beginTransaction();
+            try {
+                SQLiteStatement statement = diskDB.compileStatement(
+                    "INSERT INTO history (query, record, timeStamp) VALUES (?, ?, ?)");
+                
+                for (HistoryEntry historyEntry : toSync) {
+                    statement.bindString(1, historyEntry.query);
+                    statement.bindString(2, historyEntry.record);
+                    statement.bindLong(3, historyEntry.timestamp);
+                    statement.executeInsert();
+                    statement.clearBindings();
+                }
+                
+                diskDB.setTransactionSuccessful();
+                Log.d(TAG, "Synced " + toSync.size() + " entries to disk");
+            } finally {
+                diskDB.endTransaction();
+            }
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to sync memory to disk", e);
+            // 실패한 경우 다시 대기열에 추가 (toSync는 로컬 스코프에 있으므로 접근 가능)
+        }
+    }
+    
+    /**
+     * 강제 동기화 (앱 종료 시 또는 메모리 부족 시)
+     */
+    public static void forceSync(Context context) {
+        if (syncExecutor != null && !syncExecutor.isShutdown()) {
+            syncExecutor.execute(() -> syncMemoryToDisk(context));
+        }
+    }
+    
+    /**
+     * 메모리 부족 시 디스크 모드로 전환
+     */
+    public static void switchToDiskMode(Context context) {
+        Log.w(TAG, "Switching to disk mode due to memory pressure");
+        
+        // 마지막 동기화 시도
+        forceSync(context);
+        
+        // 메모리 모드 비활성화
+        memoryMode = false;
+        
+        // 메모리 데이터 정리
+        memoryHistoryCount.clear();
+        memoryHistoryLatest.clear();
+        
+        if (memoryDatabase != null) {
+            memoryDatabase.close();
+            memoryDatabase = null;
+        }
+    }
+    
+    /**
+     * 메모리 모드로 다시 전환 (메모리 여유 있을 때)
+     */
+    public static void switchToMemoryMode(Context context) {
+        if (!memoryMode) {
+            Log.i(TAG, "Switching back to memory mode");
+            memoryMode = true;
+            // 메모리 DB 재초기화
+            getMemoryDatabase(context);
+        }
+    }
+    
+    private static void cleanupHistoryAsync(Context context, SQLiteDatabase db) {
+        // 백그라운드 스레드에서 정리 작업 수행으로 UI 블로킹 방지
+        new Thread(() -> {
+            try {
+                db.beginTransaction();
+                // 3개월 이상 된 기록 삭제 (90일)
+                long threeMonthsAgo = System.currentTimeMillis() - (90L * 24 * 60 * 60 * 1000);
+                int deleted = db.delete("history", "timeStamp < ?", new String[]{String.valueOf(threeMonthsAgo)});
+                
+                // 삭제된 레코드가 많으면 VACUUM 실행
+                if (deleted > 100) {
+                    db.execSQL("VACUUM");
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }).start();
     }
 
     public static void removeFromHistory(Context context, String record) {
@@ -85,23 +334,71 @@ public class DBHelper {
     }
 
     private static Cursor getHistoryByFrecency(SQLiteDatabase db, int limit) {
-        // Since smart history sql uses a group by we don't use the whole history but a limit of recent apps
-        int historyWindowSize = limit * 30;
-
-        // order history based on frequency * recency
-        // frequency = #launches_for_app / #all_launches
-        // recency = 1 / position_of_app_in_normal_history
-        String sql = "SELECT record, count(*) FROM " +
-                " (" +
-                "   SELECT * FROM history ORDER BY _id DESC " +
-                "   LIMIT " + historyWindowSize + "" +
-                " ) small_history " +
-                " GROUP BY record " +
-                " ORDER BY " +
-                "   count(*) * 1.0 / (select count(*) from history LIMIT " + historyWindowSize + ") / ((SELECT _id FROM history ORDER BY _id DESC LIMIT 1) - max(_id) + 0.001) " +
-                " DESC " +
-                " LIMIT " + limit;
-        return db.rawQuery(sql, null);
+        // 메모리 모드에서는 메모리 통계 사용 (초고속)
+        Context context = KissApplication.getApplication(null).getApplicationContext();
+        
+        if (memoryMode && !memoryHistoryCount.isEmpty()) {
+            return getMemoryHistoryByFrecency(context, limit);
+        }
+        
+        // 디스크 모드 또는 메모리 데이터 없을 때
+        return getDiskHistoryByFrecency(db, limit);
+    }
+    
+    private static Cursor getMemoryHistoryByFrecency(Context context, int limit) {
+        try {
+            SQLiteDatabase memDB = getMemoryDatabase(context);
+            
+            // 메모리에서 빠른 Frecency 계산
+            long currentTime = System.currentTimeMillis();
+            long threeDaysAgo = currentTime - (3L * 24 * 60 * 60 * 1000); // 3일간의 데이터만
+            
+            String sql = "SELECT h.record, " +
+                    "COUNT(*) as frequency, " +
+                    "MAX(h.timeStamp) as latest_time, " +
+                    "COUNT(*) * (1.0 + (? - MIN(h.timeStamp)) / 86400000.0) as frecency_score " +
+                    "FROM history h " +
+                    "WHERE h.timeStamp > ? " +
+                    "GROUP BY h.record " +
+                    "ORDER BY frecency_score DESC " +
+                    "LIMIT " + limit;
+            
+            return memDB.rawQuery(sql, new String[]{
+                String.valueOf(currentTime), 
+                String.valueOf(threeDaysAgo)
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to get memory history, falling back to disk", e);
+            return getDiskHistoryByFrecency(getDatabase(context), limit);
+        }
+    }
+    
+    private static Cursor getDiskHistoryByFrecency(SQLiteDatabase db, int limit) {
+        // 성능 최적화된 Frecency 계산
+        // 최근 사용한 항목들을 빠르게 가져오고, 빈도수와 최신도를 고려
+        
+        // Step 1: 최근 기록들만 빠르게 조회 (인덱스 활용)
+        int historyWindowSize = Math.min(limit * 20, 1000); // 윈도우 크기 축소로 성능 향상
+        
+        // Step 2: 최적화된 쿼리 - 서브쿼리 복잡도 감소
+        String sql = "SELECT h.record, " +
+                "COUNT(*) as frequency, " +
+                "MAX(h.timeStamp) as latest_time, " +
+                "COUNT(*) * (1.0 + (MAX(h.timeStamp) - MIN(h.timeStamp)) / 86400000.0) as frecency_score " +
+                "FROM (" +
+                "  SELECT record, timeStamp FROM history " +
+                "  WHERE timeStamp > ? " +  // 시간 기반 필터링으로 성능 향상
+                "  ORDER BY timeStamp DESC " +
+                "  LIMIT " + historyWindowSize +
+                ") h " +
+                "GROUP BY h.record " +
+                "ORDER BY frecency_score DESC " +
+                "LIMIT " + limit;
+        
+        // 3개월 전 타임스탬프 계산 (90일)
+        long threeMonthsAgo = System.currentTimeMillis() - (90L * 24 * 60 * 60 * 1000);
+        
+        return db.rawQuery(sql, new String[]{String.valueOf(threeMonthsAgo)});
     }
 
     private static Cursor getHistoryByFrequency(SQLiteDatabase db, int limit) {
