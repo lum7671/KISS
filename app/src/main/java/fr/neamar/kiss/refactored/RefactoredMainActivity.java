@@ -1,6 +1,5 @@
 package fr.neamar.kiss.refactored;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -8,11 +7,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.command.ActionManager;
 import fr.neamar.kiss.controller.LifecycleController;
 import fr.neamar.kiss.controller.SearchController;
 import fr.neamar.kiss.controller.UIController;
-import fr.neamar.kiss.searcher.QueryInterface;
 
 /**
  * 리팩터링된 MainActivity 예시
@@ -20,7 +19,7 @@ import fr.neamar.kiss.searcher.QueryInterface;
  * 기존의 거대한 MainActivity를 여러 컨트롤러로 분리하여
  * 단일 책임 원칙을 적용한 구조입니다.
  */
-public class RefactoredMainActivity extends Activity implements QueryInterface {
+public class RefactoredMainActivity extends MainActivity {
     
     private static final String TAG = RefactoredMainActivity.class.getSimpleName();
     
@@ -36,7 +35,7 @@ public class RefactoredMainActivity extends Activity implements QueryInterface {
     private SharedPreferences prefs;
     
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() - Refactored");
         
@@ -226,7 +225,6 @@ public class RefactoredMainActivity extends Activity implements QueryInterface {
     }
     
     // QueryInterface 구현
-    @Override
     public void updateSearchRecords(String query) {
         // 검색 결과 업데이트
     }

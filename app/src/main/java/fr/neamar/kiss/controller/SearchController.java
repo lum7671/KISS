@@ -68,10 +68,14 @@ public class SearchController {
         
         try {
             // 새로운 검색 시작 - QuerySearcher 사용
-            currentSearchTask = new fr.neamar.kiss.searcher.QuerySearcher(queryInterface, trimmedQuery);
-            currentSearchTask.execute();
-            
-            Log.d(TAG, "Search started for: " + trimmedQuery);
+            if (queryInterface instanceof fr.neamar.kiss.MainActivity) {
+                currentSearchTask = new fr.neamar.kiss.searcher.QuerySearcher((fr.neamar.kiss.MainActivity) queryInterface, trimmedQuery, false);
+                currentSearchTask.execute();
+                
+                Log.d(TAG, "Search started for: " + trimmedQuery);
+            } else {
+                Log.e(TAG, "QueryInterface is not MainActivity instance");
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error starting search for: " + trimmedQuery, e);
             notifySearchError(trimmedQuery, e);
