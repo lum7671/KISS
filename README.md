@@ -31,7 +31,7 @@ KISS
 - **📱 Android 13+ Optimization**: API 33+ with Android 15 target
 - **🔐 APK Signature Scheme v3**: Modern security standards
 - **⚡ Lightweight Release Build**: 1.2MB (96% size reduction from 31MB)
-- **🎯 Package ID**: `fr.neamar.kiss.optimized` (conflict-free installation)
+- **🎯 Package ID**: `fr.neamar.kiss.lum7671` (conflict-free installation)
 - **🔧 Debug-Only Libraries**: Performance tools excluded from release builds
 
 #### 🛠️ Technical Architecture

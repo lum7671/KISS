@@ -68,7 +68,7 @@ adb devices
 adb install app/build/outputs/apk/profile/app-profile-signed.apk
 
 # 앱 실행
-adb shell am start -n fr.neamar.kiss.optimized.profile/fr.neamar.kiss.MainActivity
+adb shell am start -n fr.neamar.kiss.lum7671/fr.neamar.kiss.MainActivity
 
 # 설치 확인
 adb shell pm list packages | grep kiss
@@ -86,9 +86,9 @@ adb shell pm list packages | grep kiss
 
 | 빌드 타입 | 패키지명 | 앱 이름 | 용도 |
 |-----------|----------|---------|------|
-| **Release** | `fr.neamar.kiss.optimized` | "KISS Optimized" | 일반 사용자 |
-| **Debug** | `fr.neamar.kiss.optimized.debug` | "KISS Debug v4.0.1" | 개발/테스트 |
-| **Profile** | `fr.neamar.kiss.optimized.profile` | "KISS Profile v4.0.1" | 성능 분석 |
+| **Release** | `fr.neamar.kiss.lum7671` | "KISS Optimized" | 일반 사용자 |
+| **Debug** | `fr.neamar.kiss.lum7671` | "KISS Debug v4.0.1" | 개발/테스트 |
+| **Profile** | `fr.neamar.kiss.lum7671` | "KISS Profile v4.0.1" | 성능 분석 |
 
 ### 프로파일 빌드만의 특징
 
@@ -168,10 +168,10 @@ buildTypes {
 
 ```bash
 # 에뮬레이터에서 로그 추출
-adb shell run-as fr.neamar.kiss.optimized.profile ls /data/data/fr.neamar.kiss.optimized.profile/logs/
+adb shell run-as fr.neamar.kiss.lum7671 ls /data/data/fr.neamar.kiss.lum7671/logs/
 
 # 실제 디바이스 (루팅 필요할 수 있음)
-adb shell ls /Android/data/fr.neamar.kiss.optimized.profile/logs/
+adb shell ls /Android/data/fr.neamar.kiss.lum7671/logs/
 ```
 
 ## 📋 체크리스트
@@ -186,7 +186,7 @@ adb shell ls /Android/data/fr.neamar.kiss.optimized.profile/logs/
 
 - [ ] APK 파일 크기 ~50MB
 - [ ] 서명 상태 정상
-- [ ] 패키지명 `fr.neamar.kiss.optimized.profile`
+- [ ] 패키지명 `fr.neamar.kiss.lum7671`
 
 ### 설치 후 확인사항
 

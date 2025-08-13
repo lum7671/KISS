@@ -35,7 +35,7 @@ def load_performance_logs(log_dir):
     if not log_files:
         print(f"❌ {log_dir}에서 성능 로그 파일을 찾을 수 없습니다.")
         print("📱 안드로이드 기기에서 다음 경로를 확인하세요:")
-        print("   /storage/emulated/0/Android/data/fr.neamar.kiss.optimized.profile/files/kiss_profile_logs/")
+        print("   /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/")
         return None
     
     print(f"📊 발견된 로그 파일: {len(log_files)}개")

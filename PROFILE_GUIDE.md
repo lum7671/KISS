@@ -7,7 +7,7 @@ KISS 앱의 **Profile 빌드 모드**는 실제 사용 환경에서 앱의 성�
 ## 🔧 Profile 모드 특징
 
 ### 빌드 설정
-- **앱 ID**: `fr.neamar.kiss.optimized.profile` (일반 빌드와 병행 설치 가능)
+- **앱 ID**: `fr.neamar.kiss.lum7671` (일반 빌드와 병행 설치 가능)
 - **디버깅**: 활성화 (`debuggable = true`)
 - **최적화**: 비활성화 (성능 분석을 위해)
 - **프로파일링 도구**: 포함된 라이브러리들
@@ -57,7 +57,7 @@ adb install app/build/outputs/apk/profile/app-profile-unsigned.apk
 
 ### 안드로이드 기기 내 저장 경로
 ```
-/storage/emulated/0/Android/data/fr.neamar.kiss.optimized.profile/files/kiss_profile_logs/
+/storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/
 ```
 
 ### 로그 파일 형식
@@ -88,15 +88,15 @@ adb install app/build/outputs/apk/profile/app-profile-unsigned.apk
 ### ADB를 사용한 로그 다운로드
 ```bash
 # 로그 디렉토리 전체 다운로드
-adb pull /storage/emulated/0/Android/data/fr.neamar.kiss.optimized.profile/files/kiss_profile_logs/ ./kiss_logs/
+adb pull /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/ ./kiss_logs/
 
 # 특정 날짜 로그만 다운로드
-adb pull /storage/emulated/0/Android/data/fr.neamar.kiss.optimized.profile/files/kiss_profile_logs/performance_2025-08-13_*.csv ./
+adb pull /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/performance_2025-08-13_*.csv ./
 ```
 
 ### 파일 관리자 앱 사용
 1. 기기에서 파일 관리자 앱 실행
-2. `Android/data/fr.neamar.kiss.optimized.profile/files/kiss_profile_logs/` 이동
+2. `Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/` 이동
 3. 로그 파일들을 클라우드 저장소나 이메일로 전송
 
 ## 📈 로그 분석 도구 사용법
@@ -193,7 +193,7 @@ python3 analyze_profile_logs.py ./kiss_logs/ --output ./analysis_results/
 
 ### 로그 파일이 생성되지 않는 경우
 1. 외부 저장소 권한 확인
-2. 앱이 Profile 빌드인지 확인 (`fr.neamar.kiss.optimized.profile`)
+2. 앱이 Profile 빌드인지 확인 (`fr.neamar.kiss.lum7671`)
 3. 로그 디렉토리 수동 생성 시도
 
 ### 분석 도구 실행 오류
