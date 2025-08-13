@@ -32,7 +32,13 @@ public abstract class PojoWithTagSearcher extends Searcher {
         if (activity == null)
             return null;
 
-        KissApplication.getApplication(activity).getDataHandler().requestAllRecords(this);
+        // 태그 검색인 경우 최적화된 메서드 사용
+        if (this instanceof fr.neamar.kiss.searcher.TagsSearcher && query != null && !query.equals("<tags>")) {
+            KissApplication.getApplication(activity).getDataHandler().requestRecordsByTag(query, this);
+        } else {
+            // 기존 방식 (태그가 없는 앱 검색 등)
+            KissApplication.getApplication(activity).getDataHandler().requestAllRecords(this);
+        }
 
         return null;
     }

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import fr.neamar.kiss.broadcast.ProfileChangedHandler;
 import fr.neamar.kiss.dataprovider.AppProvider;
@@ -81,6 +82,17 @@ public class DataHandler extends BroadcastReceiver
     private final Map<String, ProviderEntry> providers = new HashMap<>();
     public boolean allProvidersHaveLoaded = false;
     private long start;
+
+    /**
+     * 태그별 캐시 (성능 최적화)
+     * 키: 소문자 태그명, 값: 해당 태그가 포함된 Pojo 목록
+     */
+    private final Map<String, List<Pojo>> tagCache = new ConcurrentHashMap<>();
+    
+    // 스마트 업데이트를 위한 상태 추적
+    private volatile long lastDataUpdateTime = System.currentTimeMillis();
+    private volatile long lastResumeTime = 0;
+    private static final long UPDATE_THRESHOLD_MS = 2000; // 2초
 
     /**
      * Initialize all providers
@@ -380,6 +392,123 @@ public class DataHandler extends BroadcastReceiver
             }
         }
         searcher.addResults(collectedPojos);
+    }
+
+    /**
+     * 태그별 최적화된 레코드 조회
+     * 전체 데이터를 순회하는 대신 태그 인덱스를 사용
+     *
+     * @param tag 검색할 태그
+     * @param searcher the searcher currently running
+     */
+    public void requestRecordsByTag(String tag, Searcher searcher) {
+        if (tag == null || tag.isEmpty()) {
+            requestAllRecords(searcher);
+            return;
+        }
+
+        List<Pojo> taggedPojos = getTaggedPojos(tag);
+        if (taggedPojos != null) {
+            searcher.addResults(taggedPojos);
+        }
+    }
+
+    /**
+     * 태그가 포함된 모든 Pojo 반환 (캐시 사용)
+     * 
+     * @param tag 검색할 태그
+     * @return 태그가 포함된 Pojo 목록
+     */
+    private List<Pojo> getTaggedPojos(String tag) {
+        // 태그 캐시 확인
+        List<Pojo> cachedResult = tagCache.get(tag.toLowerCase());
+        if (cachedResult != null) {
+            return new ArrayList<>(cachedResult); // 방어적 복사
+        }
+
+        // 캐시 미스 - 새로 구축
+        List<Pojo> taggedPojos = new ArrayList<>();
+        String normalizedTag = tag.toLowerCase();
+
+        // 앱 프로바이더에서 태그 검색
+        AppProvider appProvider = getAppProvider();
+        if (appProvider != null) {
+            List<AppPojo> apps = appProvider.getPojos();
+            if (apps != null) {
+                for (AppPojo app : apps) {
+                    if (app.getTags() != null && app.getTags().contains(normalizedTag)) {
+                        taggedPojos.add(app);
+                    }
+                }
+            }
+        }
+
+        // 단축키 프로바이더에서 태그 검색
+        ShortcutsProvider shortcutsProvider = getShortcutsProvider();
+        if (shortcutsProvider != null) {
+            List<ShortcutPojo> shortcuts = shortcutsProvider.getPojos();
+            if (shortcuts != null) {
+                for (ShortcutPojo shortcut : shortcuts) {
+                    if (shortcut.getTags() != null && shortcut.getTags().contains(normalizedTag)) {
+                        taggedPojos.add(shortcut);
+                    }
+                }
+            }
+        }
+
+        // 캐시에 저장
+        tagCache.put(normalizedTag, new ArrayList<>(taggedPojos));
+        return taggedPojos;
+    }
+
+    /**
+     * 태그 캐시 무효화 (앱 변경 시 호출)
+     */
+    public void invalidateTagCache() {
+        tagCache.clear();
+        Log.d(TAG, "Tag cache invalidated");
+    }
+
+    /**
+     * 특정 태그의 캐시만 무효화
+     * 
+     * @param tag 무효화할 태그
+     */
+    public void invalidateTagCache(String tag) {
+        if (tag != null) {
+            tagCache.remove(tag.toLowerCase());
+            Log.d(TAG, "Tag cache invalidated for: " + tag);
+        }
+    }
+
+    /**
+     * 태그 캐시 상태 정보
+     */
+    public String getTagCacheStatus() {
+        return String.format("Tag cache: %d entries", tagCache.size());
+    }
+    
+    /**
+     * onResume에서 업데이트가 필요한지 확인
+     */
+    public boolean shouldUpdateOnResume() {
+        long currentTime = System.currentTimeMillis();
+        long timeSinceLastUpdate = currentTime - lastDataUpdateTime;
+        long timeSinceLastResume = currentTime - lastResumeTime;
+        
+        lastResumeTime = currentTime;
+        
+        // 마지막 데이터 업데이트로부터 충분한 시간이 지나지 않았거나
+        // 마지막 resume으로부터 너무 짧은 시간이 지났으면 업데이트 생략
+        return timeSinceLastUpdate > UPDATE_THRESHOLD_MS && timeSinceLastResume > 1000;
+    }
+    
+    /**
+     * 데이터 변경 시 호출 (앱 설치/제거, 즐겨찾기 변경 등)
+     */
+    public void markDataUpdated() {
+        lastDataUpdateTime = System.currentTimeMillis();
+        Log.d(TAG, "Data updated at: " + lastDataUpdateTime);
     }
 
     /**
@@ -809,6 +938,9 @@ public class DataHandler extends BroadcastReceiver
     }
 
     public void reloadApps() {
+        // Invalidate tag cache when apps are reloaded
+        invalidateTagCache();
+        markDataUpdated(); // 데이터 변경 표시
         AppProvider appProvider = getAppProvider();
         if (appProvider != null) {
             appProvider.reload();
@@ -899,6 +1031,8 @@ public class DataHandler extends BroadcastReceiver
         PreferenceManager.getDefaultSharedPreferences(context).edit()
                 .putString("favorite-apps-list", favApps + id + ";").apply();
 
+        markDataUpdated(); // 즐겨찾기 변경 표시
+
         boolean excludedApps = PreferenceManager.getDefaultSharedPreferences(context).
                 getBoolean("exclude-favorites-apps", false);
         if (excludedApps) {
@@ -919,6 +1053,8 @@ public class DataHandler extends BroadcastReceiver
 
         PreferenceManager.getDefaultSharedPreferences(context).edit()
                 .putString("favorite-apps-list", favApps.replace(id + ";", "")).apply();
+
+        markDataUpdated(); // 즐겨찾기 변경 표시
 
         boolean excludedApps = PreferenceManager.getDefaultSharedPreferences(context).
                 getBoolean("exclude-favorites-apps", false);
@@ -1005,12 +1141,14 @@ public class DataHandler extends BroadcastReceiver
     public TagsHandler getTagsHandler() {
         if (tagsHandler == null) {
             tagsHandler = new TagsHandler(context);
+            tagsHandler.setDataHandler(this);
         }
         return tagsHandler;
     }
 
     public void resetTagsHandler() {
         tagsHandler = new TagsHandler(this.context);
+        tagsHandler.setDataHandler(this);
     }
 
     public void renameApp(String componentName, String newName) {

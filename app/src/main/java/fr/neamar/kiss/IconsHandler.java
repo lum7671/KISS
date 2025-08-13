@@ -338,13 +338,29 @@ public class IconsHandler {
     }
 
     public Drawable getDrawableIconForCodepoint(int codePoint, @ColorInt int textColor, @ColorInt int backgroundColor) {
+        // 태그 아이콘 캐시 키 생성
+        String tagCacheKey = String.format("tag_%d_%x_%x", codePoint, textColor, backgroundColor);
+        
+        // 캐시에서 먼저 확인
+        Drawable cachedIcon = iconCacheManager.getIcon(tagCacheKey);
+        if (cachedIcon != null) {
+            return cachedIcon;
+        }
+        
         // just checking will make this thread wait for the icon pack to load
         if (mIconPack != null && !mIconPack.isLoaded()) {
             return null;
         }
         final IconShape shape = getShapeForGeneratingDrawable();
         Drawable drawable = DrawableUtils.generateCodepointDrawable(ctx, codePoint, textColor, backgroundColor, shape);
-        return forceIconMask(drawable, shape);
+        drawable = forceIconMask(drawable, shape);
+        
+        // 생성된 태그 아이콘을 캐시에 저장
+        if (drawable != null) {
+            iconCacheManager.putIcon(tagCacheKey, drawable);
+        }
+        
+        return drawable;
     }
 
     public Drawable applyIconMask(@NonNull Context ctx, @NonNull Drawable drawable) {

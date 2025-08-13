@@ -18,6 +18,7 @@ import androidx.annotation.StringRes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,6 +35,7 @@ import fr.neamar.kiss.ui.ListPopup;
 public class TagsMenu extends Forwarder {
     private final Set<String> tagList;
     private ListPopup popupMenu = null;
+    private Set<String> lastLoadedTags = null; // 마지막으로 로드된 태그 추적
 
     public TagsMenu(MainActivity mainActivity) {
         super(mainActivity);
@@ -45,7 +47,13 @@ public class TagsMenu extends Forwarder {
     }
 
     public void onResume() {
-        loadTags();
+        // 태그 설정이 변경되었을 때만 다시 로드
+        Set<String> currentTags = isTagMenuEnabled() ? getPrefTags(prefs, mainActivity) : null;
+        
+        if (!Objects.equals(lastLoadedTags, currentTags)) {
+            loadTags();
+            lastLoadedTags = currentTags != null ? new HashSet<>(currentTags) : null;
+        }
     }
 
     public boolean isTagMenuEnabled() {

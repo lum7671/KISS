@@ -367,6 +367,24 @@ public abstract class Result<T extends Pojo> {
     }
 
     void setAsyncDrawable(ImageView view, @DrawableRes int resId) {
+        setAsyncDrawable(view, resId, true);
+    }
+    
+    /**
+     * 이미지를 비동기로 로딩합니다. 뷰포트 체크 옵션을 제공합니다.
+     * 
+     * @param view 이미지를 표시할 ImageView
+     * @param resId 플레이스홀더 리소스 ID
+     * @param checkViewport 뷰포트 내에 있는지 확인할지 여부
+     */
+    void setAsyncDrawable(ImageView view, @DrawableRes int resId, boolean checkViewport) {
+        // 뷰포트 체크가 활성화되고, 뷰가 화면에 보이지 않으면 플레이스홀더만 설정
+        if (checkViewport && !isViewInViewport(view)) {
+            view.setImageResource(resId);
+            view.setTag(null);
+            return;
+        }
+        
         // getting this called multiple times in parallel may result in empty icons
         synchronized (this) {
             // the ImageView tag will store the async task if it's running
@@ -394,6 +412,43 @@ public abstract class Result<T extends Pojo> {
                 view.setTag(createAsyncSetImage(view, resId).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR));
             }
         }
+    }
+    
+    /**
+     * 뷰가 현재 화면에 보이는지 확인합니다.
+     * 
+     * @param view 확인할 뷰
+     * @return 화면에 보이면 true
+     */
+    private boolean isViewInViewport(ImageView view) {
+        if (view == null) return true;
+        
+        // 뷰가 부모 스크롤 컨테이너에서 보이는지 확인
+        ViewGroup parent = (ViewGroup) view.getParent();
+        while (parent != null) {
+            if (parent instanceof android.widget.ListView || 
+                parent instanceof androidx.recyclerview.widget.RecyclerView ||
+                parent instanceof android.widget.ScrollView) {
+                
+                int[] viewLocation = new int[2];
+                view.getLocationOnScreen(viewLocation);
+                
+                int[] parentLocation = new int[2];
+                parent.getLocationOnScreen(parentLocation);
+                
+                int viewTop = viewLocation[1];
+                int viewBottom = viewTop + view.getHeight();
+                int parentTop = parentLocation[1];
+                int parentBottom = parentTop + parent.getHeight();
+                
+                // 뷰가 부모의 보이는 영역과 교차하는지 확인
+                return viewTop < parentBottom && viewBottom > parentTop;
+            }
+            parent = (ViewGroup) parent.getParent();
+        }
+        
+        // 스크롤 컨테이너를 찾지 못한 경우 항상 로딩
+        return true;
     }
 
     private AsyncSetImage createAsyncSetImage(ImageView imageView, @DrawableRes int resId) {

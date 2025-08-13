@@ -28,11 +28,18 @@ public class TagsHandler {
     private final Context context;
     // cached tags
     private final Map<String, String> tagsCache;
+    // DataHandler reference for cache invalidation
+    private DataHandler dataHandler;
 
     TagsHandler(Context context) {
         this.context = context;
         tagsCache = DBHelper.loadTags(this.context);
         addDefaultAliases();
+    }
+    
+    // Set DataHandler reference for cache invalidation
+    public void setDataHandler(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 
     public void setTags(String id, String tags) {
@@ -44,6 +51,11 @@ public class TagsHandler {
         DBHelper.insertTagsForId(this.context, tags, id);
         // add to cache
         tagsCache.put(id, tags);
+        
+        // Invalidate DataHandler tag cache when tags are changed
+        if (dataHandler != null) {
+            dataHandler.invalidateTagCache();
+        }
     }
 
     public String getTags(String id) {

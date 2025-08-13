@@ -572,7 +572,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
         // We need to update the history in case an external event created new items
         // (for instance, installed a new app, got a phone call or simply clicked on a favorite)
-        updateSearchRecords();
+        // 스마트 업데이트: 실제로 변경이 있었을 때만 업데이트
+        if (KissApplication.getApplication(this).getDataHandler().shouldUpdateOnResume()) {
+            updateSearchRecords();
+        }
         displayClearOnInput();
 
         if (isViewingAllApps()) {
