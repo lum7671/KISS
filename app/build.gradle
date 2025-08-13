@@ -20,12 +20,12 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        applicationId 'fr.neamar.kiss.optimized'
+        applicationId 'fr.neamar.kiss.lum7671'
         minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환)
         targetSdkVersion 35
         compileSdk 35
-        versionCode 400
-        versionName "4.0.0-based-on-3.22.1"
+        versionCode 401
+        versionName "4.0.1-based-on-3.22.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         // BuildConfig에 업스트림 버전 정보 추가
@@ -53,18 +53,27 @@ android {
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug  // 디버그 키로 서명
+            
+            // 빌드 타입 정보 추가
+            buildConfigField "String", "BUILD_TYPE", '"release"'
         }
         debug {
-            applicationIdSuffix ".debug"
+            // fr.neamar.kiss.lum7671로 통일
+            
+            // 빌드 타입 정보 추가
+            buildConfigField "String", "BUILD_TYPE", '"debug"'
         }
         profile {
             // Android 15+ 고급 프로파일링을 위한 빌드 타입
-            applicationIdSuffix ".profile"
+            // fr.neamar.kiss.lum7671로 통일
             debuggable true
             minifyEnabled false
             shrinkResources false
             // 프로파일링을 위해 최적화 비활성화
             proguardFiles getDefaultProguardFile('proguard-android.txt')
+            
+            // 빌드 타입 정보 추가
+            buildConfigField "String", "BUILD_TYPE", '"profile"'
             
             // Android 15+ 프로파일링 최적화
             manifestPlaceholders.putAll([

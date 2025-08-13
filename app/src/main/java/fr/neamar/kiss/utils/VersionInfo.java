@@ -43,11 +43,19 @@ public class VersionInfo {
     }
     
     /**
+     * 빌드 타입 (release, debug, profile)
+     */
+    public static String getBuildType() {
+        return BuildConfig.BUILD_TYPE;
+    }
+    
+    /**
      * 전체 버전 정보 문자열
      */
     public static String getFullVersionInfo() {
-        return String.format("KISS Optimized %s\nBased on upstream %s (versionCode: %s)\nOptimized by: %s\nBuild date: %s",
+        return String.format("KISS Optimized %s (%s)\nBased on upstream %s (versionCode: %s)\nOptimized by: %s\nBuild date: %s",
                 getOptimizedVersion(),
+                getBuildType().toUpperCase(),
                 getUpstreamVersion(),
                 getUpstreamVersionCode(),
                 getOptimizedBy(),
@@ -58,8 +66,9 @@ public class VersionInfo {
      * 간단한 버전 정보 (설정 화면용)
      */
     public static String getSimpleVersionInfo() {
-        return String.format("v%s (based on upstream %s)", 
+        return String.format("v%s (%s) (based on upstream %s)", 
                 getOptimizedVersion(), 
+                getBuildType().toUpperCase(),
                 getUpstreamVersion());
     }
 }
