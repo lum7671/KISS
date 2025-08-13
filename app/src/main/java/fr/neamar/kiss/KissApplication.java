@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
 import fr.neamar.kiss.utils.IconPackCache;
+import fr.neamar.kiss.profiling.ProfileManager;
 
 public class KissApplication extends Application {
     /**
@@ -32,14 +33,27 @@ public class KissApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
+        // Profile 모드 성능 프로파일러 초기화
+        ProfileManager.getInstance().initialize(this);
+        ProfileManager.getInstance().logAppStart();
+        
         // 성능 분석 도구 초기화 (DEBUG 빌드에만)
         if (BuildConfig.DEBUG) {
             initializePerformanceTools();
+        }
+        
+        // Profile 빌드에서 프로파일링 자동 시작
+        if (BuildConfig.BUILD_TYPE.equals("profile")) {
+            ProfileManager.getInstance().startProfiling();
+            android.util.Log.i("KISS_PROFILE", "Auto-started performance profiling for profile build");
         }
     }
     
     @Override
     public void onTerminate() {
+        // Profile 모드 프로파일러 정리
+        ProfileManager.getInstance().cleanup();
+        
         // 앱 종료 시 메모리 DB 동기화
         fr.neamar.kiss.db.DBHelper.forceSync(this);
         super.onTerminate();
@@ -124,6 +138,9 @@ public class KissApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
+
+        // Profile 모드에서 메모리 압박 이벤트 로깅
+        ProfileManager.getInstance().logMemoryPressure(level);
 
         if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
             // this is called every time the screen is off

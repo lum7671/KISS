@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
@@ -33,6 +34,8 @@ import android.view.Menu;
 
 // 성능 추적을 위한 import
 import androidx.tracing.Trace;
+import fr.neamar.kiss.profiling.ProfileManager;
+import fr.neamar.kiss.profiling.ActionPerformanceTracker;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -289,6 +292,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
+        
+        // Profile 모드에서 액티비티 생명주기 로깅
+        ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onCreate");
+        ActionPerformanceTracker.getInstance().initialize(this);
+        ActionPerformanceTracker.getInstance().trackAppStartupPhase("ACTIVITY_CREATE", SystemClock.elapsedRealtime());
 
         KissApplication.getApplication(this).initDataHandler();
 
@@ -394,6 +402,39 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 return true;
             }
         });
+        
+        // 스크롤 성능 추적을 위한 리스너 추가
+        this.list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private long scrollStartTime = 0;
+            private int lastFirstVisibleItem = 0;
+            private boolean isScrolling = false;
+            
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    // 스크롤 시작
+                    scrollStartTime = SystemClock.elapsedRealtime();
+                    isScrolling = true;
+                    ActionPerformanceTracker.getInstance().startAction("SCROLL");
+                } else if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isScrolling) {
+                    // 스크롤 종료
+                    long scrollDuration = SystemClock.elapsedRealtime() - scrollStartTime;
+                    ActionPerformanceTracker.getInstance().trackUIInteraction("SCROLL", "LIST_VIEW", scrollDuration);
+                    ActionPerformanceTracker.getInstance().endAction("SCROLL");
+                    isScrolling = false;
+                }
+            }
+            
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (isScrolling) {
+                    int scrollDirection = firstVisibleItem - lastFirstVisibleItem;
+                    String direction = scrollDirection > 0 ? "DOWN" : (scrollDirection < 0 ? "UP" : "NONE");
+                    ActionPerformanceTracker.getInstance().trackScrollAction(direction, visibleItemCount, Math.abs(scrollDirection));
+                    lastFirstVisibleItem = firstVisibleItem;
+                }
+            }
+        });
 
         // Display empty list view when having no results
         this.adapter.registerDataSetObserver(new DataSetObserver() {
@@ -419,6 +460,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         searchEditText.addTextChangedListener(new TextWatcher() {
 
             private String oldText = null;
+            private long textChangeStartTime = 0;
 
             public void afterTextChanged(Editable s) {
                 int length = s.length();
@@ -448,8 +490,17 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                         if (isViewingAllApps()) {
                             displayKissBar(false, false);
                         }
+                        
+                        // 텍스트 입력 성능 추적
+                        long textChangeEndTime = SystemClock.elapsedRealtime();
+                        long inputDuration = textChangeEndTime - textChangeStartTime;
+                        ActionPerformanceTracker.getInstance().trackUIInteraction("TEXT_INPUT", 
+                            "SEARCH_FIELD", inputDuration);
+                        
                         updateSearchRecords(false, text);
                         displayClearOnInput();
+                        
+                        ActionPerformanceTracker.getInstance().endAction("TEXT_INPUT");
                     }
                 }
             }
@@ -457,9 +508,20 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // remember text before change
                 oldText = s.toString().trim();
+                // 텍스트 입력 시작 시간 기록
+                textChangeStartTime = SystemClock.elapsedRealtime();
+                ActionPerformanceTracker.getInstance().startAction("TEXT_INPUT");
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 실시간 타이핑 성능 추적
+                if (count > 0) { // 텍스트 추가
+                    ActionPerformanceTracker.getInstance().trackUIInteraction("TYPING", 
+                        "CHARACTER_ADD", count);
+                } else if (before > 0) { // 텍스트 삭제
+                    ActionPerformanceTracker.getInstance().trackUIInteraction("TYPING", 
+                        "CHARACTER_DELETE", before);
+                }
             }
         });
 
@@ -539,6 +601,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @Override
     protected void onStart() {
         super.onStart();
+        ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onStart");
         forwarderManager.onStart();
     }
 
@@ -549,6 +612,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @SuppressLint("CommitPrefEdits")
     protected void onResume() {
         Trace.beginSection("MainActivity.onResume");  // 성능 추적 시작
+        ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onResume");
         Log.d(TAG, "onResume()");
 
         // 화면 재구성 최적화: 필요한 경우에만 재구성 수행
@@ -607,12 +671,14 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @Override
     protected void onPause() {
         super.onPause();
+        ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onPause");
         forwarderManager.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onStop");
         forwarderManager.onStop();
     }
 
@@ -943,12 +1009,20 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * @param query     the query on which to search
      */
     protected void updateSearchRecords(boolean isRefresh, String query) {
+        long searchStartTime = System.currentTimeMillis();
+        
+        // 검색 성능 추적 시작
+        ActionPerformanceTracker.getInstance().startAction("SEARCH");
+        ActionPerformanceTracker.getInstance().trackSearchAction(query, 0, 0); // SEARCH_START
+        
         resetTask();
         dismissPopup();
 
         if (isRefresh && isViewingAllApps()) {
             // Refreshing while viewing all apps (for instance app installed or uninstalled in the background)
+            ActionPerformanceTracker.getInstance().trackSearchAction(query, 1, 0); // SEARCH_TYPING
             runTask(new ApplicationsSearcher(this, isRefresh));
+            ActionPerformanceTracker.getInstance().endAction("SEARCH_APPS");
             return;
         }
 
@@ -956,9 +1030,18 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
         if (query.isEmpty()) {
             systemUiVisibilityHelper.resetScroll();
+            ActionPerformanceTracker.getInstance().endAction("SEARCH_EMPTY");
         } else {
+            ActionPerformanceTracker.getInstance().trackSearchAction(query, 1, 0); // SEARCH_TYPING
             runTask(new QuerySearcher(this, query, isRefresh));
         }
+        
+        // 검색 성능 로깅
+        long searchDuration = System.currentTimeMillis() - searchStartTime;
+        int resultCount = (list != null && list.getAdapter() != null) ? list.getAdapter().getCount() : 0;
+        ProfileManager.getInstance().logSearchPerformance(query, searchDuration, resultCount);
+        ActionPerformanceTracker.getInstance().trackSearchAction(query, 2, resultCount); // SEARCH_COMPLETE
+        ActionPerformanceTracker.getInstance().endAction("SEARCH");
     }
 
     public void runTask(Searcher task) {
