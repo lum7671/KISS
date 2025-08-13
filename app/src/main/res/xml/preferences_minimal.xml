@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- 최소한의 기본 설정만 유지 -->
+    <PreferenceCategory
+        android:order="10"
+        android:title="@string/menu_settings"
+        android:key="ui-settings-section">
+        
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="keyboard-workaround"
+            android:order="10"
+            android:summary="@string/keyboard_workaround_summary"
+            android:title="@string/keyboard_workaround_name" />
+            
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:key="theme"
+            android:order="20"
+            android:summary="@string/theme_summary"
+            android:title="@string/theme_name" />
+            
+    </PreferenceCategory>
+    
+    <!-- 프로파일링 관련 설정 -->
+    <PreferenceCategory
+        android:order="999"
+        android:title="Profile Settings"
+        android:key="profile-settings-section">
+        
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="enable-profiling"
+            android:order="1000"
+            android:summary="Enable performance profiling for analysis"
+            android:title="Enable Profiling" />
+            
+    </PreferenceCategory>
+    
+</PreferenceScreen>
