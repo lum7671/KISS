@@ -5,7 +5,14 @@
 
 set -e  # 에러 시 스크립트 중단
 
-echo "🚀 KISS Profile APK 빌드 시작..."
+echo "🚀 echo -e "${GREEN}✅ 빌드 완료!${NC}"
+echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요.${NC}"
+echo -e "${BLUE}📄 빌드 정보:${NC}"
+echo "   버전: KISS $VERSION ($VERSION_NAME)"
+echo "   빌드 번호: $VERSION_CODE"
+echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
+echo "   APK 크기: $APK_SIZE"
+echo "   파일명: $(basename "$APK_SIGNED")"file APK 빌드 시작..."
 
 # 색상 정의
 RED='\033[0;31m'
@@ -53,17 +60,49 @@ fi
 echo -e "${BLUE}🔧 Gradle 빌드 시작...${NC}"
 ./gradlew assembleProfile
 
-# 빌드된 APK 파일 확인
-APK_UNSIGNED="app/build/outputs/apk/profile/app-profile-unsigned.apk"
-APK_SIGNED="app/build/outputs/apk/profile/app-profile-signed.apk"
+# 빌드 정보 설정
+BUILD_DATE=$(date '+%Y%m%d_%H%M%S')
 
-if [ ! -f "$APK_UNSIGNED" ]; then
-    echo -e "${RED}❌ 빌드된 APK를 찾을 수 없습니다: $APK_UNSIGNED${NC}"
-    exit 1
+# build.gradle에서 버전 정보 추출
+echo -e "${BLUE}📋 build.gradle에서 버전 정보 추출 중...${NC}"
+VERSION_NAME=$(grep 'versionName' app/build.gradle | head -1 | sed 's/.*versionName[[:space:]]*"\([^"]*\)".*/\1/')
+VERSION_CODE=$(grep 'versionCode' app/build.gradle | head -1 | sed 's/.*versionCode[[:space:]]*\([0-9]*\).*/\1/')
+
+# 버전 이름에서 간단한 버전만 추출 (예: "4.0.1-based-on-3.22.1" -> "4.0.1")
+VERSION=$(echo "$VERSION_NAME" | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\).*/v\1/')
+
+echo -e "${GREEN}📝 추출된 버전 정보:${NC}"
+echo "   버전명: $VERSION_NAME"
+echo "   버전코드: $VERSION_CODE"
+echo "   파일용 버전: $VERSION"
+
+# 빌드된 APK 파일 확인
+APK_ORIGINAL="app/build/outputs/apk/profile/app-profile.apk"
+APK_RENAMED="app/build/outputs/apk/profile/KISS_${VERSION}_b${VERSION_CODE}_${BUILD_DATE}_profile.apk"
+APK_SIGNED="app/build/outputs/apk/profile/KISS_${VERSION}_b${VERSION_CODE}_${BUILD_DATE}_profile_signed.apk"
+
+# 원본 파일 확인 (unsigned 또는 일반 파일)
+if [ ! -f "$APK_ORIGINAL" ]; then
+    APK_ORIGINAL="app/build/outputs/apk/profile/app-profile-unsigned.apk"
+    if [ ! -f "$APK_ORIGINAL" ]; then
+        echo -e "${RED}❌ 빌드된 APK를 찾을 수 없습니다${NC}"
+        echo "   확인한 경로: app/build/outputs/apk/profile/"
+        ls -la app/build/outputs/apk/profile/ || echo "디렉토리가 존재하지 않습니다"
+        exit 1
+    fi
 fi
 
+# APK 파일명 변경
+echo -e "${BLUE}📝 APK 파일명 변경...${NC}"
+mv "$APK_ORIGINAL" "$APK_RENAMED"
+
+# APK 크기 확인
+APK_SIZE=$(du -h "$APK_RENAMED" | cut -f1)
+echo -e "${GREEN}📦 빌드 완료! APK 크기: $APK_SIZE${NC}"
+echo -e "${GREEN}📂 파일명: $(basename "$APK_RENAMED")${NC}"
+
 echo -e "${BLUE}✍️  APK 서명 중...${NC}"
-cp "$APK_UNSIGNED" "$APK_SIGNED"
+cp "$APK_RENAMED" "$APK_SIGNED"
 "$APKSIGNER" sign --ks "$DEBUG_KEYSTORE" --ks-pass pass:android --key-pass pass:android "$APK_SIGNED"
 
 echo -e "${BLUE}📦 APK 설치 중...${NC}"
@@ -82,7 +121,13 @@ adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
 
 echo -e "${GREEN}✅ 빌드 완료!${NC}"
 echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요.${NC}"
-echo -e "${BLUE}📊 프로파일 로그는 다음 경로에 저장됩니다:${NC}"
+echo -e "${BLUE}� 빌드 정보:${NC}"
+echo "   버전: KISS $VERSION Profile Edition"
+echo "   빌드 번호: 401"  
+echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
+echo "   APK 크기: $APK_SIZE"
+echo "   파일명: $(basename "$APK_SIGNED")"
+echo -e "${BLUE}�📊 프로파일 로그는 다음 경로에 저장됩니다:${NC}"
 echo "   /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/"
 
 # 로그 모니터링 시작 여부 묻기

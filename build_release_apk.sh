@@ -90,21 +90,43 @@ echo -e "${BLUE}   - 패키지: fr.neamar.kiss.lum7671${NC}"
 
 ./gradlew assembleRelease
 
-# 빌드된 APK 파일 확인
-APK_UNSIGNED="app/build/outputs/apk/release/app-release-unsigned.apk"
-APK_SIGNED="app/build/outputs/apk/release/app-release-signed.apk"
+# 빌드 정보 설정
+BUILD_DATE=$(date '+%Y%m%d_%H%M%S')
 
-if [ ! -f "$APK_UNSIGNED" ]; then
-    echo -e "${RED}❌ 빌드된 APK를 찾을 수 없습니다: $APK_UNSIGNED${NC}"
+# build.gradle에서 버전 정보 추출
+echo -e "${BLUE}📋 build.gradle에서 버전 정보 추출 중...${NC}"
+VERSION_NAME=$(grep 'versionName' app/build.gradle | head -1 | sed 's/.*versionName[[:space:]]*"\([^"]*\)".*/\1/')
+VERSION_CODE=$(grep 'versionCode' app/build.gradle | head -1 | sed 's/.*versionCode[[:space:]]*\([0-9]*\).*/\1/')
+
+# 버전 이름에서 간단한 버전만 추출 (예: "4.0.1-based-on-3.22.1" -> "4.0.1")
+VERSION=$(echo "$VERSION_NAME" | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\).*/v\1/')
+
+echo -e "${GREEN}📝 추출된 버전 정보:${NC}"
+echo "   버전명: $VERSION_NAME"
+echo "   버전코드: $VERSION_CODE"
+echo "   파일용 버전: $VERSION"
+
+# 빌드된 APK 파일 확인
+APK_ORIGINAL="app/build/outputs/apk/release/app-release.apk"
+APK_RENAMED="app/build/outputs/apk/release/KISS_${VERSION}_b${VERSION_CODE}_${BUILD_DATE}_release.apk"
+APK_SIGNED="app/build/outputs/apk/release/KISS_${VERSION}_b${VERSION_CODE}_${BUILD_DATE}_release_signed.apk"
+
+if [ ! -f "$APK_ORIGINAL" ]; then
+    echo -e "${RED}❌ 빌드된 APK를 찾을 수 없습니다: $APK_ORIGINAL${NC}"
     exit 1
 fi
 
+# APK 파일명 변경
+echo -e "${BLUE}📝 APK 파일명 변경...${NC}"
+mv "$APK_ORIGINAL" "$APK_RENAMED"
+
 # APK 크기 확인
-APK_SIZE=$(du -h "$APK_UNSIGNED" | cut -f1)
+APK_SIZE=$(du -h "$APK_RENAMED" | cut -f1)
 echo -e "${GREEN}📦 빌드 완료! APK 크기: $APK_SIZE${NC}"
+echo -e "${GREEN}📂 파일명: $(basename "$APK_RENAMED")${NC}"
 
 echo -e "${BLUE}✍️  APK 서명 중...${NC}"
-cp "$APK_UNSIGNED" "$APK_SIGNED"
+cp "$APK_RENAMED" "$APK_SIGNED"
 
 if [ "$KEYSTORE" = "$DEBUG_KEYSTORE" ]; then
     "$APKSIGNER" sign --ks "$KEYSTORE" --ks-pass pass:$KEYSTORE_PASS --key-pass pass:$KEY_PASS --ks-key-alias $KEY_ALIAS "$APK_SIGNED"
@@ -153,10 +175,13 @@ fi
 echo ""
 echo -e "${GREEN}🎉 KISS Release APK 빌드 완료!${NC}"
 echo -e "${BLUE}📄 빌드 정보:${NC}"
-echo "   버전: KISS v4.0.0 Optimized Edition"
+echo "   버전: KISS $VERSION ($VERSION_NAME)"
+echo "   빌드 번호: $VERSION_CODE"
+echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
 echo "   패키지: fr.neamar.kiss.lum7671"
 echo "   APK 크기: $APK_SIZE"
 echo "   파일 위치: $APK_SIGNED"
+echo "   파일명: $(basename "$APK_SIGNED")"
 echo ""
 echo -e "${BLUE}🚀 주요 최적화 사항:${NC}"
 echo "   ⚡ 3-Tier Icon Caching (검색 성능 99% 향상)"
@@ -172,9 +197,10 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     RELEASE_NOTES="release_notes_$(date +%Y%m%d_%H%M%S).md"
     cat > "$RELEASE_NOTES" << EOF
-# KISS v4.0.0 Release Notes
+# KISS $VERSION Release Notes
 
 ## 빌드 정보
+- **버전**: $VERSION_NAME (빌드 $VERSION_CODE)
 - **빌드 날짜**: $(date '+%Y년 %m월 %d일 %H:%M:%S')
 - **APK 크기**: $APK_SIZE
 - **패키지명**: fr.neamar.kiss.lum7671
@@ -195,6 +221,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 \`\`\`bash
 adb install $APK_SIGNED
 \`\`\`
+
+## 파일 정보
+- **파일명**: $(basename "$APK_SIGNED")
+- **명명 규칙**: KISS_[버전]_b[빌드번호]_[날짜시간]_[빌드타입]_signed.apk
 
 ## 성능 프로파일링 (옵션)
 Profile 빌드 사용 시:
