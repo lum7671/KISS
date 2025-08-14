@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -46,9 +45,12 @@ import java.util.Set;
 import fr.neamar.kiss.icons.IconPackXML;
 import fr.neamar.kiss.icons.SystemIconPack;
 import fr.neamar.kiss.normalizer.StringNormalizer;
+import fr.neamar.kiss.utils.AsyncCallback;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.UserHandle;
 import fr.neamar.kiss.utils.Utilities;
+import kotlinx.coroutines.Job;
 import fr.neamar.kiss.utils.fuzzy.FuzzyFactory;
 import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 
@@ -60,7 +62,7 @@ public class CustomIconDialog extends DialogFragment {
     private ImageView mPreview;
     private OnDismissListener mOnDismissListener = null;
     private OnConfirmListener mOnConfirmListener = null;
-    private Utilities.AsyncRun mLoadIconsPackTask = null;
+    private Job mLoadIconsPackTask = null;
 
     public interface OnDismissListener {
         void onDismiss(@NonNull CustomIconDialog dialog);
@@ -202,16 +204,12 @@ public class CustomIconDialog extends DialogFragment {
         IconPackXML iconPack = iconsHandler.getCustomIconPack();
         if (iconPack != null) {
             cancelLoadIconsPackTask();
-            mLoadIconsPackTask = Utilities.runAsync((task) -> {
-                if (task == mLoadIconsPackTask) {
-                    iconPack.loadDrawables(context.getPackageManager());
-                }
-            }, (task) -> {
-                if (!task.isCancelled() && task == mLoadIconsPackTask) {
-                    Activity activity = Utilities.getActivity(context);
-                    if (activity != null)
-                        refreshList();
-                }
+            mLoadIconsPackTask = CoroutineUtils.runAsync(() -> {
+                iconPack.loadDrawables(context.getPackageManager());
+            }, () -> {
+                Activity activity = Utilities.getActivity(context);
+                if (activity != null)
+                    refreshList();
             });
         }
 
@@ -442,37 +440,7 @@ public class CustomIconDialog extends DialogFragment {
 
         static class ViewHolder {
             ImageView icon;
-            AsyncLoad loader = null;
-
-            static class AsyncLoad extends AsyncTask<IconData, Void, Drawable> {
-                WeakReference<ViewHolder> holder;
-
-                AsyncLoad(ViewHolder holder) {
-                    this.holder = new WeakReference<>(holder);
-                }
-
-                @Override
-                protected void onPreExecute() {
-                    ViewHolder h = holder.get();
-                    if (h == null || h.loader != this)
-                        return;
-                    h.icon.setImageDrawable(null);
-                }
-
-                @Override
-                protected Drawable doInBackground(IconData... iconData) {
-                    return iconData[0].getIcon();
-                }
-
-                @Override
-                protected void onPostExecute(Drawable drawable) {
-                    ViewHolder h = holder.get();
-                    if (h == null || h.loader != this)
-                        return;
-                    h.loader = null;
-                    h.icon.setImageDrawable(drawable);
-                }
-            }
+            Job loader = null;
 
             ViewHolder(View itemView) {
                 itemView.setTag(this);
@@ -481,11 +449,25 @@ public class CustomIconDialog extends DialogFragment {
 
             public void setContent(IconData content) {
                 if (loader != null)
-                    loader.cancel(true);
-                loader = new AsyncLoad(this);
-                // use AsyncTask.SERIAL_EXECUTOR explicitly for now
-                // TODO: make execution parallel if needed/possible
-                loader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, content);
+                    loader.cancel(null);
+                
+                icon.setImageDrawable(null);
+                
+                loader = CoroutineUtils.runAsyncWithResult(() -> {
+                    return content.getIcon();
+                }, new AsyncCallback<Drawable>() {
+                    @Override
+                    public void onResult(Drawable drawable) {
+                        loader = null;
+                        icon.setImageDrawable(drawable);
+                    }
+                    
+                    @Override
+                    public void onError(Exception error) {
+                        loader = null;
+                        error.printStackTrace();
+                    }
+                });
             }
         }
     }
@@ -495,7 +477,7 @@ public class CustomIconDialog extends DialogFragment {
      */
     private void cancelLoadIconsPackTask() {
         if (mLoadIconsPackTask != null) {
-            mLoadIconsPackTask.cancel();
+            mLoadIconsPackTask.cancel(null);
             mLoadIconsPackTask = null;
         }
     }

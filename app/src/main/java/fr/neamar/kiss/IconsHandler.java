@@ -45,7 +45,8 @@ import fr.neamar.kiss.utils.IconShape;
 import fr.neamar.kiss.utils.IconCacheManager;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.UserHandle;
-import fr.neamar.kiss.utils.Utilities;
+import fr.neamar.kiss.utils.CoroutineUtils;
+import kotlinx.coroutines.Job;
 
 /**
  * Inspired from <a href="http://stackoverflow.com/questions/31490630/how-to-load-icon-from-icon-pack">How to load icon from icon pack</a>
@@ -65,7 +66,7 @@ public class IconsHandler {
     private boolean mContactPackMask = false;
     private IconShape mContactsShape = IconShape.SHAPE_SYSTEM;
     private boolean mForceShape = false;
-    private Utilities.AsyncRun mLoadIconsPackTask = null;
+    private Job mLoadIconsPackTask = null;
     private volatile Map<String, Long> customIconIds = null;
     
         // 아이콘 성능 최적화를 위한 필드들
@@ -205,18 +206,15 @@ public class IconsHandler {
         if (mIconPack == null || !mIconPack.getPackPackageName().equals(packageName)) {
             cacheClear();
             if (mLoadIconsPackTask != null)
-                mLoadIconsPackTask.cancel();
+                mLoadIconsPackTask.cancel(null);
             final IconPackXML iconPack = KissApplication.iconPackCache(ctx).getIconPack(packageName);
             // set the current icon pack
             mIconPack = iconPack;
             // start async loading
-            mLoadIconsPackTask = Utilities.runAsync((task) -> {
-                if (task == mLoadIconsPackTask)
-                    iconPack.load(ctx.getPackageManager());
-            }, (task) -> {
-                if (!task.isCancelled() && task == mLoadIconsPackTask) {
-                    mLoadIconsPackTask = null;
-                }
+            mLoadIconsPackTask = CoroutineUtils.runAsync(() -> {
+                iconPack.load(ctx.getPackageManager());
+            }, () -> {
+                mLoadIconsPackTask = null;
             });
         }
     }

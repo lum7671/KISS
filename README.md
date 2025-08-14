@@ -3,6 +3,17 @@ KISS
 
 ## 📋 Changes
 
+### 🚀 v4.0.2 - Coroutines Migration Edition (2025-08-14)
+
+#### 🔄 AsyncTask → Kotlin Coroutines Migration
+- **⚡ Modern Async Architecture**: Complete migration from deprecated AsyncTask to Kotlin Coroutines
+- **🏗️ CoroutineUtils Framework**: Custom utility class for seamless Java-Kotlin interop
+- **🔧 8 Files Converted**: All AsyncTask usage patterns modernized
+  - Settings initialization, Icon loading, Widget management
+  - Contact/App/Shortcut providers, Custom icon dialogs
+- **✅ Production Ready**: Validated on Android emulator with stable performance
+- **📈 Future-Proof**: Structured concurrency with proper lifecycle management
+
 ### 🚀 v4.0.0 - Optimized Performance Edition (2025-08-12)
 
 #### 🔀 Merged Upstream v3.22.1 Features

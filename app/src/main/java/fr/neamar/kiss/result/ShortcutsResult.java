@@ -38,8 +38,9 @@ import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.ShortcutUtil;
 import fr.neamar.kiss.utils.SpaceTokenizer;
 import fr.neamar.kiss.utils.UserHandle;
-import fr.neamar.kiss.utils.Utilities;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
+import kotlinx.coroutines.Job;
 
 public class ShortcutsResult extends Result<ShortcutPojo> {
 
@@ -48,7 +49,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
     private volatile Drawable icon = null;
     private volatile Drawable appDrawable = null;
 
-    private Utilities.AsyncRun mLoadIconTask = null;
+    private Job mLoadIconTask = null;
 
     ShortcutsResult(@NonNull ShortcutPojo pojo) {
         super(pojo);
@@ -85,7 +86,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
 
             // set app icon
             if (mLoadIconTask != null) {
-                mLoadIconTask.cancel();
+                mLoadIconTask.cancel(null);
                 mLoadIconTask = null;
             }
 
@@ -97,15 +98,11 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                 } else {
                     appIcon.setImageResource(android.R.color.transparent);
                     AtomicReference<Drawable> appDrawable = new AtomicReference<>(null);
-                    mLoadIconTask = Utilities.runAsync((task) -> {
-                        if (task == mLoadIconTask) {
-                            // Retrieve icon for this shortcut
-                            appDrawable.set(getAppDrawable(context));
-                        }
-                    }, (task) -> {
-                        if (!task.isCancelled() && task == mLoadIconTask) {
-                            appIcon.setImageDrawable(appDrawable.get());
-                        }
+                    mLoadIconTask = CoroutineUtils.runAsync(() -> {
+                        // Retrieve icon for this shortcut
+                        appDrawable.set(getAppDrawable(context));
+                    }, () -> {
+                        appIcon.setImageDrawable(appDrawable.get());
                     });
                 }
             } else {

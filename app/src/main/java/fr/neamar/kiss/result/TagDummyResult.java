@@ -28,7 +28,8 @@ import fr.neamar.kiss.UIColors;
 import fr.neamar.kiss.pojo.TagDummyPojo;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
-import fr.neamar.kiss.utils.Utilities;
+import fr.neamar.kiss.utils.CoroutineUtils;
+import kotlinx.coroutines.Job;
 
 public class TagDummyResult extends Result<TagDummyPojo> {
     private static volatile Drawable gBackground = null;
@@ -36,7 +37,7 @@ public class TagDummyResult extends Result<TagDummyPojo> {
 
     private volatile Drawable icon = null;
 
-    private Utilities.AsyncRun mLoadIconTask = null;
+    private Job mLoadIconTask = null;
 
     TagDummyResult(@NonNull TagDummyPojo pojo) {
         super(pojo);
@@ -92,17 +93,13 @@ public class TagDummyResult extends Result<TagDummyPojo> {
 
             favoriteIcon.setImageResource(R.drawable.ic_launcher_white);
             AtomicReference<Drawable> backgroundDrawable = new AtomicReference<>(null);
-            mLoadIconTask = Utilities.runAsync((task) -> {
-                if (task == mLoadIconTask) {
-                    // Retrieve icon for this shortcut
-                    backgroundDrawable.set(getShape(context));
-                }
-            }, (task) -> {
-                if (!task.isCancelled() && task == mLoadIconTask) {
-                    // set icons
-                    favoriteIcon.setImageDrawable(backgroundDrawable.get());
-                    favoriteIcon.invalidateDrawable(backgroundDrawable.get());
-                }
+            mLoadIconTask = CoroutineUtils.runAsync(() -> {
+                // Retrieve icon for this shortcut
+                backgroundDrawable.set(getShape(context));
+            }, () -> {
+                // set icons
+                favoriteIcon.setImageDrawable(backgroundDrawable.get());
+                favoriteIcon.invalidateDrawable(backgroundDrawable.get());
             });
 
             boolean largeSearchBar = sharedPreferences.getBoolean("large-search-bar", false);

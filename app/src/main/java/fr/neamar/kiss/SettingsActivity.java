@@ -5,7 +5,6 @@ import android.app.role.RoleManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -39,6 +38,7 @@ import java.util.Set;
 import fr.neamar.kiss.broadcast.IncomingCallHandler;
 import fr.neamar.kiss.dataprovider.simpleprovider.SearchProvider;
 import fr.neamar.kiss.dataprovider.simpleprovider.TagsProvider;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.forwarder.ExperienceTweaks;
 import fr.neamar.kiss.forwarder.InterfaceTweaks;
 import fr.neamar.kiss.forwarder.TagsMenu;
@@ -179,7 +179,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
         if (savedInstanceState == null) {
             // Run asynchronously to open settings fast
-            AsyncTask.execute(runnable);
+            CoroutineUtils.execute(runnable);
             asyncInitItemToRunList();
         } else {
             // Run synchronously to ensure preferences can be restored from state
@@ -193,7 +193,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 }
             }
         }
-        AsyncTask.execute(alwaysAsync);
+        CoroutineUtils.execute(alwaysAsync);
 
         permissionManager = new Permission(this);
         
@@ -284,14 +284,16 @@ public class SettingsActivity extends PreferenceActivity implements
                 updateItemToRunList(gesturePref);
         };
         if (ItemToRunListContent == null) {
-            AsyncTask.execute(() -> {
-                Pair<CharSequence[], CharSequence[]> content = generateItemToRunListContent();
-                synchronized (SettingsActivity.class) {
-                    if (ItemToRunListContent == null)
-                        ItemToRunListContent = content;
-                }
-                runOnUiThread(updateLists);
-            });
+            CoroutineUtils.runAsync(
+                () -> {
+                    Pair<CharSequence[], CharSequence[]> content = generateItemToRunListContent();
+                    synchronized (SettingsActivity.class) {
+                        if (ItemToRunListContent == null)
+                            ItemToRunListContent = content;
+                    }
+                },
+                () -> updateLists.run()
+            );
         } else {
             updateLists.run();
         }

@@ -38,14 +38,15 @@ import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 import fr.neamar.kiss.utils.MimeTypeUtils;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.UserHandle;
-import fr.neamar.kiss.utils.Utilities;
+import fr.neamar.kiss.utils.CoroutineUtils;
+import kotlinx.coroutines.Job;
 
 public class ContactsResult extends CallResult<ContactsPojo> {
 
     private final QueryInterface queryInterface;
     private volatile Drawable icon = null;
     private volatile Drawable appDrawable = null;
-    private Utilities.AsyncRun mLoadIconTask = null;
+    private Job mLoadIconTask = null;
     private static final String TAG = ContactsResult.class.getSimpleName();
 
     ContactsResult(QueryInterface queryInterface, @NonNull ContactsPojo pojo) {
@@ -160,15 +161,11 @@ public class ContactsResult extends CallResult<ContactsPojo> {
             } else {
                 appIcon.setImageResource(R.drawable.ic_launcher_white);
                 AtomicReference<Drawable> appDrawable = new AtomicReference<>(null);
-                mLoadIconTask = Utilities.runAsync((task) -> {
-                    if (task == mLoadIconTask) {
-                        // Retrieve icon for this shortcut
-                        appDrawable.set(getAppDrawable(context));
-                    }
-                }, (task) -> {
-                    if (!task.isCancelled() && task == mLoadIconTask) {
-                        appIcon.setImageDrawable(appDrawable.get());
-                    }
+                mLoadIconTask = CoroutineUtils.runAsync(() -> {
+                    // Retrieve icon for this shortcut
+                    appDrawable.set(getAppDrawable(context));
+                }, () -> {
+                    appIcon.setImageDrawable(appDrawable.get());
                 });
             }
         } else {

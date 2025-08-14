@@ -94,7 +94,7 @@ adb shell pm list packages | grep kiss
 
 - 📊 **성능 로깅 활성화**: ProfileManager, ActionPerformanceTracker
 - 🔍 **빌드 타입 표시**: 설정 → About에서 "🔍 PERFORMANCE PROFILING BUILD" 표시
-- 📁 **로그 디렉토리**: `/Android/data/com.hqwisen.kiss.profile/logs/`
+- 📁 **로그 디렉토리**: `/storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/`
 - 📈 **50MB 크기**: 프로파일링 라이브러리 포함으로 일반 빌드보다 큼
 
 ## 🛠️ 트러블슈팅
@@ -168,10 +168,10 @@ buildTypes {
 
 ```bash
 # 에뮬레이터에서 로그 추출
-adb shell run-as fr.neamar.kiss.lum7671 ls /data/data/fr.neamar.kiss.lum7671/logs/
+adb shell run-as fr.neamar.kiss.lum7671 ls /data/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/
 
 # 실제 디바이스 (루팅 필요할 수 있음)
-adb shell ls /Android/data/fr.neamar.kiss.lum7671/logs/
+adb shell ls /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/
 ```
 
 ## 📋 체크리스트

@@ -60,6 +60,22 @@ public class Utilities {
     }
 
     /**
+     * Kotlin Coroutines 기반 비동기 실행 (신규 권장 방식)
+     * 기존 runAsync와 동일한 인터페이스를 제공하되 Coroutines 사용
+     * 
+     * @param background 백그라운드에서 실행할 작업
+     * @param after UI 스레드에서 실행할 콜백 (nullable)
+     * @return Job 취소 가능한 작업 참조
+     */
+    @NonNull
+    public static kotlinx.coroutines.Job runAsyncCoroutines(@NonNull AsyncRun.Run background, @Nullable AsyncRun.Run after) {
+        return CoroutineUtils.runAsync(
+            () -> background.run(null), // AsyncRun.Run의 task 파라미터는 null로 처리
+            after != null ? () -> after.run(null) : null
+        );
+    }
+
+    /**
      * Get default executor for async operations.
      * From android Q AsyncTask.THREAD_POOL_EXECUTOR supports fallback if queue gets too long.
      * Else we use more safe AsyncTask.SERIAL_EXECUTOR.

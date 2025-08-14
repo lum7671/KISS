@@ -36,8 +36,10 @@ import java.util.List;
 
 import fr.neamar.kiss.forwarder.ExperienceTweaks;
 import fr.neamar.kiss.forwarder.InterfaceTweaks;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.UserHandle;
 import fr.neamar.kiss.utils.Utilities;
+import kotlinx.coroutines.Job;
 
 public class PickAppWidgetActivity extends Activity {
     private static final String TAG = PickAppWidgetActivity.class.getSimpleName();
@@ -65,7 +67,7 @@ public class PickAppWidgetActivity extends Activity {
         final WidgetListAdapter adapter = new WidgetListAdapter();
         listView.setAdapter(adapter);
         final List<MenuItem> adapterList = new ArrayList<>();
-        Utilities.runAsync(t -> {
+        CoroutineUtils.runAsync(() -> {
             // get widget list
             List<WidgetInfo> widgetList = getWidgetList(context);
 
@@ -83,7 +85,7 @@ public class PickAppWidgetActivity extends Activity {
                 }
                 adapterList.add(new ItemWidget(item));
             }
-        }, t -> {
+        }, () -> {
             progressContainer.setVisibility(View.GONE);
             adapter.setItems(adapterList);
         });
@@ -338,7 +340,7 @@ public class PickAppWidgetActivity extends Activity {
     public static class ViewHolder {
         private final int mViewType;
         private final TextView textView;
-        private Utilities.AsyncRun task = null;
+        private Job task = null;
         private Drawable mDrawable = null;
 
         protected ViewHolder(int viewType, View itemView) {
@@ -353,7 +355,7 @@ public class PickAppWidgetActivity extends Activity {
 
         public void setContent(MenuItem content) {
             if (task != null) {
-                task.cancel();
+                task.cancel(null);
                 task = null;
             }
             CharSequence text = content.getName();
@@ -367,14 +369,12 @@ public class PickAppWidgetActivity extends Activity {
                     icon.setBounds(0, 0, w, h);
                     textView.setCompoundDrawables(null, icon, null, null);
                 }
-                task = Utilities.runAsync(t -> {
+                task = CoroutineUtils.runAsync(() -> {
                     Drawable icon = PickAppWidgetActivity.getWidgetPreview(textView.getContext(), widgetInfo.appWidgetInfo);
                     synchronized (ViewHolder.this) {
                         mDrawable = icon;
                     }
-                }, t -> {
-                    if (t.isCancelled())
-                        return;
+                }, () -> {
                     final Drawable icon;
                     synchronized (ViewHolder.this) {
                         icon = mDrawable != null ? mDrawable : new ColorDrawable(0);

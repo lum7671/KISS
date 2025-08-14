@@ -20,7 +20,7 @@ import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.R;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.pojo.NameComparator;
-import fr.neamar.kiss.utils.Utilities;
+import fr.neamar.kiss.utils.CoroutineUtils;
 
 /**
  * Normally this would be a subclass of PreferenceScreen but PreferenceScreen is final.
@@ -83,13 +83,11 @@ public class ExcludePreferenceScreen {
 
 		AtomicReference<Drawable> icon = new AtomicReference<>(null);
 		switchPreference.setIcon(R.drawable.ic_launcher_white);
-		Utilities.runAsync((task) -> {
+		CoroutineUtils.runAsync(() -> {
 			final ComponentName componentName = new ComponentName(app.packageName, app.activityName);
 			icon.set(iconsHandler.getDrawableIconForPackage(componentName, app.userHandle));
-		}, (task) -> {
-			if (!task.isCancelled()) {
-				switchPreference.setIcon(icon.get());
-			}
+		}, () -> {
+			switchPreference.setIcon(icon.get());
 		});
 
 		switchPreference.setTitle(app.getName());
