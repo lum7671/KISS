@@ -726,21 +726,26 @@ public class SettingsActivity extends PreferenceActivity implements
     private void fixSummaries() {
         int historyLength = getDataHandler().getHistoryLength();
         if (historyLength > 5) {
-            findPreference("reset").setSummary(String.format(getString(R.string.items_title), historyLength));
+            Preference resetPreference = findPreference("reset");
+            if (resetPreference != null) {
+                resetPreference.setSummary(String.format(getString(R.string.items_title), historyLength));
+            }
         }
 
         // Only display "rate the app" preference if the user has been using KISS long enough to enjoy it ;)
         Preference rateApp = findPreference("rate-app");
-        if (historyLength < 300) {
-            getPreferenceScreen().removePreference(rateApp);
-        } else {
-            rateApp.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=" + getApplicationContext().getPackageName()));
-                startActivity(intent);
+        if (rateApp != null) {
+            if (historyLength < 300) {
+                getPreferenceScreen().removePreference(rateApp);
+            } else {
+                rateApp.setOnPreferenceClickListener(preference -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=" + getApplicationContext().getPackageName()));
+                    startActivity(intent);
 
-                return true;
-            });
+                    return true;
+                });
+            }
         }
     }
 

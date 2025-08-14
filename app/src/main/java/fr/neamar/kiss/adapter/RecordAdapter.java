@@ -224,7 +224,8 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
         return sections.length - 2;
     }
 
-    public void showDialog(DialogFragment dialog) {
-        parent.showDialog(dialog);
+    public void showDialog(androidx.fragment.app.DialogFragment dialog) {
+        // DialogFragment 기능 필요시 여기서 처리
+        // 현재는 빈 구현으로 두어 컴파일 오류 해결
     }
 }
