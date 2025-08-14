@@ -2,7 +2,7 @@ package fr.neamar.kiss;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;

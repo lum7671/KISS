@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.UserManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -254,12 +255,12 @@ public class AppResult extends Result<AppPojo> {
             // We'll need to reset the list view to its previous transcript mode,
             // but it has to happen *after* the keyboard is hidden, otherwise scroll will be reset
             // Let's wait for half a second, that's ugly but we don't have any other option :(
-            final Handler handler = new Handler();
+            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> parent.updateTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL), 500);
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
             dialog.cancel();
-            final Handler handler = new Handler();
+            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> parent.updateTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL), 500);
 
         });
@@ -295,7 +296,7 @@ public class AppResult extends Result<AppPojo> {
             // We'll need to reset the list view to its previous transcript mode,
             // but it has to happen *after* the keyboard is hidden, otherwise scroll will be reset
             // Let's wait for half a second, that's ugly but we don't have any other option :(
-            final Handler handler = new Handler();
+            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> parent.updateTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL), 500);
         });
         builder.setNegativeButton(R.string.custom_name_set_default, (dialog, which) -> {
@@ -313,13 +314,13 @@ public class AppResult extends Result<AppPojo> {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             }
 
-            final Handler handler = new Handler();
+            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> parent.updateTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL), 500);
         });
         builder.setNeutralButton(android.R.string.cancel, (dialog, which) -> {
             dialog.cancel();
 
-            final Handler handler = new Handler();
+            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> parent.updateTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL), 500);
         });
 

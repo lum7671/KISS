@@ -13,6 +13,7 @@ import android.content.pm.ShortcutInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -248,7 +249,7 @@ public class DataHandler extends BroadcastReceiver
                     boolean isPhoneLocked = myKM.inKeyguardRestrictedInputMode();
                     if (!isPhoneLocked) {
                         context.unregisterReceiver(this);
-                        final Handler handler = new Handler();
+                        final Handler handler = new Handler(Looper.getMainLooper());
                         // Even when all the stars are aligned,
                         // starting the service needs to be slightly delayed because the Intent is fired *before* the app is considered in the foreground.
                         // Each new release of Android manages to make the developer life harder.

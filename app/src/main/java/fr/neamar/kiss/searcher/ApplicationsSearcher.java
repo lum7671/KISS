@@ -34,10 +34,10 @@ public class ApplicationsSearcher extends Searcher {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected void doInBackground() {
         MainActivity activity = activityWeakReference.get();
         if (activity == null)
-            return null;
+            return;
 
         Set<String> excludedFavoriteIds = KissApplication.getApplication(activity).getDataHandler().getExcludedFavorites();
 
@@ -52,13 +52,11 @@ public class ApplicationsSearcher extends Searcher {
         if (shortcuts != null) {
             this.addResults(getPojosWithoutFavorites(shortcuts, excludedFavoriteIds));
         }
-
-        return null;
     }
 
     @Override
-    protected void onPostExecute(Void param) {
-        super.onPostExecute(param);
+    protected void onPostExecute() {
+        super.onPostExecute();
 
         MainActivity activity = activityWeakReference.get();
         if (activity == null)

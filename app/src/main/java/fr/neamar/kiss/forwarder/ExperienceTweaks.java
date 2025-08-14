@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -255,12 +256,12 @@ public class ExperienceTweaks extends Forwarder {
             // Display keyboard
             mainActivity.showKeyboard();
 
-            new Handler().postDelayed(displayKeyboardRunnable, 10);
+            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 10);
             // For some weird reasons, keyboard may be hidden by the system
             // So we have to run this multiple time at different time
             // See https://github.com/Neamar/KISS/issues/119
-            new Handler().postDelayed(displayKeyboardRunnable, 100);
-            new Handler().postDelayed(displayKeyboardRunnable, 500);
+            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 100);
+            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 500);
         } else {
             // Not used (thanks windowSoftInputMode)
             // unless coming back from KISS settings

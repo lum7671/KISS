@@ -5,8 +5,7 @@ import static android.view.HapticFeedbackConstants.LONG_PRESS;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -49,6 +48,8 @@ import android.widget.AdapterView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ import fr.neamar.kiss.ui.SearchEditText;
 import fr.neamar.kiss.utils.Permission;
 import fr.neamar.kiss.utils.SystemUiVisibilityHelper;
 
-public class MainActivity extends Activity implements QueryInterface, KeyboardScrollHider.KeyboardHandler, View.OnTouchListener {
+public class MainActivity extends AppCompatActivity implements QueryInterface, KeyboardScrollHider.KeyboardHandler, View.OnTouchListener {
 
     public static final String START_LOAD = "fr.neamar.summon.START_LOAD";
     public static final String LOAD_OVER = "fr.neamar.summon.LOAD_OVER";
@@ -594,6 +595,30 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          * Defer everything else to the forwarders
          */
         forwarderManager.onCreate();
+        
+        // OnBackPressedCallback으로 onBackPressed 대체
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mPopup != null) {
+                    mPopup.dismiss();
+                } else if (isViewingAllApps()) {
+                    displayKissBar(false);
+                } else {
+                    // If no kissmenu, empty the search bar
+                    // (this will trigger a new event if the search bar was already empty)
+                    // (which means pressing back in minimalistic mode with history displayed
+                    // will hide history again)
+                    clearSearchText();
+                }
+
+                // Calling super.onBackPressed() will quit the launcher, only do this if KISS is not the user's default home.
+                if (!isKissDefaultLauncher()) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 
     @Override
@@ -713,6 +738,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         //Set the intent so KISS can tell when it was launched as an assistant
         setIntent(intent);
 
@@ -738,26 +764,6 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     public void clearSearchText() {
         searchEditText.setText("");
         searchEditText.setCursorVisible(false);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mPopup != null) {
-            mPopup.dismiss();
-        } else if (isViewingAllApps()) {
-            displayKissBar(false);
-        } else {
-            // If no kissmenu, empty the search bar
-            // (this will trigger a new event if the search bar was already empty)
-            // (which means pressing back in minimalistic mode with history displayed
-            // will hide history again)
-            clearSearchText();
-        }
-
-        // Calling super.onBackPressed() will quit the launcher, only do this if KISS is not the user's default home.
-        if (!isKissDefaultLauncher()) {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -825,6 +831,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         forwarderManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -1141,7 +1148,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 updateSearchRecords();
             });
         }
-        dialog.show(getFragmentManager(), "dialog");
+        dialog.show(getSupportFragmentManager(), "dialog");
     }
 
     @Override

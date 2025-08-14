@@ -40,13 +40,13 @@ public class HistorySearcher extends Searcher {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected void doInBackground() {
         // Ask for records
         boolean excludeFavorites = prefs.getBoolean("exclude-favorites-history", false);
 
         MainActivity activity = activityWeakReference.get();
         if (activity == null)
-            return null;
+            return;
 
         DataHandler dataHandler = KissApplication.getApplication(activity).getDataHandler();
 
@@ -80,7 +80,6 @@ public class HistorySearcher extends Searcher {
         List<Pojo> pojos = dataHandler.getHistory(activity, getMaxResultCount(), excludedPojoById);
 
         this.addResults(pojos);
-        return null;
     }
 
     @Override

@@ -27,10 +27,10 @@ public abstract class PojoWithTagSearcher extends Searcher {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected void doInBackground() {
         MainActivity activity = activityWeakReference.get();
         if (activity == null)
-            return null;
+            return;
 
         // 태그 검색인 경우 최적화된 메서드 사용
         if (this instanceof fr.neamar.kiss.searcher.TagsSearcher && query != null && !query.equals("<tags>")) {
@@ -39,8 +39,6 @@ public abstract class PojoWithTagSearcher extends Searcher {
             // 기존 방식 (태그가 없는 앱 검색 등)
             KissApplication.getApplication(activity).getDataHandler().requestAllRecords(this);
         }
-
-        return null;
     }
 
     @Override

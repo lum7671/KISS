@@ -69,10 +69,10 @@ public class QuerySearcher extends Searcher {
      * Called on the background thread
      */
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected void doInBackground() {
         MainActivity activity = activityWeakReference.get();
         if (activity == null)
-            return null;
+            return;
 
         // Have we ever made the same query and selected something ?
         List<ValuedHistoryRecord> lastIdsForQuery = DBHelper.getPreviousResultsForQuery(activity, query);
@@ -83,7 +83,6 @@ public class QuerySearcher extends Searcher {
 
         // Request results via "addResult"
         KissApplication.getApplication(activity).getDataHandler().requestResults(query, this);
-        return null;
     }
 
     public static void clearMaxResultCountCache() {

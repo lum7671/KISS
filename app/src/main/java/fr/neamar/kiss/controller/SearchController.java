@@ -70,7 +70,7 @@ public class SearchController {
             // 새로운 검색 시작 - QuerySearcher 사용
             if (queryInterface instanceof fr.neamar.kiss.MainActivity) {
                 currentSearchTask = new fr.neamar.kiss.searcher.QuerySearcher((fr.neamar.kiss.MainActivity) queryInterface, trimmedQuery, false);
-                currentSearchTask.execute();
+                currentSearchTask.executeOnExecutor(fr.neamar.kiss.searcher.Searcher.SEARCH_THREAD);
                 
                 Log.d(TAG, "Search started for: " + trimmedQuery);
             } else {

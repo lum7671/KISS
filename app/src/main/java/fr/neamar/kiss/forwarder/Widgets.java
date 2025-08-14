@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -429,7 +430,7 @@ class Widgets extends Forwarder {
             profile = null;
         }
 
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Log.d(TAG, "asking for permission");
 
             Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
