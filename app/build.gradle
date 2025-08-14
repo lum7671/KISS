@@ -33,7 +33,7 @@ android {
         buildConfigField "String", "UPSTREAM_VERSION", '"3.22.1"'
         buildConfigField "String", "UPSTREAM_VERSION_CODE", '"214"'
         buildConfigField "String", "OPTIMIZED_BY", '"lum7671"'
-        buildConfigField "String", "BUILD_DATE", '"2025-08-12"'
+        buildConfigField "String", "BUILD_DATE", "\"${new Date().format('yyyy-MM-dd')}\""
         
         // 프로파일링을 위한 설정 (Android 15+에서 모든 기능 지원)
         manifestPlaceholders = [

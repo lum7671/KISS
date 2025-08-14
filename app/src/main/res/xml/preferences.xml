@@ -547,6 +547,7 @@
         <Preference
             android:key="version-info"
             android:title="Version Information"
+            android:layout="@layout/preference_multiline"
             android:selectable="false" />
     </PreferenceCategory>
     <Preference
