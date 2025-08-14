@@ -122,16 +122,6 @@ public class SettingsActivity extends PreferenceActivity implements
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             removePreference("colors-section", "black-notification-icons");
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            removePreference("history-hide-section", "pref-hide-navbar");
-            removePreference("history-hide-section", "pref-hide-statusbar");
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
-            removePreference("advanced", "enable-notifications");
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            removePreference("alternate-history-inputs-section", "enable-notification-history");
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             removePreference("icons-section", DrawableUtils.KEY_THEMED_ICONS);
         }
@@ -202,10 +192,34 @@ public class SettingsActivity extends PreferenceActivity implements
     }
     
     private void setupVersionInfo() {
-        Preference versionPref = findPreference("version-info");
-        if (versionPref != null) {
-            versionPref.setTitle("Version: " + VersionInfo.getSimpleVersionInfo());
-            versionPref.setSummary(VersionInfo.getFullVersionInfo());
+        try {
+            Preference versionPref = findPreference("version-info");
+            if (versionPref != null) {
+                String simpleVersion = VersionInfo.getSimpleVersionInfo();
+                String fullVersion = VersionInfo.getFullVersionInfo();
+                
+                // 간단한 버전 정보를 title에, 상세 정보를 summary에 표시
+                versionPref.setTitle("KISS " + simpleVersion);
+                versionPref.setSummary(fullVersion);
+                
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Version info set successfully");
+                }
+            } else {
+                if (BuildConfig.DEBUG) {
+                    Log.w(TAG, "version-info preference not found");
+                }
+            }
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.e(TAG, "Error setting up version info", e);
+            }
+            // 오류 발생 시 기본 정보만 표시
+            Preference versionPref = findPreference("version-info");
+            if (versionPref != null) {
+                versionPref.setTitle("KISS Launcher");
+                versionPref.setSummary("Version information not available");
+            }
         }
     }
 
@@ -365,13 +379,11 @@ public class SettingsActivity extends PreferenceActivity implements
             if (systemUiVisibilityHelper != null) {
                 systemUiVisibilityHelper.copyVisibility(dialog.getWindow().getDecorView());
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Toolbar toolbar = PreferenceScreenHelper.findToolbar((PreferenceScreen) preference);
-                if (toolbar != null) {
-                    toolbar.setNavigationOnClickListener(v -> {
-                        dialog.dismiss();
-                    });
-                }
+            Toolbar toolbar = PreferenceScreenHelper.findToolbar((PreferenceScreen) preference);
+            if (toolbar != null) {
+                toolbar.setNavigationOnClickListener(v -> {
+                    dialog.dismiss();
+                });
             }
             InterfaceTweaks.applySystemBarInsets(dialog.getWindow().getDecorView());
         }
@@ -385,7 +397,9 @@ public class SettingsActivity extends PreferenceActivity implements
         if (c != null) {
             p.removePreference(c);
         } else {
-            Log.d(TAG, "Preference to remove not found: " + parentKey + "/" + key);
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Preference to remove not found: " + parentKey + "/" + key);
+            }
         }
     }
 
@@ -664,7 +678,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 getDataHandler().reloadApps();
             } else if ("enable-notification-history".equals(key)) {
                 boolean enabled = sharedPreferences.getBoolean(key, false);
-                if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                if (enabled) {
                     startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
                 }
             } else if ("selected-contact-mime-types".equals(key)) {

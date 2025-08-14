@@ -49,18 +49,15 @@ public class ExcludePreferenceScreen {
 		final PreferenceScreen excludedAppsScreen = preferenceActivity.getPreferenceManager().createPreferenceScreen(preferenceActivity);
 		excludedAppsScreen.setTitle(preferenceTitleResId);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			excludedAppsScreen.setOnPreferenceClickListener(preference -> {
-				Toolbar toolbar = PreferenceScreenHelper.findToolbar(excludedAppsScreen);
-				if (toolbar != null) {
-					toolbar.setTitle(preferenceScreenTitleResId);
-				}
-				return false;
-			});
-		}
+		excludedAppsScreen.setOnPreferenceClickListener(preference -> {
+			Toolbar toolbar = PreferenceScreenHelper.findToolbar(excludedAppsScreen);
+			if (toolbar != null) {
+				toolbar.setTitle(preferenceScreenTitleResId);
+			}
+			return false;
+		});
 
-		final boolean showSummary = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-				|| preferenceActivity.getResources().getConfiguration().screenWidthDp > 420;
+		final boolean showSummary = preferenceActivity.getResources().getConfiguration().screenWidthDp > 420;
 
 		for (AppPojo app : apps) {
 			SwitchPreference pref = createExcludeAppSwitch(preferenceActivity, iconsHandler, isExcludedCallback, app, showSummary, onExcludedListener);

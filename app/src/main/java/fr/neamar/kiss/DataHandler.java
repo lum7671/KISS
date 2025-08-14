@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.broadcast.ProfileChangedHandler;
 import fr.neamar.kiss.dataprovider.AppProvider;
 import fr.neamar.kiss.dataprovider.ContactsProvider;
@@ -118,10 +119,8 @@ public class DataHandler extends BroadcastReceiver
         this.context.sendBroadcast(i);
 
         // Monitor changes for profiles
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ProfileChangedHandler profileChangedHandler = new ProfileChangedHandler();
-            profileChangedHandler.register(this.context.getApplicationContext());
-        }
+        ProfileChangedHandler profileChangedHandler = new ProfileChangedHandler();
+        profileChangedHandler.register(this.context.getApplicationContext());
 
         // Monitor changes for service preferences (to automatically start and stop services)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -206,7 +205,9 @@ public class DataHandler extends BroadcastReceiver
             return;
         }
 
-        Log.v(TAG, "Connecting to " + name);
+        if (BuildConfig.DEBUG) {
+            Log.v(TAG, "Connecting to " + name);
+        }
 
         // Find provider class for the given service name
         final Intent intent = this.providerName2Intent(name);
@@ -335,7 +336,9 @@ public class DataHandler extends BroadcastReceiver
         }
 
         long time = System.currentTimeMillis() - start;
-        Log.v(TAG, "Time to load all providers: " + time + "ms");
+        if (BuildConfig.DEBUG) {
+            Log.v(TAG, "Time to load all providers: " + time + "ms");
+        }
 
         this.allProvidersHaveLoaded = true;
 
@@ -466,7 +469,9 @@ public class DataHandler extends BroadcastReceiver
      */
     public void invalidateTagCache() {
         tagCache.clear();
-        Log.d(TAG, "Tag cache invalidated");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Tag cache invalidated");
+        }
     }
 
     /**
@@ -477,7 +482,9 @@ public class DataHandler extends BroadcastReceiver
     public void invalidateTagCache(String tag) {
         if (tag != null) {
             tagCache.remove(tag.toLowerCase());
-            Log.d(TAG, "Tag cache invalidated for: " + tag);
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Tag cache invalidated for: " + tag);
+            }
         }
     }
 
@@ -485,7 +492,7 @@ public class DataHandler extends BroadcastReceiver
      * 태그 캐시 상태 정보
      */
     public String getTagCacheStatus() {
-        return String.format("Tag cache: %d entries", tagCache.size());
+        return "Tag cache: " + tagCache.size() + " entries";
     }
     
     /**
@@ -508,7 +515,9 @@ public class DataHandler extends BroadcastReceiver
      */
     public void markDataUpdated() {
         lastDataUpdateTime = System.currentTimeMillis();
-        Log.d(TAG, "Data updated at: " + lastDataUpdateTime);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Data updated at: " + lastDataUpdateTime);
+        }
     }
 
     /**

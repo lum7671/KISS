@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.TagsHandler;
 import fr.neamar.kiss.db.AppRecord;
@@ -49,36 +50,19 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
         Set<String> excludedFromHistoryAppList = KissApplication.getApplication(ctx).getDataHandler().getExcludedFromHistory();
         Set<String> excludedShortcutsAppList = KissApplication.getApplication(ctx).getDataHandler().getExcludedShortcutApps();
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            UserManager manager = (UserManager) ctx.getSystemService(Context.USER_SERVICE);
-            LauncherApps launcherApps = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        UserManager manager = (UserManager) ctx.getSystemService(Context.USER_SERVICE);
+        LauncherApps launcherApps = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
 
-            // Handle multi-profile support introduced in Android 5 (#542)
-            for (android.os.UserHandle profile : manager.getUserProfiles()) {
-                UserHandle user = new UserHandle(manager.getSerialNumberForUser(profile), profile);
-                for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
-                    if (isCancelled()) {
-                        break;
-                    }
-                    ApplicationInfo appInfo = activityInfo.getApplicationInfo();
-                    boolean disabled = PackageManagerUtils.isAppSuspended(appInfo) || isQuietModeEnabled(manager, profile);
-                    final AppPojo app = createPojo(user, appInfo.packageName, activityInfo.getName(), activityInfo.getLabel(), disabled, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList);
-                    apps.add(app);
-                }
-            }
-        } else {
-            PackageManager manager = ctx.getPackageManager();
-
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-            for (ResolveInfo info : manager.queryIntentActivities(mainIntent, 0)) {
+        // Handle multi-profile support introduced in Android 5 (#542)
+        for (android.os.UserHandle profile : manager.getUserProfiles()) {
+            UserHandle user = new UserHandle(manager.getSerialNumberForUser(profile), profile);
+            for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                 if (isCancelled()) {
                     break;
                 }
-                ApplicationInfo appInfo = info.activityInfo.applicationInfo;
-                boolean disabled = PackageManagerUtils.isAppSuspended(appInfo);
-                final AppPojo app = createPojo(new UserHandle(), appInfo.packageName, info.activityInfo.name, info.loadLabel(manager), disabled, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList);
+                ApplicationInfo appInfo = activityInfo.getApplicationInfo();
+                boolean disabled = PackageManagerUtils.isAppSuspended(appInfo) || isQuietModeEnabled(manager, profile);
+                final AppPojo app = createPojo(user, appInfo.packageName, activityInfo.getName(), activityInfo.getLabel(), disabled, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList);
                 apps.add(app);
             }
         }
@@ -95,7 +79,9 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
         }
 
         long end = System.currentTimeMillis();
-        Log.i(TAG, (end - start) + " milliseconds to list apps");
+        if (BuildConfig.DEBUG) {
+            Log.i(TAG, (end - start) + " milliseconds to list apps");
+        }
 
         return apps;
     }

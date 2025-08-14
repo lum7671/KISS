@@ -28,12 +28,11 @@ public class AppProvider extends Provider<AppPojo> {
 
     @Override
     public void onCreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final UserManager manager = (UserManager) this.getSystemService(Context.USER_SERVICE);
-            assert manager != null;
+        final UserManager manager = (UserManager) this.getSystemService(Context.USER_SERVICE);
+        assert manager != null;
 
-            final LauncherApps launcher = (LauncherApps) this.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-            assert launcher != null;
+        final LauncherApps launcher = (LauncherApps) this.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        assert launcher != null;
 
             launcher.registerCallback(new LauncherAppsCallback() {
                 @Override
@@ -82,28 +81,6 @@ public class AppProvider extends Provider<AppPojo> {
                     );
                 }
             });
-        } else {
-            // Get notified when app changes on standard user profile
-            PackageAddedRemovedHandler packageAddedRemovedHandler = new PackageAddedRemovedHandler();
-
-            IntentFilter appChangedFilter = new IntentFilter();
-            appChangedFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-            appChangedFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
-            appChangedFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-            appChangedFilter.addDataScheme("package");
-            this.registerReceiver(packageAddedRemovedHandler, appChangedFilter);
-
-            IntentFilter mediaChangedFilter = new IntentFilter();
-            mediaChangedFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-            mediaChangedFilter.addAction(Intent.ACTION_MEDIA_REMOVED);
-            mediaChangedFilter.addDataScheme("file");
-            this.registerReceiver(packageAddedRemovedHandler, mediaChangedFilter);
-
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-            intentFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-            this.registerReceiver(packageAddedRemovedHandler, intentFilter);
-        }
 
         super.onCreate();
     }

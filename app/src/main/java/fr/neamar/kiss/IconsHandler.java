@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.LinkedHashMap;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.db.AppRecord;
 import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.icons.IconPack;
@@ -88,9 +89,9 @@ public class IconsHandler {
             this.maxSize = maxSize;
             this.cache = new LinkedHashMap<String, Drawable>(maxSize + 1, 0.75f, true) {
                 @Override
-                protected boolean removeEldestEntry(java.util.Map.Entry<String, Drawable> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<String, Drawable> eldest) {
                     boolean shouldRemove = size() > LruIconCache.this.maxSize;
-                    if (shouldRemove) {
+                    if (shouldRemove && BuildConfig.DEBUG) {
                         Log.d(TAG, "LRU evicting icon: " + eldest.getKey());
                     }
                     return shouldRemove;
@@ -386,11 +387,9 @@ public class IconsHandler {
     }
 
     public Drawable applyBadge(@NonNull Drawable drawable, @NonNull UserHandle userHandle) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Drawable badgedDrawable = pm.getUserBadgedIcon(drawable, userHandle.getRealHandle());
-            if (badgedDrawable != null) {
-                return badgedDrawable;
-            }
+        Drawable badgedDrawable = pm.getUserBadgedIcon(drawable, userHandle.getRealHandle());
+        if (badgedDrawable != null) {
+            return badgedDrawable;
         }
         return drawable;
     }

@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.utils.UserHandle;
 
@@ -77,7 +78,9 @@ public class NotificationListener extends NotificationListenerService {
 
         editor.apply();
 
-        Log.v(TAG, "Refreshed all notifications for " + allKeys);
+        if (BuildConfig.DEBUG) {
+            Log.v(TAG, "Refreshed all notifications for " + allKeys);
+        }
     }
 
     @Override
@@ -95,7 +98,9 @@ public class NotificationListener extends NotificationListenerService {
 
         editor.apply();
 
-        Log.v(TAG, "Removed all notifications for " + packages.toString());
+        if (BuildConfig.DEBUG) {
+            Log.v(TAG, "Removed all notifications for " + packages.toString());
+        }
 
         super.onListenerDisconnected();
     }
@@ -120,7 +125,9 @@ public class NotificationListener extends NotificationListenerService {
             editor.putStringSet(packageKey, currentNotifications);
             editor.apply();
 
-            Log.v(TAG, "Added notification for " + packageKey + ": " + currentNotifications);
+            if (BuildConfig.DEBUG) {
+                Log.v(TAG, "Added notification for " + packageKey + ": " + currentNotifications);
+            }
 
             addNotificationToHistory(sbn);
         }
@@ -135,13 +142,9 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private UserHandle getUserHandle(Context context, StatusBarNotification sbn) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            UserManager manager = (UserManager) context.getSystemService(Context.USER_SERVICE);
-            android.os.UserHandle user = sbn.getUser();
-            return new UserHandle(manager.getSerialNumberForUser(user), user);
-        } else {
-            return new UserHandle();
-        }
+        UserManager manager = (UserManager) context.getSystemService(Context.USER_SERVICE);
+        android.os.UserHandle user = sbn.getUser();
+        return new UserHandle(manager.getSerialNumberForUser(user), user);
     }
 
     @Override
@@ -164,16 +167,14 @@ public class NotificationListener extends NotificationListenerService {
             }
             editor.apply();
 
-            Log.v(TAG, "Removed notification for " + packageKey + ": " + currentNotifications);
+            if (BuildConfig.DEBUG) {
+                Log.v(TAG, "Removed notification for " + packageKey + ": " + currentNotifications);
+            }
         }
     }
 
     private String getPackageKey(StatusBarNotification sbn) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return sbn.getUser().hashCode() + "|" + sbn.getPackageName();
-        } else {
-            return sbn.getPackageName();
-        }
+        return sbn.getUser().hashCode() + "|" + sbn.getPackageName();
     }
 
     public Set<String> getCurrentNotificationsForPackage(String packageName) {
@@ -218,11 +219,7 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private boolean isGroupHeader(Notification notification) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            return (notification.flags & Notification.FLAG_GROUP_SUMMARY) != 0;
-        } else {
-            return false;
-        }
+        return (notification.flags & Notification.FLAG_GROUP_SUMMARY) != 0;
     }
 
 }

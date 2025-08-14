@@ -45,11 +45,7 @@ public class BottomPullEffectView extends View {
 
         // Provide new pull effect data
         this.effect.setSize(this.getWidth(), this.getHeight());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.effect.onPull(distance, displacement);
-        } else {
-            this.effect.onPull(distance);
-        }
+        this.effect.onPull(distance, displacement);
 
         if (!animated) {
             // Prevent more than one frame being drawn

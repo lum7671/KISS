@@ -14,7 +14,7 @@ public class NotificationPreference extends DialogPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        if (positiveResult && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+        if (positiveResult) {
             getContext().startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
         }
     }

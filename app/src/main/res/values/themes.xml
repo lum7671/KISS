@@ -236,4 +236,81 @@
     <style name="OverlayBarColorBlack">
         <item name="searchBackgroundColor">@android:color/black</item>
     </style>
+
+    <style name="OverlayAccentDefault">
+        <!-- Default accent color overlay - base for system accent -->
+    </style>
+
+    <style name="OverlayAccentSystem" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">@android:color/system_accent1_100</item>
+        <item name="android:colorPrimary">@android:color/system_accent1_700</item>
+    </style>
+
+    <!-- Color Overlay Styles -->
+    <style name="OverlayAccentD32F2F" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFD32F2F</item>
+    </style>
+    <style name="OverlayAccentC2185B" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFC2185B</item>
+    </style>
+    <style name="OverlayAccent7B1FA2" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF7B1FA2</item>
+    </style>
+    <style name="OverlayAccent512DA8" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF512DA8</item>
+    </style>
+    <style name="OverlayAccent303F9F" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF303F9F</item>
+    </style>
+    <style name="OverlayAccent1976D2" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF1976D2</item>
+    </style>
+    <style name="OverlayAccent0288D1" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF0288D1</item>
+    </style>
+    <style name="OverlayAccent0097A7" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF0097A7</item>
+    </style>
+    <style name="OverlayAccent00796B" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF00796B</item>
+    </style>
+    <style name="OverlayAccent388E3C" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF388E3C</item>
+    </style>
+    <style name="OverlayAccent689F38" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF689F38</item>
+    </style>
+    <style name="OverlayAccentAFB42B" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFAFB42B</item>
+    </style>
+    <style name="OverlayAccentFBC02D" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFFBC02D</item>
+    </style>
+    <style name="OverlayAccentFFA000" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFFFA000</item>
+    </style>
+    <style name="OverlayAccentF57C00" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFF57C00</item>
+    </style>
+    <style name="OverlayAccentE64A19" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FFE64A19</item>
+    </style>
+    <style name="OverlayAccent5D4037" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF5D4037</item>
+    </style>
+    <style name="OverlayAccent616161" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF616161</item>
+    </style>
+    <style name="OverlayAccent455A64" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">#FF455A64</item>
+    </style>
+    <style name="OverlayAccentTransparent" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">@android:color/transparent</item>
+    </style>
+    <style name="OverlayAccentLightTransparent" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">@color/kiss_background_light_transparent</item>
+    </style>
+    <style name="OverlayAccentDarkTransparent" parent="OverlayAccentDefault">
+        <item name="android:colorAccent">@color/kiss_background_dark_transparent</item>
+    </style>
 </resources>

@@ -115,6 +115,6 @@ public class LazyImageLoader {
      * 현재 로딩 상태 정보
      */
     public String getLoadingStatus() {
-        return String.format("Visible items: %d", visibleItems.size());
+        return "Visible items: " + visibleItems.size();
     }
 }

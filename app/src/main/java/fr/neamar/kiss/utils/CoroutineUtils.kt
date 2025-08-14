@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import java.lang.ref.WeakReference
+import fr.neamar.kiss.BuildConfig
 
 /**
  * Kotlin Coroutines 기반 비동기 실행 유틸리티
@@ -36,11 +37,17 @@ object CoroutineUtils {
      */
     @JvmStatic
     fun execute(background: Runnable) {
-        Log.d("CoroutineUtils", "execute() called")
+        if (BuildConfig.DEBUG) {
+            Log.d("CoroutineUtils", "execute() called")
+        }
         applicationScope.launch {
-            Log.d("CoroutineUtils", "execute() - background task started")
+            if (BuildConfig.DEBUG) {
+                Log.d("CoroutineUtils", "execute() - background task started")
+            }
             background.run()
-            Log.d("CoroutineUtils", "execute() - background task completed")
+            if (BuildConfig.DEBUG) {
+                Log.d("CoroutineUtils", "execute() - background task completed")
+            }
         }
     }
     
@@ -53,21 +60,31 @@ object CoroutineUtils {
     @JvmStatic
     fun runAsync(
         @NonNull background: AsyncRunnable,
-        @Nullable callback: AsyncRunnable? = null
+        callback: AsyncRunnable? = null
     ): Job {
-        Log.d("CoroutineUtils", "runAsync() called")
+        if (BuildConfig.DEBUG) {
+            Log.d("CoroutineUtils", "runAsync() called")
+        }
         return applicationScope.launch {
             try {
-                Log.d("CoroutineUtils", "runAsync() - background task started")
+                if (BuildConfig.DEBUG) {
+                    Log.d("CoroutineUtils", "runAsync() - background task started")
+                }
                 background.run()
-                Log.d("CoroutineUtils", "runAsync() - background task completed")
+                if (BuildConfig.DEBUG) {
+                    Log.d("CoroutineUtils", "runAsync() - background task completed")
+                }
                 
                 callback?.let {
-                    Log.d("CoroutineUtils", "runAsync() - UI callback started")
+                    if (BuildConfig.DEBUG) {
+                        Log.d("CoroutineUtils", "runAsync() - UI callback started")
+                    }
                     withContext(Dispatchers.Main) {
                         it.run()
                     }
-                    Log.d("CoroutineUtils", "runAsync() - UI callback completed")
+                    if (BuildConfig.DEBUG) {
+                        Log.d("CoroutineUtils", "runAsync() - UI callback completed")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("CoroutineUtils", "runAsync() - error occurred", e)

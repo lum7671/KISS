@@ -23,11 +23,8 @@ public class UserHandle implements Parcelable {
     }
 
     public UserHandle(long serial, android.os.UserHandle user) {
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            // OS does not provide any APIs for multi-user support
-            this.serial = 0;
-            this.handle = null;
-        } else if (user != null && Process.myUserHandle().equals(user)) {
+        // minSdkVersion is 33, so always JELLY_BEAN_MR1+
+        if (user != null && Process.myUserHandle().equals(user)) {
             // For easier processing the current user is also stored as `null`, even
             // if there is multi-user support
             this.serial = 0;
@@ -50,19 +47,13 @@ public class UserHandle implements Parcelable {
 
     protected UserHandle(Parcel in) {
         serial = in.readLong();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            handle = in.readParcelable(android.os.UserHandle.class.getClassLoader());
-        } else {
-            handle = null;
-        }
+        handle = in.readParcelable(android.os.UserHandle.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(serial);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            dest.writeParcelable(handle, flags);
-        }
+        dest.writeParcelable(handle, flags);
     }
 
     @Override

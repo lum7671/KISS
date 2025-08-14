@@ -34,6 +34,7 @@ import android.view.Menu;
 
 // 성능 추적을 위한 import
 import androidx.tracing.Trace;
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.profiling.ProfileManager;
 import fr.neamar.kiss.profiling.ActionPerformanceTracker;
 import android.view.MenuInflater;
@@ -146,13 +147,17 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // 2. 너무 빈번한 재구성 방지 (5초 이내 재구성 방지)
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastRecreateTime < 5000) {
-            Log.d(TAG, "Preventing frequent recreation, waiting...");
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Preventing frequent recreation, waiting...");
+            }
             return false;
         }
         
         // 3. 화면이 꺼진 상태에서는 재구성하지 않음
         if (!isScreenOn) {
-            Log.d(TAG, "Screen off, delaying recreation");
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Screen off, delaying recreation");
+            }
             return false;
         }
         
@@ -169,7 +174,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (Intent.ACTION_SCREEN_ON.equals(action)) {
-                    Log.d(TAG, "Screen turned ON");
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Screen turned ON");
+                    }
                     isScreenOn = true;
                     
                     // 아이콘 핸들러에 화면 상태 알림
@@ -181,7 +188,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                     // 화면이 켜졌을 때 지연된 레이아웃 업데이트 처리
                     handleDelayedLayoutUpdate();
                 } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
-                    Log.d(TAG, "Screen turned OFF");
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Screen turned OFF");
+                    }
                     isScreenOn = false;
                     // 화면이 꺼졌을 때 불필요한 작업 정리
                     onScreenOff();
@@ -203,7 +212,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // 화면이 켜진 후 잠시 기다려서 레이아웃 업데이트 확인
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (prefs.getBoolean("require-layout-update", false) && isScreenOn) {
-                Log.i(TAG, "Processing delayed layout update after screen on");
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "Processing delayed layout update after screen on");
+                }
                 recreate();
                 prefs.edit().putBoolean("require-layout-update", false).apply();
             }
@@ -945,14 +956,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             runTask(new ApplicationsSearcher(MainActivity.this, false));
 
             // Reveal the bar
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                int animationDuration = getResources().getInteger(
-                        android.R.integer.config_shortAnimTime);
+            int animationDuration = getResources().getInteger(
+                    android.R.integer.config_shortAnimTime);
 
-                Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, 0, finalRadius);
-                anim.setDuration(animationDuration);
-                anim.start();
-            }
+            Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, 0, finalRadius);
+            anim.setDuration(animationDuration);
+            anim.start();
             kissBar.setVisibility(View.VISIBLE);
 
             // Display the alphabet on the scrollbar (#926)
@@ -960,27 +969,22 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         } else {
             isDisplayingKissBar = false;
             // Hide the bar
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                int animationDuration = getResources().getInteger(
-                        android.R.integer.config_shortAnimTime);
+            int animationDuration = getResources().getInteger(
+                    android.R.integer.config_shortAnimTime);
 
-                try {
-                    Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, finalRadius, 0);
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            kissBar.setVisibility(View.GONE);
-                            super.onAnimationEnd(animation);
-                        }
-                    });
-                    anim.setDuration(animationDuration);
-                    anim.start();
-                } catch (IllegalStateException e) {
-                    // If the view hasn't been laid out yet, we can't animate it
-                    kissBar.setVisibility(View.GONE);
-                }
-            } else {
-                // No animation before Lollipop
+            try {
+                Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, finalRadius, 0);
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        kissBar.setVisibility(View.GONE);
+                        super.onAnimationEnd(animation);
+                    }
+                });
+                anim.setDuration(animationDuration);
+                anim.start();
+            } catch (IllegalStateException e) {
+                // If the view hasn't been laid out yet, we can't animate it
                 kissBar.setVisibility(View.GONE);
             }
 

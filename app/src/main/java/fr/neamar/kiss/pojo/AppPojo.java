@@ -75,11 +75,7 @@ public final class AppPojo extends PojoWithTags {
     }
 
     public String getPackageKey() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return userHandle.getRealHandle().hashCode() + "|" + packageName;
-        } else {
-            return packageName;
-        }
+        return userHandle.getRealHandle().hashCode() + "|" + packageName;
     }
 
     @Override

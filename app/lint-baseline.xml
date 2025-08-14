@@ -1,0 +1,4535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.7.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.7.3)" variant="all" version="8.7.3">
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="            return String.format(&quot;ActionStats{actions=%d, listeners=%d}&quot;, "
+        errorLine2="                   ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/ActionManager.java"
+            line="265"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String actionDetails = String.format(&quot;direction:%s,items:%d,velocity:%.2f&quot;, "
+        errorLine2="                               ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="78"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String actionDetails = String.format(&quot;query_length:%d,phase:%s,results:%d&quot;, "
+        errorLine2="                               ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="99"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String actionDetails = String.format(&quot;type:%s,target:%s,response_time:%dms&quot;, "
+        errorLine2="                               ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="112"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String actionDetails = String.format(&quot;phase:%s,time:%dms&quot;, phase, phaseTime);"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="125"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String actionDetails = String.format(&quot;event:%s,change:%dKB&quot;, eventType, memoryChange);"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="136"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="            String snapshotDetails = String.format("
+        errorLine2="                                     ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="157"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                String spikeDetails = String.format(&quot;trigger:%s,growth_rate:%.2f%%,current_mb:%.2f&quot;,"
+        errorLine2="                                      ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="187"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String patternDetails = String.format(&quot;action:%s,count:%d,total_duration:%dms,avg_duration:%.2f&quot;,"
+        errorLine2="                                ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="201"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String stateDetails = String.format(&quot;new_state:%s,transition_time:%dms&quot;, newState, transitionTime);"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="215"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String normalizedQuery = query.toLowerCase().trim();"
+        errorLine2="                                       ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="48"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        if (item.getName().toLowerCase().contains(normalizedQuery)) {"
+        errorLine2="                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="64"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String normalizedTag = tag.toLowerCase().trim();"
+        errorLine2="                                   ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="139"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        return item.getName().toLowerCase().contains(tag);"
+        errorLine2="                              ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="159"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String normalizedPart = namePart.toLowerCase().trim();"
+        errorLine2="                                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="181"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            .filter(item -> item.getName().toLowerCase().contains(normalizedPart))"
+        errorLine2="                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="183"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="            return String.format(&quot;CacheStats{items=%d, tags=%d, total=%d, valid=%s}&quot;, "
+        errorLine2="                   ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/repository/cache/CachedPojoRepository.java"
+            line="233"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        List&lt;Pojo> cachedResult = tagCache.get(tag.toLowerCase());"
+        errorLine2="                                                   ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="424"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String normalizedTag = tag.toLowerCase();"
+        errorLine2="                                   ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="431"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            tagCache.remove(tag.toLowerCase());"
+        errorLine2="                                ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="479"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        return String.format(&quot;Tag cache: %d entries&quot;, tagCache.size());"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="488"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        return String.format(&quot;Frequent: %d/%d, Recent: %d/%d, Memory: %d/%d KB&quot;, "
+        errorLine2="               ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/IconCacheManager.java"
+            line="248"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String tagCacheKey = String.format(&quot;tag_%d_%x_%x&quot;, codePoint, textColor, backgroundColor);"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/IconsHandler.java"
+            line="340"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        return String.format(&quot;Visible items: %d&quot;, visibleItems.size());"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/LazyImageLoader.java"
+            line="118"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                String.format(&quot;query:%s,duration:%dms,results:%d&quot;, query, durationMs, resultCount));"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ProfileManager.java"
+            line="90"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                getBuildType().toUpperCase(),"
+        errorLine2="                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/VersionInfo.java"
+            line="58"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                getBuildType().toUpperCase(),"
+        errorLine2="                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/VersionInfo.java"
+            line="71"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncRunnable` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncRunnable,"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncRunnable,"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncRunnable` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncRunnable,"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="90"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncRunnable,"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="90"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@Nullable` in Kotlin; the nullability is already implied by the Kotlin type `AsyncRunnable?` ending with `?`"
+        errorLine1="        @Nullable callback: AsyncRunnable? = null"
+        errorLine2="        ~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="91"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@Nullable` in Kotlin; the nullability is determined by the Kotlin type `Job` **not** ending with `?` which declares it not nullable, contradicting the annotation"
+        errorLine1="        @Nullable callback: AsyncRunnable? = null"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="91"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncCallable&lt;T>` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncCallable&lt;T>,"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="120"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncCallable&lt;T>,"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="120"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncCallback&lt;T>` **not** ending with `?`"
+        errorLine1="        @NonNull callback: AsyncCallback&lt;T>"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="121"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull callback: AsyncCallback&lt;T>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="121"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncCallable&lt;T>` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncCallable&lt;T>,"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="144"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull background: AsyncCallable&lt;T>,"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="144"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `AsyncCallback&lt;T>` **not** ending with `?`"
+        errorLine1="        @NonNull callback: AsyncCallback&lt;T>"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="145"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull callback: AsyncCallback&lt;T>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="145"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull background: WeakAsyncCallable&lt;T, R>,"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="171"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `WeakAsyncCallable&lt;T, R>` **not** ending with `?`"
+        errorLine1="        @NonNull background: WeakAsyncCallable&lt;T, R>,"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="171"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `Job` **not** ending with `?`"
+        errorLine1="        @NonNull callback: WeakAsyncCallback&lt;T, R>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="172"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KotlinNullnessAnnotation"
+        message="Do not use `@NonNull` in Kotlin; the nullability is already implied by the Kotlin type `WeakAsyncCallback&lt;T, R>` **not** ending with `?`"
+        errorLine1="        @NonNull callback: WeakAsyncCallback&lt;T, R>"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/CoroutineUtils.kt"
+            line="172"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="Registered"
+        message="The `&lt;activity> fr.neamar.kiss.refactored.RefactoredMainActivity` is not registered in the manifest"
+        errorLine1="public class RefactoredMainActivity extends MainActivity {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="22"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin:kotlin-stdlib than 1.9.10 is available: 2.1.20"
+        errorLine1="    implementation &quot;org.jetbrains.kotlin:kotlin-stdlib:1.9.10&quot;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="108"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.7.0 is available: 2.9.2"
+        errorLine1="    implementation &apos;androidx.lifecycle:lifecycle-runtime-ktx:2.7.0&apos;  // LifecycleScope 지원"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="111"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test:runner than 1.5.2 is available: 1.7.0"
+        errorLine1="    androidTestImplementation &apos;androidx.test:runner:1.5.2&apos;         // 버전 통일"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="113"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="    androidTestImplementation &apos;androidx.test.espresso:espresso-core:3.5.1&apos;  // 버전 통일"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="114"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test:rules than 1.5.0 is available: 1.7.0"
+        errorLine1="    androidTestImplementation &apos;androidx.test:rules:1.5.0&apos;          // 버전 통일"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="115"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.recyclerview:recyclerview than 1.3.2 is available: 1.4.0"
+        errorLine1="    implementation &apos;androidx.recyclerview:recyclerview:1.3.2&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="118"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.benchmark:benchmark-macro-junit4 than 1.3.3 is available: 1.4.0"
+        errorLine1="    debugImplementation &apos;androidx.benchmark:benchmark-macro-junit4:1.3.3&apos;   // 벤치마크 테스트"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="127"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.benchmark:benchmark-macro-junit4 than 1.3.3 is available: 1.4.0"
+        errorLine1="    profileImplementation &apos;androidx.benchmark:benchmark-macro-junit4:1.3.3&apos; // 프로파일 빌드용"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="128"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.tracing:tracing than 1.2.0 is available: 1.3.0"
+        errorLine1="    debugImplementation &apos;androidx.tracing:tracing:1.2.0&apos;                    // 시스템 추적"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="129"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.tracing:tracing than 1.2.0 is available: 1.3.0"
+        errorLine1="    profileImplementation &apos;androidx.tracing:tracing:1.2.0&apos;                  // 프로파일 빌드용"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="130"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.startup:startup-runtime than 1.1.1 is available: 1.2.0"
+        errorLine1="    profileImplementation &apos;androidx.startup:startup-runtime:1.1.1&apos;          // 시작 시간 추적"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="133"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.profileinstaller:profileinstaller than 1.3.1 is available: 1.4.1"
+        errorLine1="    profileImplementation &apos;androidx.profileinstaller:profileinstaller:1.3.1&apos; // ART 프로파일 설치"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="134"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime than 2.9.1 is available: 2.10.3"
+        errorLine1="    profileImplementation &apos;androidx.work:work-runtime:2.9.1&apos;                // 백그라운드 작업 모니터링"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="137"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.concurrent:concurrent-futures than 1.1.0 is available: 1.3.0"
+        errorLine1="    profileImplementation &apos;androidx.concurrent:concurrent-futures:1.1.0&apos;    // 동시성 추적"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="138"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-process than 2.7.0 is available: 2.9.2"
+        errorLine1="    profileImplementation &apos;androidx.lifecycle:lifecycle-process:2.7.0&apos;      // 프로세스 라이프사이클 추적"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="139"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.0.0 is available: 1.1.7"
+        errorLine1="    profileImplementation &apos;androidx.datastore:datastore-preferences:1.0.0&apos;  // 데이터 저장 성능 추적"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="143"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.collection:collection than 1.4.5 is available: 1.5.0"
+        errorLine1="    implementation &apos;androidx.collection:collection:1.4.5&apos;                   // LruCache 등 컬렉션 유틸리티"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="154"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 1.9.10 is available: 2.2.0"
+        errorLine1="    id &apos;org.jetbrains.kotlin.android&apos; version &apos;1.9.10&apos;"
+        errorLine2="                                              ~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="12"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of net.ltgt.errorprone than 4.1.0 is available: 4.3.0"
+        errorLine1="    id &apos;net.ltgt.errorprone&apos; version &apos;4.1.0&apos;  // 안정된 버전으로 설정"
+        errorLine2="                                     ~~~~~~~">
+        <location
+            file="build.gradle"
+            line="13"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.7.3 is available: 1.10.2"
+        errorLine1="    implementation &apos;org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="109"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-core than 1.7.3 is available: 1.10.2"
+        errorLine1="    implementation &apos;org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="110"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.facebook.flipper:flipper than 0.265.0 is available: 0.273.0"
+        errorLine1="    debugImplementation &apos;com.facebook.flipper:flipper:0.265.0&apos;             // Facebook Flipper - 종합 디버깅"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="122"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.facebook.flipper:flipper-network-plugin than 0.265.0 is available: 0.273.0"
+        errorLine1="    debugImplementation &apos;com.facebook.flipper:flipper-network-plugin:0.265.0&apos; // 네트워크 분석"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="124"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.junit.jupiter:junit-jupiter-api than 5.11.4 is available: 5.12.2"
+        errorLine1="    testImplementation &apos;org.junit.jupiter:junit-jupiter-api:5.11.4&apos;      // 최신 버전 유지"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="156"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.junit.jupiter:junit-jupiter-params than 5.11.4 is available: 5.12.2"
+        errorLine1="    testImplementation &apos;org.junit.jupiter:junit-jupiter-params:5.11.4&apos;   // 최신 버전 유지"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="157"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.junit.jupiter:junit-jupiter-engine than 5.11.4 is available: 5.12.2"
+        errorLine1="    testRuntimeOnly(&apos;org.junit.jupiter:junit-jupiter-engine:5.11.4&apos;)      // 최신 버전 유지"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="158"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        errorLine1="            android:screenOrientation=&quot;user&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="74"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of `scheduleAtFixedRate` is strongly discouraged because it can lead to unexpected behavior when Android processes become cached (tasks may unexpectedly execute hundreds or thousands of times in quick succession when a process changes from cached to uncached); prefer using `scheduleWithFixedDelay`"
+        errorLine1="            syncExecutor.scheduleAtFixedRate(() -> {"
+        errorLine2="            ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/db/DBHelper.java"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        return packResources.getIdentifier(name, defType, iconPackPackageName);"
+        errorLine2="                             ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/icons/IconPackXML.java"
+            line="305"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="                    drawableId = resources.getIdentifier(drawableName, &quot;drawable&quot;, iconPackPackageName);"
+        errorLine2="                                           ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/icons/IconPackXML.java"
+            line="498"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of `scheduleAtFixedRate` is strongly discouraged because it can lead to unexpected behavior when Android processes become cached (tasks may unexpectedly execute hundreds or thousands of times in quick succession when a process changes from cached to uncached); prefer using `scheduleWithFixedDelay`"
+        errorLine1="            scheduler.scheduleAtFixedRate(this::collectPerformanceData, "
+        errorLine2="            ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/PerformanceProfiler.java"
+            line="92"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnclosedTrace"
+        message="The `beginSection()` call is not always closed with a matching `endSection()` because the code in between may throw an exception"
+        errorLine1="        Trace.beginSection(&quot;MainActivity.onResume&quot;);  // 성능 추적 시작"
+        errorLine2="              ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="614"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;?attr/searchColor&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="181"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;?attr/searchColor&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="196"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="            android:tint=&quot;?attr/resultColor&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_empty.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="            android:tint=&quot;?attr/resultColor&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_empty.xml"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="            android:tint=&quot;?attr/resultColor&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_empty.xml"
+            line="130"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="                {getContext().getResources().getDrawable(R.drawable.color_picker_swatch)};"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/android/colorpicker/ColorPickerSwatch.java"
+            line="55"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="                        icon = context.getResources()"
+        errorLine2="                               ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ContactsResult.java"
+            line="260"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="                Drawable drawable = resourcesForApplication.getDrawable(dayResId);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/GoogleCalendarIcon.java"
+            line="39"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="                    return resources.getDrawable(drawableId);"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/icons/IconPackXML.java"
+            line="519"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        return context.getResources().getDrawable(android.R.drawable.ic_menu_call);"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/PhoneResult.java"
+            line="83"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="            Drawable response = context.getResources().getDrawable(pojo.icon);"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/SettingsResult.java"
+            line="51"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="                        icon = context.getResources().getDrawable(android.R.drawable.ic_menu_send);"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ShortcutsResult.java"
+            line="191"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="ExportedContentProvider"
+        message="Exported content providers can provide access to potentially sensitive data"
+        errorLine1="        &lt;provider"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="140"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 24"
+        errorLine1="            tools:targetApi=&quot;24&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="168"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 18"
+        errorLine1="            tools:targetApi=&quot;18&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="183"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/pojo/AppPojo.java"
+            line="78"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/AppProvider.java"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/AppProvider.java"
+            line="61"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/AppProvider.java"
+            line="68"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="96"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (!uninstallDisabled &amp;&amp; Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="142"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="276"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="362"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="398"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="438"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/AppResult.java"
+            line="444"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/BottomPullEffectView.java"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/calculator/Calculator.java"
+            line="141"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="  if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ClipboardUtils.java"
+            line="10"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/android/colorpicker/ColorPickerPalette.java"
+            line="182"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/android/colorpicker/ColorPickerPalette.java"
+            line="198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/ColorPreference.java"
+            line="117"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="124"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="231"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="249"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="257"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="266"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="121"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="641"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="657"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="676"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="718"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &amp;&amp; isAdaptiveIconDrawable(icon)) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/DrawableUtils.java"
+            line="120"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/DrawableUtils.java"
+            line="335"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU;"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/DrawableUtils.java"
+            line="339"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/ExcludePreferenceScreen.java"
+            line="52"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="  final boolean showSummary = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/ExcludePreferenceScreen.java"
+            line="62"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="                if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.P) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java"
+            line="111"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= 17) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java"
+            line="373"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java"
+            line="438"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Favorites.java"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/searcher/HistorySearcher.java"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/IconsHandler.java"
+            line="389"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/ImprovedQuickContactBadge.java"
+            line="51"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/ImprovedQuickContactBadge.java"
+            line="74"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/broadcast/IncomingCallHandler.java"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 24"
+        errorLine1="@RequiresApi(api = Build.VERSION_CODES.N)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/broadcast/IncomingCallScreeningService.java"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="120"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="152"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="183"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        } else if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="208"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="214"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="248"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="256"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java"
+            line="275"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT &lt; android.os.Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/kustomsupport/Kustom5SecsProvider.java"
+            line="77"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/actions/LaunchAppAction.java"
+            line="41"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/LauncherAppsCallback.java"
+            line="45"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/ListPopup.java"
+            line="167"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadAppPojos.java"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadAppPojos.java"
+            line="104"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadShortcutsPojos.java"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/LockAccessibilityService.java"
+            line="25"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="344"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="948"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="963"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Notification.java"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 18"
+        errorLine1="@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="24"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="138"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="172"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="202"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="221"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (positiveResult &amp;&amp; Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/NotificationPreference.java"
+            line="17"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/OreoShortcuts.java"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="148"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="161"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="176"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &amp;&amp; !user.isCurrentUser()) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="215"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="261"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PackageManagerUtils.java"
+            line="320"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        return Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.M || context.checkSelfPermission(permissions[permission]) == PackageManager.PERMISSION_GRANTED;"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/Permission.java"
+            line="33"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.M) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/Permission.java"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="105"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="107"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="112"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="115"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="136"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="145"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="175"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="181"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java"
+            line="212"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1=" @RequiresApi(Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/PreferenceScreenHelper.java"
+            line="16"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/broadcast/ProfileChangedHandler.java"
+            line="16"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/broadcast/ProfileChangedHandler.java"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/broadcast/ProfileChangedHandler.java"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/ResetShortcutsPreference.java"
+            line="27"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 &amp;&amp; view != null) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/Result.java"
+            line="552"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="@RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/shortcut/SaveAllOreoShortcutsAsync.java"
+            line="23"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="@RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/shortcut/SaveSingleOreoShortcutAsync.java"
+            line="21"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.P) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="119"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.M) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="122"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="125"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="129"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="132"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.TIRAMISU) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="135"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="368"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (enabled &amp;&amp; Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="667"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &amp;&amp; enabled) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/SettingsActivity.java"
+            line="687"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &amp;&amp; pm.hasSystemFeature(PackageManager.FEATURE_NFC)) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/simpleprovider/SettingsProvider.java"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/simpleprovider/SettingsProvider.java"
+            line="60"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/ShapedContactBadge.java"
+            line="30"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="62"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="68"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="76"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="91"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="99"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="127"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="161"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="202"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="213"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="226"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/ShortcutUtil.java"
+            line="252"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/ShortcutsProvider.java"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ShortcutsResult.java"
+            line="174"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ShortcutsResult.java"
+            line="223"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.O)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ShortcutsResult.java"
+            line="248"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/ShortcutsResult.java"
+            line="254"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="67"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="77"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="83"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="89"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/TagsHandler.java"
+            line="154"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/TagsHandler.java"
+            line="185"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="210"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="226"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.S)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="235"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="253"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="276"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.S)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="286"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.S)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="319"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.S)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/UIColors.java"
+            line="347"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (animateSearch &amp;&amp; android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="74"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="103"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="173"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/UserHandle.java"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 17"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/UserHandle.java"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/UserHandle.java"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/UserHandle.java"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 17"
+        errorLine1="    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/UserHandle.java"
+            line="85"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/Utilities.java"
+            line="42"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/Utilities.java"
+            line="86"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/WidgetView.java"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="102"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="215"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="391"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="421"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="426"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="438"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="472"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (appWidgetInfo.configure != null &amp;&amp; Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
+        errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="498"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 33"
+        errorLine1="        if (appWidgetInfo.configure != null &amp;&amp; Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {"
+        errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/Widgets.java"
+            line="511"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 33. Merge all the resources in this folder into `drawable-anydpi`.">
+        <location
+            file="src/main/res/drawable-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v18`) is unnecessary; `minSdkVersion` is 33. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v18"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 33. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v31`) is unnecessary; `minSdkVersion` is 33. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v31"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Action registered: &quot; + actionId);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/ActionManager.java"
+            line="53"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Executing action: &quot; + action.getActionId());"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/ActionManager.java"
+            line="96"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Action started: &quot; + actionName);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="53"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Action completed: &quot; + actionName + &quot; (duration: &quot; + actionDuration + &quot;ms)&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/ActionPerformanceTracker.java"
+            line="69"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.d(TAG, &quot;Component &quot; + component.getSimpleName() + "
+        errorLine2="            ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/pm/ComponentUtils.java"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.d(TAG, &quot;Component &quot; + componentName.getClassName() + "
+        errorLine2="            ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/pm/ComponentUtils.java"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.v(TAG, &quot;Contacts changed, reloading provider: &quot; + uris + &quot;, flags: &quot; + flags);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/ContactsProvider.java"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;Synced &quot; + toSync.size() + &quot; entries to disk&quot;);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/db/DBHelper.java"
+            line="252"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.v(TAG, &quot;Connecting to &quot; + name);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="209"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.v(TAG, &quot;Time to load all providers: &quot; + time + &quot;ms&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="338"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Data updated at: &quot; + lastDataUpdateTime);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="511"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Removing shortcut for &quot; + packageName);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/DataHandler.java"
+            line="706"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.i(TAG, (end - start) + &quot; milliseconds to parse drawable.xml&quot;);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/icons/IconPackXML.java"
+            line="297"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (end - start) + &quot; milliseconds to parse appfilter.xml&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/icons/IconPackXML.java"
+            line="432"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.d(TAG, &quot;Launching app: &quot; + appPojo.getName());"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/actions/LaunchAppAction.java"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.i(TAG, &quot;Successfully launched app: &quot; + appPojo.getName());"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/actions/LaunchAppAction.java"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (end - start) + &quot; milliseconds to list apps&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadAppPojos.java"
+            line="98"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (endBasicContacts - startBasicContacts) + &quot; milliseconds to load &quot; + basicContacts.size() + &quot; basic contacts&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadContactsPojos.java"
+            line="94"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (endRawContacts - startRawContacts) + &quot; milliseconds to load &quot; + basicRawContacts.size() + &quot; raw contacts&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadContactsPojos.java"
+            line="119"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (endNicks - startNicks) + &quot; milliseconds to load nicknames&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadContactsPojos.java"
+            line="150"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.i(TAG, (endMimeType - startMimeType) + &quot; milliseconds to list contacts for &quot; + mimeType);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadContactsPojos.java"
+            line="161"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (end - start) + &quot; milliseconds to list all &quot; + contacts.size() + &quot; contacts&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/loader/LoadContactsPojos.java"
+            line="165"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (end - start) + &quot; milliseconds to load &quot; + mimeTypes.size() + &quot; supported mime types&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, (end - start) + &quot; milliseconds to load &quot; + supportedMimeTypes.size() + &quot; active mime types&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java"
+            line="111"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.v(TAG, &quot;Refreshed all notifications for &quot; + allKeys);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.v(TAG, &quot;Removed all notifications for &quot; + packages.toString());"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/notification/NotificationListener.java"
+            line="98"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.d(TAG, String.format(&quot;%s: %.2fms&quot;, name, elapsedMs));"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PerformanceProfiler.java"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, String.format(&quot;%s - Memory: %.1fMB/%.1fMB (%.1f%%)&quot;, "
+        errorLine2="        ^">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/PerformanceProfiler.java"
+            line="37"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.i(TAG, &quot;Performance profiling started. Log file: &quot; + logFile.getAbsolutePath());"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/PerformanceProfiler.java"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="            Log.d(TAG, &quot;Custom event logged: &quot; + eventName + &quot; - &quot; + details);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/profiling/PerformanceProfiler.java"
+            line="241"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, &quot;Starting provider: &quot; + this.getClass().getSimpleName());"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/Provider.java"
+            line="54"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(TAG, &quot;Time to load &quot; + this.getClass().getSimpleName() + &quot;: &quot; + time + &quot;ms&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/dataprovider/Provider.java"
+            line="87"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;Search started: &quot; + query);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="110"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;Search completed: &quot; + query + &quot; (&quot; + results.size() + &quot; results)&quot;);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="116"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;Search cancelled: &quot; + query);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="123"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;KISS bar visibility: &quot; + visible);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="141"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="                Log.d(TAG, &quot;Keyboard visibility: &quot; + visible);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="146"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Updating search results: &quot; + results.size() + &quot; items&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="203"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.i(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.i(this.getClass().getSimpleName(), &quot;Launching &quot; + pojo.id);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/result/Result.java"
+            line="289"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.v(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.v(TAG, &quot;Time to run query `&quot; + query + &quot;` on &quot; + getClass().getSimpleName() + &quot; to completion: &quot; + time + &quot;ms&quot;);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/searcher/Searcher.java"
+            line="132"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, sb.toString());"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/SystemUiVisibilityHelper.java"
+            line="145"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogConditional"
+        message="The log call Log.d(...) should be conditional: surround with `if (Log.isLoggable(...))` or `if (BuildConfig.DEBUG) { ... }`"
+        errorLine1="        Log.d(TAG, &quot;Showing KISS bar with animation: &quot; + animateSearch);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="67"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="StringFormatTrivial"
+        message="This formatting string is trivial. Rather than using `String.format` to create your String, it will be more performant to concatenate your arguments with `+`. "
+        errorLine1="            return String.format(&quot;ActivityStatus{query=&apos;%s&apos;, searching=%s, kissBar=%s, screen=%s}&quot;, "
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="301"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="StringFormatTrivial"
+        message="This formatting string is trivial. Rather than using `String.format` to create your String, it will be more performant to concatenate your arguments with `+`. "
+        errorLine1="            return String.format(&quot;ActionResult{success=%s, message=&apos;%s&apos;, hasError=%s}&quot;, "
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/command/UserAction.java"
+            line="77"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="StringFormatTrivial"
+        message="This formatting string is trivial. Rather than using `String.format` to create your String, it will be more performant to concatenate your arguments with `+`. "
+        errorLine1="        return String.format(&quot;KISS Optimized %s (%s)\nBased on upstream %s (versionCode: %s)\nOptimized by: %s\nBuild date: %s&quot;,"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/VersionInfo.java"
+            line="56"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="StringFormatTrivial"
+        message="This formatting string is trivial. Rather than using `String.format` to create your String, it will be more performant to concatenate your arguments with `+`. "
+        errorLine1="        return String.format(&quot;v%s (%s) (based on upstream %s)&quot;, "
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/VersionInfo.java"
+            line="69"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/widget_picker.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `palette` of class `ColorPreference` requires synthetic accessor"
+        errorLine1="                ColorPreference.this.palette.init(ColorPickerDialog.SIZE_SMALL, view.getWidth() / (swatchSize + swatchMargin), ColorPreference.this);"
+        errorLine2="                                     ~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/preference/ColorPreference.java"
+            line="97"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mSearch` of class `CustomIconDialog` requires synthetic accessor"
+        errorLine1="                mSearch.post(() -> refreshList());"
+        errorLine2="                ~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/CustomIconDialog.java"
+            line="149"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mainEmptyView` of class `ExperienceTweaks` requires synthetic accessor"
+        errorLine1="                            result.fastLaunch(mainActivity, ExperienceTweaks.this.mainEmptyView);"
+        errorLine2="                                                                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java"
+            line="215"
+            column="83"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `getDrawableSize` of class `IconCacheManager` requires synthetic accessor"
+        errorLine1="                return getDrawableSize(value);"
+        errorLine2="                       ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/IconCacheManager.java"
+            line="60"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `getDrawableSize` of class `IconCacheManager` requires synthetic accessor"
+        errorLine1="                return getDrawableSize(value);"
+        errorLine2="                       ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/IconCacheManager.java"
+            line="75"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `getDrawableSize` of class `IconCacheManager` requires synthetic accessor"
+        errorLine1="                return getDrawableSize(value);"
+        errorLine2="                       ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/IconCacheManager.java"
+            line="83"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `usageCount` of class `IconCacheManager` requires synthetic accessor"
+        errorLine1="                    AtomicInteger count = usageCount.get(key);"
+        errorLine2="                                          ~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/utils/IconCacheManager.java"
+            line="90"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `maxSize` of class `LruIconCache` requires synthetic accessor"
+        errorLine1="                    boolean shouldRemove = size() > LruIconCache.this.maxSize;"
+        errorLine2="                                                                      ~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/IconsHandler.java"
+            line="92"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `IconsHandler` requires synthetic accessor"
+        errorLine1="                        Log.d(TAG, &quot;LRU evicting icon: &quot; + eldest.getKey());"
+        errorLine2="                              ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/IconsHandler.java"
+            line="94"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `IconsHandler` requires synthetic accessor"
+        errorLine1="                Log.i(TAG, String.format(&quot;Icon Cache Stats - Size: %d/%d, Hit Rate: %.1f%% (%d/%d)&quot;, "
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/IconsHandler.java"
+            line="128"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `packageName` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.packageName = Objects.requireNonNull(builder.packageName);"
+        errorLine2="                                                          ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="39"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `activityName` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.activityName = Objects.requireNonNull(builder.activityName);"
+        errorLine2="                                                           ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="40"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `userHandle` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.userHandle = Objects.requireNonNull(builder.userHandle);"
+        errorLine2="                                                         ~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="41"
+            column="58"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `excluded` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.excluded = builder.excluded;"
+        errorLine2="                                ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="42"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `excludedFromHistory` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.excludedFromHistory = builder.excludedFromHistory;"
+        errorLine2="                                           ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="43"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `excludedShortcuts` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.excludedShortcuts = builder.excludedShortcuts;"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="44"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `disabled` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.disabled = builder.disabled;"
+        errorLine2="                                ~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="45"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `customIconId` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.customIconId = builder.customIconId;"
+        errorLine2="                                    ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="46"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `tags` of class `Builder` requires synthetic accessor"
+        errorLine1="        this.tags = Collections.unmodifiableSet(builder.tags);"
+        errorLine2="                                                        ~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="47"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` constructor of class `ImmutableAppPojo` requires synthetic accessor"
+        errorLine1="            return new ImmutableAppPojo(this);"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/immutable/ImmutableAppPojo.java"
+            line="177"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `list` of class `KeyboardScrollHider` requires synthetic accessor"
+        errorLine1="                            KeyboardScrollHider.this.list.unblockTouchEvents();"
+        errorLine2="                                                     ~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/KeyboardScrollHider.java"
+            line="179"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `pullEffect` of class `KeyboardScrollHider` requires synthetic accessor"
+        errorLine1="                            KeyboardScrollHider.this.pullEffect.releasePull();"
+        errorLine2="                                                     ~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/KeyboardScrollHider.java"
+            line="182"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `onScreenTurnedOn` of class `LifecycleController` requires synthetic accessor"
+        errorLine1="                    onScreenTurnedOn();"
+        errorLine2="                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/LifecycleController.java"
+            line="181"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `onScreenTurnedOff` of class `LifecycleController` requires synthetic accessor"
+        errorLine1="                    onScreenTurnedOff();"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/LifecycleController.java"
+            line="183"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `isScreenOn` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                    isScreenOn = true;"
+        errorLine2="                    ~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="173"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `handleDelayedLayoutUpdate` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                    handleDelayedLayoutUpdate();"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="182"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `isScreenOn` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                    isScreenOn = false;"
+        errorLine2="                    ~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="185"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `onScreenOff` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                    onScreenOff();"
+        errorLine2="                    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="187"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `forwarderManager` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                forwarderManager.onDataSetChanged();"
+        errorLine2="                ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="454"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `loaderSpinner` of class `MainActivity` requires synthetic accessor"
+        errorLine1="                                loaderSpinner.setVisibility(View.GONE);"
+        errorLine2="                                ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/MainActivity.java"
+            line="902"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Search started: &quot; + query);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="110"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Search completed: &quot; + query + &quot; (&quot; + results.size() + &quot; results)&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="116"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `updateSearchResults` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                updateSearchResults(results);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="118"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Search cancelled: &quot; + query);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="123"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.e(TAG, &quot;Search error: &quot; + query, error);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="128"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;KISS bar visibility: &quot; + visible);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="141"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Keyboard visibility: &quot; + visible);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="146"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Theme changed&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="151"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Layout changed&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="156"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Lifecycle: Resume&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="168"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Lifecycle: Pause&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="174"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Lifecycle: Screen ON&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="180"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Lifecycle: Screen OFF&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="186"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `TAG` of class `RefactoredMainActivity` requires synthetic accessor"
+        errorLine1="                Log.d(TAG, &quot;Lifecycle: Recreate needed&quot;);"
+        errorLine2="                      ~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/refactored/RefactoredMainActivity.java"
+            line="192"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `onKissBarAnimationEnd` of class `UIController` requires synthetic accessor"
+        errorLine1="                        onKissBarAnimationEnd();"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="185"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` method `onKissBarAnimationEnd` of class `UIController` requires synthetic accessor"
+        errorLine1="                        onKissBarAnimationEnd();"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/controller/UIController.java"
+            line="211"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;application_not_found&quot;>Упс... не удалось запустить это приложение.&lt;/string>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="43"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Ups... text-nya ternyata kosong.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-in/strings.xml"
+            line="64"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Опааа... текстът всъщност е празен.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bg/strings.xml"
+            line="345"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Ups... tekst on tegelikult tühi.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-et/strings.xml"
+            line="345"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Oopa... textul e de fapt gol.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ro/strings.xml"
+            line="347"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Упс... текст на самом деле пустой.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="347"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;shared_text_empty&quot;>Hoppsan... text är faktiskt tom.&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="347"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/drawable-xxhdpi/ic_contact.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes">
+        <location
+            file="src/main/res/drawable-hdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes">
+        <location
+            file="src/main/res/drawable-mdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes">
+        <location
+            file="src/main/res/drawable-xhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes">
+        <location
+            file="src/main/res/drawable-xxhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `drawable-hdpi/ic_launcher_white.png`: expected 72x72, but was 48x48">
+        <location
+            file="src/main/res/drawable-hdpi/ic_launcher_white.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `drawable-xhdpi/ic_launcher_white.png`: expected 96x96, but was 64x64">
+        <location
+            file="src/main/res/drawable-xhdpi/ic_launcher_white.png"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-hdpi`: ic_functions.png, setting_accessibility.png, setting_dev.png, setting_storage.png">
+        <location
+            file="src/main/res/drawable-hdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-mdpi`: call.png, clear_dark.png, ic_colorpicker_swatch_selected.png, ic_functions.png, ic_launcher_white.png... (15 more)">
+        <location
+            file="src/main/res/drawable-mdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xxhdpi`: call.png, clear_dark.png, ic_colorpicker_swatch_selected.png, ic_functions.png, ic_launcher_white.png... (15 more)">
+        <location
+            file="src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="ButtonOrder"
+        message="Cancel button should be on the left (was &quot;Cancel | OK&quot;, should be &quot;Cancel | OK&quot;)"
+        errorLine1="        &lt;Button"
+        errorLine2="         ~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="101"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="SelectableText"
+        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
+        errorLine1="        &lt;TextView"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="SelectableText"
+        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
+        errorLine1="        &lt;TextView"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="43"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NegativeMargin"
+        message="Margin values should not be negative"
+        errorLine1="            android:layout_marginTop=&quot;-4dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_app.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NegativeMargin"
+        message="Margin values should not be negative"
+        errorLine1="            android:layout_marginTop=&quot;-6dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_shortcut.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KtxExtensionAvailable"
+        message="Add suffix `-ktx` to enable the Kotlin extensions for this library"
+        errorLine1="    implementation &apos;androidx.collection:collection:1.4.5&apos;                   // LruCache 등 컬렉션 유틸리티"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="154"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`BlockableListView#onTouchEvent` should call `BlockableListView#performClick` when a click is detected"
+        errorLine1="    public boolean onTouchEvent(MotionEvent ev) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/BlockableListView.java"
+            line="43"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`KeyboardScrollHider#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/fr/neamar/kiss/ui/KeyboardScrollHider.java"
+            line="136"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="19"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginLeft=&quot;@dimen/icon_margin_left&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginRight=&quot;@dimen/icon_margin_right&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="96"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginLeft=&quot;@dimen/icon_margin_left&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="107"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginRight=&quot;@dimen/icon_margin_right&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginLeft=&quot;@dimen/icon_margin_left&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="120"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_marginRight=&quot;@dimen/icon_margin_right&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_icon_dialog.xml"
+            line="122"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:paddingRight=&quot;2dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_app.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:paddingRight=&quot;2dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_app.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="12"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignRight`; already defining `layout_alignEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignRight=&quot;@id/item_contact_icon&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toLeftOf`; already defining `layout_toStartOf` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_toLeftOf=&quot;@+id/item_contact_action_message&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="34"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_toRightOf=&quot;@id/item_contact_icon&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="36"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:paddingRight=&quot;2dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="39"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignLeft=&quot;@id/item_contact_name&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="58"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:paddingRight=&quot;2dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="61"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignRight`; already defining `layout_alignEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignRight=&quot;@+id/item_contact_name&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_marginLeft=&quot;5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="82"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_toRightOf=&quot;@+id/item_contact_phone&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="84"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:paddingRight=&quot;2dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="87"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toLeftOf`; already defining `layout_toStartOf` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_toLeftOf=&quot;@+id/item_contact_action_phone&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="107"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentRight`; already defining `layout_alignParentEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_contact.xml"
+            line="117"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_marginRight=&quot;4dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_setting.xml"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:paddingRight=&quot;2dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_shortcut.xml"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:paddingRight=&quot;2dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_shortcut.xml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="88"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toLeftOf`; already defining `layout_toStartOf` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_toLeftOf=&quot;@id/rightHandSideButtonsWrapper&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_toRightOf=&quot;@id/leftHandSideButtonsWrapper&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="146"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentRight`; already defining `layout_alignParentEnd` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main.xml"
+            line="222"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_kissbar.xml"
+            line="16"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_toRightOf=&quot;@+id/whiteLauncherButton&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_kissbar.xml"
+            line="33"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 35"
+        errorLine1="        android:layout_marginRight=&quot;6dip&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 35"
+        errorLine1="            android:layout_alignLeft=&quot;@android:id/title&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/preference_multiline.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingLeft`; already defining `paddingStart` with `targetSdkVersion` 35"
+        errorLine1="    android:paddingLeft=&quot;@dimen/result_margin_left&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/widget_picker_item.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `paddingRight`; already defining `paddingEnd` with `targetSdkVersion` 35"
+        errorLine1="    android:paddingRight=&quot;@dimen/result_margin_right&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/widget_picker_item.xml"
+            line="14"
+            column="5"/>
+    </issue>
+
+</issues>

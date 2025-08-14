@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.DataHandler;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.R;
@@ -29,33 +30,34 @@ public class ShortcutsProvider extends Provider<ShortcutPojo> {
 
     @Override
     public void onCreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final LauncherApps launcher = (LauncherApps) this.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-            assert launcher != null;
+        // minSdkVersion is 33, so always Android O+
+        final LauncherApps launcher = (LauncherApps) this.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        assert launcher != null;
 
-            launcher.registerCallback(new LauncherAppsCallback() {
-                @Override
-                public void onShortcutsChanged(String packageName, List<ShortcutInfo> shortcuts, android.os.UserHandle user) {
-                    if (isAnyShortcutVisible(shortcuts)) {
+        launcher.registerCallback(new LauncherAppsCallback() {
+            @Override
+            public void onShortcutsChanged(String packageName, List<ShortcutInfo> shortcuts, android.os.UserHandle user) {
+                if (isAnyShortcutVisible(shortcuts)) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(TAG, "Shortcuts changed for " + packageName);
-                        KissApplication.getApplication(ShortcutsProvider.this).getDataHandler().reloadShortcuts();
+                    }
+                    KissApplication.getApplication(ShortcutsProvider.this).getDataHandler().reloadShortcuts();
+                }
+            }
+
+            private boolean isAnyShortcutVisible(List<ShortcutInfo> shortcuts) {
+                DataHandler dataHandler = KissApplication.getApplication(ShortcutsProvider.this).getDataHandler();
+                Set<String> excludedApps = dataHandler.getExcluded();
+                Set<String> excludedShortcutApps = dataHandler.getExcludedShortcutApps();
+
+                for (ShortcutInfo shortcutInfo : shortcuts) {
+                    if (ShortcutUtil.isShortcutVisible(ShortcutsProvider.this, shortcutInfo, excludedApps, excludedShortcutApps)) {
+                        return true;
                     }
                 }
-
-                private boolean isAnyShortcutVisible(List<ShortcutInfo> shortcuts) {
-                    DataHandler dataHandler = KissApplication.getApplication(ShortcutsProvider.this).getDataHandler();
-                    Set<String> excludedApps = dataHandler.getExcluded();
-                    Set<String> excludedShortcutApps = dataHandler.getExcludedShortcutApps();
-
-                    for (ShortcutInfo shortcutInfo : shortcuts) {
-                        if (ShortcutUtil.isShortcutVisible(ShortcutsProvider.this, shortcutInfo, excludedApps, excludedShortcutApps)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
-        }
+                return false;
+            }
+        });
 
         super.onCreate();
     }

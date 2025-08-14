@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
+import fr.neamar.kiss.BuildConfig;
+
 public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChangeListener {
     private static final String TAG = SystemUiVisibilityHelper.class.getSimpleName();
     private final Activity mActivity;
@@ -64,26 +66,16 @@ public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChange
     private void applySystemUi(boolean hideNavBar, boolean hideStatusBar, boolean hasBlackNotificationIcons) {
         int visibility = 0;
         if (hideNavBar) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                visibility = visibility
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hide nav bar
-            } else {
-                visibility = visibility
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hide nav bar
-            }
+            visibility = visibility
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hide nav bar
         }
         if (hideStatusBar) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                visibility = visibility
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN; // hide status bar
-            }
+            visibility = visibility
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN; // hide status bar
         }
         if (hideNavBar || hideStatusBar) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                visibility = visibility
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE;
-            }
+            visibility = visibility
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
         }
         if (hasBlackNotificationIcons) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -98,9 +90,7 @@ public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChange
 
     public void applyScrollSystemUi() {
         mIsScrolling = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            applySystemUi();
-        }
+        applySystemUi();
     }
 
     public void resetScroll() {
@@ -142,7 +132,9 @@ public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChange
         if ((visibility & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
             sb.append("\n SYSTEM_UI_FLAG_LIGHT_STATUS_BAR");
 
-        Log.d(TAG, sb.toString());
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, sb.toString());
+        }
 
         if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
             applySystemUi();
@@ -162,9 +154,7 @@ public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChange
 
     public void addPopup() {
         mPopupCount += 1;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            applySystemUi(false, false, false);
-        }
+        // minSdkVersion is 33, so always KITKAT+ 
     }
 
     public void popPopup() {

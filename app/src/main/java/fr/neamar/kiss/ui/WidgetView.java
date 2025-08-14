@@ -106,12 +106,10 @@ public class WidgetView extends AppWidgetHostView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            // calculate size in dips
-            float density = getResources().getDisplayMetrics().density;
-            int widthDips = (int) (w / density);
-            int heightDips = (int) (h / density);
-            updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
-        }
+        // calculate size in dips
+        float density = getResources().getDisplayMetrics().density;
+        int widthDips = (int) (w / density);
+        int heightDips = (int) (h / density);
+        updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
     }
 }

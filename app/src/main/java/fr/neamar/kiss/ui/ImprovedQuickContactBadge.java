@@ -71,9 +71,7 @@ public class ImprovedQuickContactBadge extends ShapedContactBadge {
      * Hide the overlay
      */
     private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setOverlay(null);
-        }
+        setOverlay(null);
     }
 
 }

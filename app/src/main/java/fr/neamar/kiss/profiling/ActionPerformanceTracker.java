@@ -122,7 +122,7 @@ public class ActionPerformanceTracker {
     public void trackAppStartupPhase(String phase, long phaseTime) {
         if (!isEnabled) return;
         
-        String actionDetails = String.format("phase:%s,time:%dms", phase, phaseTime);
+        String actionDetails = "phase:" + phase + ",time:" + phaseTime + "ms";
         profiler.logCustomEvent("STARTUP_PHASE", actionDetails);
         collectActionSnapshot("STARTUP_" + phase);
     }
@@ -133,7 +133,7 @@ public class ActionPerformanceTracker {
     public void trackMemoryEvent(String eventType, long memoryChange) {
         if (!isEnabled) return;
         
-        String actionDetails = String.format("event:%s,change:%dKB", eventType, memoryChange);
+        String actionDetails = "event:" + eventType + ",change:" + memoryChange + "KB";
         profiler.logCustomEvent("MEMORY_EVENT", actionDetails);
         collectActionSnapshot("MEMORY_" + eventType);
     }
@@ -212,7 +212,7 @@ public class ActionPerformanceTracker {
     public void trackAppStateChange(String newState, long transitionTime) {
         if (!isEnabled) return;
         
-        String stateDetails = String.format("new_state:%s,transition_time:%dms", newState, transitionTime);
+        String stateDetails = "new_state:" + newState + ",transition_time:" + transitionTime + "ms";
         profiler.logCustomEvent("APP_STATE_CHANGE", stateDetails);
         collectActionSnapshot("STATE_" + newState);
     }

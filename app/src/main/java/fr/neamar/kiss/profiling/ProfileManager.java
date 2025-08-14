@@ -87,7 +87,7 @@ public class ProfileManager {
      */
     public void logSearchPerformance(String query, long durationMs, int resultCount) {
         logEvent("SEARCH_PERFORMANCE", 
-                String.format("query:%s,duration:%dms,results:%d", query, durationMs, resultCount));
+                "query:" + query + ",duration:" + durationMs + "ms,results:" + resultCount);
     }
     
     /**
