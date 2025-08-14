@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Build;
@@ -33,9 +34,6 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleableRes;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.List;
 import java.util.Locale;
 
@@ -410,8 +408,9 @@ public abstract class Result<T extends Pojo> {
                 view.setImageDrawable(getDrawable(view.getContext()));
                 view.setTag(this);
             } else {
-                // use modern executor for image loading
-                view.setTag(createAsyncSetImage(view, resId).execute());
+                // use AsyncTask.SERIAL_EXECUTOR explicitly for now
+                // TODO: make execution parallel if needed/possible
+                view.setTag(createAsyncSetImage(view, resId).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR));
             }
         }
     }
@@ -492,16 +491,12 @@ public abstract class Result<T extends Pojo> {
         return this.pojo.id.hashCode();
     }
 
-    static class AsyncSetImage implements Runnable {
-        private static final ExecutorService IMAGE_EXECUTOR = Executors.newSingleThreadExecutor();
-        private final Handler mainHandler = new Handler(Looper.getMainLooper());
-        
+    static class AsyncSetImage extends AsyncTask<Void, Void, Drawable> {
         final WeakReference<ImageView> imageViewWeakReference;
         final WeakReference<Result<?>> resultWeakReference;
-        private volatile Future<?> task;
-        private volatile boolean cancelled = false;
 
         AsyncSetImage(ImageView image, Result<?> result, @DrawableRes int resId) {
+            super();
             image.setTag(this);
             image.setImageResource(resId);
             this.imageViewWeakReference = new WeakReference<>(image);
@@ -509,24 +504,21 @@ public abstract class Result<T extends Pojo> {
         }
 
         @Override
-        public void run() {
+        protected Drawable doInBackground(Void... voids) {
             ImageView image = imageViewWeakReference.get();
             if (isCancelled() || image == null || image.getTag() != this) {
                 imageViewWeakReference.clear();
-                return;
+                return null;
             }
             Result<?> result = resultWeakReference.get();
             if (result == null) {
-                return;
+                return null;
             }
-            
-            Drawable drawable = result.getDrawable(image.getContext());
-            
-            // UI 업데이트를 메인 스레드에서 수행
-            mainHandler.post(() -> onPostExecute(drawable));
+            return result.getDrawable(image.getContext());
         }
-        
-        private void onPostExecute(Drawable drawable) {
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
             ImageView image = imageViewWeakReference.get();
             if (isCancelled() || image == null || drawable == null) {
                 imageViewWeakReference.clear();
@@ -534,23 +526,6 @@ public abstract class Result<T extends Pojo> {
             }
             image.setImageDrawable(drawable);
             image.setTag(resultWeakReference.get());
-        }
-
-        public Future<?> execute() {
-            this.task = IMAGE_EXECUTOR.submit(this);
-            return this.task;
-        }
-
-        public boolean isCancelled() {
-            return cancelled || (task != null && task.isCancelled());
-        }
-
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            cancelled = true;
-            if (task != null) {
-                return task.cancel(mayInterruptIfRunning);
-            }
-            return true;
         }
     }
 

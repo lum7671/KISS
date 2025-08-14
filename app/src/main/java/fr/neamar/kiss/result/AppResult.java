@@ -417,8 +417,20 @@ public class AppResult extends Result<AppPojo> {
         if (!isDrawableCached()) {
             synchronized (this) {
                 if (!isDrawableCached()) {
-                    IconsHandler iconsHandler = KissApplication.getApplication(context).getIconsHandler();
-                    icon = iconsHandler.getDrawableIconForPackage(className, this.pojo.userHandle);
+                    try {
+                        IconsHandler iconsHandler = KissApplication.getApplication(context).getIconsHandler();
+                        icon = iconsHandler.getDrawableIconForPackage(className, this.pojo.userHandle);
+                        
+                        // 아이콘이 null인 경우 기본 아이콘 사용
+                        if (icon == null) {
+                            android.util.Log.w("KISS", "Failed to load icon for " + className + ", using default");
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("KISS", "Error loading icon for " + className, e);
+                        // 오류 발생 시 기본 아이콘 사용
+                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                    }
                 }
             }
         }
