@@ -13,4 +13,7 @@
 
     <!-- ignore until kotlin is in use -->
     <issue id="UnknownNullness" severity="ignore" />
+    
+    <!-- Allow Android system IDs in preference layouts -->
+    <issue id="InvalidId" severity="ignore" />
 </lint>
