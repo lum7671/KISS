@@ -12,7 +12,6 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import fr.neamar.kiss.DataHandler;
 import fr.neamar.kiss.KissApplication;
 
 public class DBHelper {
@@ -57,8 +55,12 @@ public class DBHelper {
 
     private static SQLiteDatabase getDatabase(Context context) {
         if (database == null) {
-            database = new DB(context).getReadableDatabase();
-            initializeMemoryDB(context);
+            synchronized (DBHelper.class) {
+                if (database == null) {
+                    database = new DB(context).getReadableDatabase();
+                    initializeMemoryDB(context);  // 사용자 커스텀 메모리 DB 초기화 유지
+                }
+            }
         }
         return database;
     }

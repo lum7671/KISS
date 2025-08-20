@@ -14,15 +14,13 @@ plugins {
 }
 
 android {
-    defaultConfig {
-        compileSdk = 35
-    }
     buildFeatures {
         buildConfig = true
     }
     defaultConfig {
-        applicationId 'fr.neamar.kiss.lum7671'
-        minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환)
+        applicationId 'fr.neamar.kiss.lum7671'  // 사용자 커스텀 ID 유지
+        minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환) - 사용자 설정 유지
+        compileSdk 35
         targetSdkVersion 35
         compileSdk = 35
         versionCode 402
