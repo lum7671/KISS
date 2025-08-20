@@ -128,3 +128,4 @@ fastlane/report.xml
 app/release/
 
 tmp
+node_modules
