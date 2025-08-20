@@ -1,11 +1,41 @@
-KISS
-======
+# KISS
 
 ## 📋 Changes
+
+### 🚀 v4.0.3 - Upstream Integration Edition (2025-08-20)
+
+#### 🔀 Merged Upstream v3.22.1+ Latest Features
+
+- **🔒 Private Space Support**: Android 15+ Private Space integration with
+  `ACCESS_HIDDEN_PROFILES` permission
+- **👥 Enhanced Multi-Profile Handling**: Improved user profile management for
+  work/private spaces
+- **🛡️ Thread Safety Improvements**: Better synchronization for database operations
+- **🔧 User Handle Management**: Enhanced support for multi-user environments
+- **📱 App Loading Optimizations**: Private profile aware app discovery and loading
+
+#### 🔧 Compatibility & Stability
+
+- **⚙️ Maintained Custom Features**: All lum7671 optimizations preserved during
+  merge
+  - Memory-first hybrid database system
+  - Performance profiling capabilities
+  - Screen state monitoring optimizations
+  - Custom package ID (`fr.neamar.kiss.lum7671`)
+- **🏗️ Build System**: Updated dependencies and improved conflict resolution
+- **🧪 Tested Integration**: Validated on Android emulator with full functionality
+
+#### 🛠️ Technical Details
+
+- **Conflict Resolution**: Successfully merged 5 major file conflicts
+- **API Compatibility**: Maintained Android 13+ (API 33) minimum support
+- **Performance Preservation**: All custom optimizations retained
+- **Database Sync**: Thread-safe initialization with memory DB features
 
 ### 🚀 v4.0.2 - Coroutines Migration Edition (2025-08-14)
 
 #### 🔄 AsyncTask → Kotlin Coroutines Migration
+
 - **⚡ Modern Async Architecture**: Complete migration from deprecated AsyncTask to Kotlin Coroutines
 - **🏗️ CoroutineUtils Framework**: Custom utility class for seamless Java-Kotlin interop
 - **🔧 8 Files Converted**: All AsyncTask usage patterns modernized
@@ -17,6 +47,7 @@ KISS
 ### 🚀 v4.0.0 - Optimized Performance Edition (2025-08-12)
 
 #### 🔀 Merged Upstream v3.22.1 Features
+
 - **⚙️ UI Improvements**: Icon settings moved to user interface section
 - **🎯 Better Alignment**: Notification dots align with app names (no-icon mode)
 - **🔧 Widget Management**: Allow reconfigure of widgets
@@ -27,6 +58,7 @@ KISS
 - **🏢 Work Profile**: Allow uninstalling work profile apps
 
 #### 🎯 Major Performance Optimizations
+
 - **🏃‍♂️ 3-Tier Icon Caching System**: Glide + LRU Cache implementation
   - Frequent Cache (64MB) + Recent Cache (32MB) + Memory Cache (128MB)
   - Smart usage-based icon promotion
@@ -39,6 +71,7 @@ KISS
   - Intelligent activity recreation logic
 
 #### 📦 Build & Compatibility Improvements
+
 - **📱 Android 13+ Optimization**: API 33+ with Android 15 target
 - **🔐 APK Signature Scheme v3**: Modern security standards
 - **⚡ Lightweight Release Build**: 1.2MB (96% size reduction from 31MB)
@@ -46,12 +79,14 @@ KISS
 - **🔧 Debug-Only Libraries**: Performance tools excluded from release builds
 
 #### 🛠️ Technical Architecture
+
 - **Java 17 + Gradle 8.13**: Modern build system
 - **Proven Libraries**: Glide, AndroidX LruCache, LeakCanary (debug)
 - **Multi-Build Support**: Release, Debug, Profile configurations
 - **Memory Management**: Smart trimming and background optimization
 
 #### 📋 Version Information Display
+
 - **🏷️ Enhanced Version Name**: `4.0.0-based-on-3.22.1` (shows upstream version)
 - **📊 BuildConfig Fields**: Added upstream version, build date, optimizer info
 - **⚙️ Settings Integration**: New "Version Information" section in About
@@ -59,6 +94,7 @@ KISS
 - **📱 Runtime Access**: `VersionInfo` utility class for programmatic access
 
 #### 📊 Performance Metrics
+
 - **App Launch Time**: 30-50% faster icon loading
 - **Memory Usage**: 20-30% reduction with smart caching
 - **APK Size**: Smaller than official KISS (1.2MB vs 3MB)
@@ -86,7 +122,7 @@ _Browsing for apps is and should be secondary_.
 
 Join the [beta program](https://play.google.com/apps/testing/fr.neamar.kiss/) to test the latest version.
 
-Public Telegram chat: https://t.me/joinchat/_eDeAIQJU1FlNjM0
+Public Telegram chat: <https://t.me/joinchat/_eDeAIQJU1FlNjM0>
 
 |![Less interface](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Search anything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![Customize everything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |![Settings](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
