@@ -123,6 +123,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'  // LifecycleScope 지원
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0' // ViewModelScope 지원
     
     androidTestImplementation 'androidx.test:runner:1.5.2'         // 버전 통일
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'  // 버전 통일

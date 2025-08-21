@@ -31,8 +31,8 @@ import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.db.ShortcutRecord;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.pojo.ShortcutPojo;
-import fr.neamar.kiss.shortcut.SaveAllOreoShortcutsAsync;
-import fr.neamar.kiss.shortcut.SaveSingleOreoShortcutAsync;
+import fr.neamar.kiss.shortcut.SaveAllOreoShortcuts;
+import fr.neamar.kiss.shortcut.SaveSingleOreoShortcut;
 
 public class ShortcutUtil {
 
@@ -67,7 +67,7 @@ public class ShortcutUtil {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public static void addAllShortcuts(Context context) {
-        new SaveAllOreoShortcutsAsync(context).execute();
+        SaveAllOreoShortcuts.execute(context);
     }
 
     /**
@@ -75,7 +75,7 @@ public class ShortcutUtil {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public static void addShortcut(Context context, Intent intent) {
-        new SaveSingleOreoShortcutAsync(context, intent).execute();
+        SaveSingleOreoShortcut.execute(context, intent);
     }
 
     /**

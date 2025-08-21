@@ -373,6 +373,7 @@ public abstract class Result<T extends Pojo> {
     
     /**
      * 이미지를 비동기로 로딩합니다. 뷰포트 체크 옵션을 제공합니다.
+     * Kotlin Coroutines 기반으로 변환됨 (AsyncSetImage → SetImageCoroutine)
      * 
      * @param view 이미지를 표시할 ImageView
      * @param resId 플레이스홀더 리소스 ID
@@ -388,29 +389,19 @@ public abstract class Result<T extends Pojo> {
         
         // getting this called multiple times in parallel may result in empty icons
         synchronized (this) {
-            // the ImageView tag will store the async task if it's running
-            if (view.getTag() instanceof AsyncSetImage) {
-                AsyncSetImage asyncSetImage = (AsyncSetImage) view.getTag();
-                if (this.equals(asyncSetImage.resultWeakReference.get())) {
-                    // we are already loading the icon for this
-                    return;
-                } else {
-                    asyncSetImage.cancel(true);
-                    view.setTag(null);
-                }
-            }
-            // the ImageView will store the Result after the AsyncTask finished
-            else if (this.equals(view.getTag())) {
-                ((Result<?>) view.getTag()).setDrawableCache(view.getDrawable());
+            // Check if we're already loading the same result
+            Object currentTag = view.getTag();
+            if (this.equals(currentTag)) {
+                ((Result<?>) currentTag).setDrawableCache(view.getDrawable());
                 return;
             }
+            
             if (isDrawableCached()) {
                 view.setImageDrawable(getDrawable(view.getContext()));
                 view.setTag(this);
             } else {
-                // use AsyncTask.SERIAL_EXECUTOR explicitly for now
-                // TODO: make execution parallel if needed/possible
-                view.setTag(createAsyncSetImage(view, resId).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR));
+                // Use Kotlin Coroutines - it handles cancellation internally
+                SetImageCoroutine.INSTANCE.setImageAsync(view, this, resId);
             }
         }
     }
