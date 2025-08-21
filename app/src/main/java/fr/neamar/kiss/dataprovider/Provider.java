@@ -2,7 +2,6 @@ package fr.neamar.kiss.dataprovider;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.neamar.kiss.MainActivity;
-import fr.neamar.kiss.loader.LoadPojos;
 import fr.neamar.kiss.pojo.Pojo;
 
 public abstract class Provider<T extends Pojo> extends Service implements IProvider<T> {
@@ -33,7 +31,6 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
     private String pojoScheme = "(none)://";
 
     private long start;
-    private LoadPojos<T> loader;
     private kotlinx.coroutines.Job loaderJob;
 
     /**
@@ -47,18 +44,6 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         this.reload();
     }
 
-
-    void initialize(LoadPojos<T> loader) {
-        cancelInitialize();
-        start = System.currentTimeMillis();
-
-        Log.i(TAG, "Starting provider: " + this.getClass().getSimpleName());
-
-        loader.setProvider(this);
-        this.pojoScheme = loader.getPojoScheme();
-        this.loader = (LoadPojos<T>) loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-    
     /**
      * Initialize provider with Kotlin Coroutines-based loader
      * 
@@ -77,17 +62,9 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
     }
 
     /**
-     * Cancel running {@link LoadPojos<T>} task and set to null.
+     * Cancel running Coroutines task and set to null.
      */
     private void cancelInitialize() {
-        // Cancel AsyncTask-based loader
-        if (this.loader != null) {
-            this.loader.cancel(false);
-            this.loader.setProvider(null);
-            this.loader = null;
-            Log.i(TAG, "Cancelling provider (AsyncTask): " + this.getClass().getSimpleName());
-        }
-        
         // Cancel Coroutines-based loader
         if (this.loaderJob != null) {
             this.loaderJob.cancel(null);
@@ -112,7 +89,6 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
 
         Log.i(TAG, "Time to load " + this.getClass().getSimpleName() + ": " + time + "ms");
         // Store results
-        this.loader = null;
         this.loaded = true;
         this.pojos = results;
 

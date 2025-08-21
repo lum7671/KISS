@@ -80,11 +80,7 @@ object SetImageCoroutine {
             currentTag.job.cancel()
             imageView.tag = null
         }
-        // Handle legacy AsyncSetImage operations
-        else if (currentTag is fr.neamar.kiss.result.Result.AsyncSetImage) {
-            currentTag.cancel(true)
-            imageView.tag = null
-        }
+        // Legacy AsyncTask handling is no longer needed - all converted to Coroutines
     }
     
     /**

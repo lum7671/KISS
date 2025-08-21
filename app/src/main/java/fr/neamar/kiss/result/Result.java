@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Build;
@@ -443,10 +442,6 @@ public abstract class Result<T extends Pojo> {
         return true;
     }
 
-    private AsyncSetImage createAsyncSetImage(ImageView imageView, @DrawableRes int resId) {
-        return new AsyncSetImage(imageView, this, resId);
-    }
-
     /**
      * Helper function to get a view
      *
@@ -480,44 +475,6 @@ public abstract class Result<T extends Pojo> {
     public long getUniqueId() {
         // we can consider hashCode unique enough in this context
         return this.pojo.id.hashCode();
-    }
-
-    static class AsyncSetImage extends AsyncTask<Void, Void, Drawable> {
-        final WeakReference<ImageView> imageViewWeakReference;
-        final WeakReference<Result<?>> resultWeakReference;
-
-        AsyncSetImage(ImageView image, Result<?> result, @DrawableRes int resId) {
-            super();
-            image.setTag(this);
-            image.setImageResource(resId);
-            this.imageViewWeakReference = new WeakReference<>(image);
-            this.resultWeakReference = new WeakReference<>(result);
-        }
-
-        @Override
-        protected Drawable doInBackground(Void... voids) {
-            ImageView image = imageViewWeakReference.get();
-            if (isCancelled() || image == null || image.getTag() != this) {
-                imageViewWeakReference.clear();
-                return null;
-            }
-            Result<?> result = resultWeakReference.get();
-            if (result == null) {
-                return null;
-            }
-            return result.getDrawable(image.getContext());
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            ImageView image = imageViewWeakReference.get();
-            if (isCancelled() || image == null || drawable == null) {
-                imageViewWeakReference.clear();
-                return;
-            }
-            image.setImageDrawable(drawable);
-            image.setTag(resultWeakReference.get());
-        }
     }
 
     protected boolean isHideIcons(Context context) {

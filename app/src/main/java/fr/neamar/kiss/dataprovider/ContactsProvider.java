@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-import fr.neamar.kiss.loader.LoadContactsPojos;
 import fr.neamar.kiss.normalizer.PhoneNormalizer;
 import fr.neamar.kiss.normalizer.StringNormalizer;
 import fr.neamar.kiss.pojo.ContactsPojo;
