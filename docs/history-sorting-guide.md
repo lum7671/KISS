@@ -2,7 +2,8 @@
 
 ## Overview
 
-KISS Launcher provides 6 different sorting algorithms for analyzing user app usage history. Each sorting mode has unique characteristics and use cases, offering optimized app accessibility tailored to users' various patterns and preferences.
+KISS Launcher provides 6 different sorting algorithms for analyzing user app usage history.  
+Each sorting mode has unique characteristics and use cases, offering optimized app accessibility tailored to users' patterns.
 
 ## Supported History Modes
 
@@ -67,7 +68,7 @@ LIMIT n
 
 ```text
 frecency_score = frequency × (1.0 + time_weight)
-time_weight = (current_time - min_timestamp) / 86400000.0
+time_weight = (current_time - min_timestamp) / 86400000.0  // weight calculation based on days
 ```
 
 **Use Cases**:

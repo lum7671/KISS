@@ -27,16 +27,19 @@
 ### Phase 1: 기반 구조 개선 ✅
 
 #### 1.1 DTO/VO 클래스들 불변성 확보
+
 - `ImmutablePojo` 기본 클래스 생성
 - `ImmutableAppPojo` Builder 패턴 적용
 - 불변 객체로 Thread-Safety 확보
 
 #### 1.2 Interface 정의 및 의존성 주입 준비  
+
 - `Repository<T, ID>` 기본 인터페이스
 - `PojoRepository<T>` 전용 인터페이스
 - `CachedPojoRepository<T>` 구현체
 
 #### 1.3 유틸리티 클래스들 세분화
+
 - `PackageManagerUtils` → 기능별 분리:
   - `IntentResolverUtils` - Intent 해결
   - `ApplicationInfoUtils` - 앱 정보 조회
@@ -45,11 +48,13 @@
 ### Phase 2: 핵심 로직 분리 ✅
 
 #### 2.1 MainActivity에서 Controller들 분리
+
 - `SearchController` - 검색 기능 전담
 - `UIController` - UI 상태 및 애니메이션 관리
 - `LifecycleController` - 생명주기 및 시스템 이벤트 처리
 
 #### 2.2 Repository 패턴 적용
+
 - `CachedPojoRepository` 캐시 기능 구현
 - 태그별 캐시 최적화
 - 메모리 효율성 개선
@@ -57,11 +62,13 @@
 ### Phase 3: 디자인 패턴 적용 ✅
 
 #### 3.1 Command 패턴으로 사용자 액션 처리
+
 - `UserAction` 인터페이스 정의
 - `LaunchAppAction` 구체적인 액션 구현
 - `ActionManager` 중앙 집중식 액션 관리
 
 #### 3.2 Observer 패턴으로 이벤트 처리
+
 - 각 컨트롤러별 리스너 인터페이스
 - 느슨한 결합으로 확장성 확보
 
@@ -69,7 +76,7 @@
 
 ### 새로운 패키지 구조
 
-```
+```text
 fr.neamar.kiss/
 ├── command/                    # Command 패턴
 │   ├── UserAction.java
@@ -101,6 +108,7 @@ fr.neamar.kiss/
 ### 리팩터링 적용 예시
 
 #### Before: 기존 MainActivity
+
 ```java
 public class MainActivity extends Activity implements QueryInterface {
     // 1,247줄의 거대한 클래스
@@ -109,6 +117,7 @@ public class MainActivity extends Activity implements QueryInterface {
 ```
 
 #### After: 리팩터링된 MainActivity  
+
 ```java
 public class RefactoredMainActivity extends Activity implements QueryInterface {
     private SearchController searchController;      // 검색 전담
@@ -163,21 +172,25 @@ public void testSearchFunctionality() {
 ## 기대 효과
 
 ### 1. 코드 품질 개선
+
 - **복잡도 감소**: 큰 클래스들이 작은 단위로 분해
 - **가독성 향상**: 각 클래스의 역할이 명확
 - **중복 제거**: 공통 로직의 재사용성 증가
 
 ### 2. 유지보수성 향상
+
 - **변경 영향 최소화**: 수정 시 관련 클래스만 영향
 - **버그 추적 용이**: 문제 발생 지점을 빠르게 특정
 - **기능 추가 간편**: 새로운 Controller나 Action 추가만으로 확장
 
 ### 3. 테스트 용이성
+
 - **단위 테스트**: 각 컨트롤러별 독립적 테스트 가능
 - **Mock 객체**: 의존성 주입으로 Mock 테스트 지원
 - **통합 테스트**: 컨트롤러 간 상호작용 테스트
 
 ### 4. 성능 최적화
+
 - **메모리 관리**: 컨트롤러별 리소스 관리
 - **캐시 효율성**: Repository 패턴의 체계적 캐싱
 - **비동기 처리**: 각 컨트롤러의 독립적 스레드 관리
@@ -185,16 +198,19 @@ public void testSearchFunctionality() {
 ## 마이그레이션 체크리스트
 
 ### Phase 1 완료 확인
+
 - [ ] `ImmutablePojo` 클래스 생성
 - [ ] `Repository` 인터페이스 정의
 - [ ] 유틸리티 클래스 분리
 
 ### Phase 2 완료 확인  
+
 - [ ] `SearchController` 동작 검증
 - [ ] `UIController` 애니메이션 테스트
 - [ ] `LifecycleController` 이벤트 처리 확인
 
 ### Phase 3 완료 확인
+
 - [ ] `Command 패턴` 액션 실행 테스트
 - [ ] `Observer 패턴` 이벤트 전파 확인
 - [ ] 전체 통합 테스트 통과
@@ -211,6 +227,7 @@ public void testSearchFunctionality() {
 ## 결론
 
 이 리팩터링을 통해 KISS 프로젝트는:
+
 - **1,247줄의 MainActivity → 여러 100줄 내외의 컨트롤러들**로 분해
 - **단일 책임 원칙** 적용으로 코드 품질 향상
 - **확장 가능한 구조**로 미래 기능 추가 대비
