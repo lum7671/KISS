@@ -34,6 +34,7 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
 
     private long start;
     private LoadPojos<T> loader;
+    private kotlinx.coroutines.Job loaderJob;
 
     /**
      * (Re-)load the providers resources when the provider has been completely initialized
@@ -57,16 +58,41 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         this.pojoScheme = loader.getPojoScheme();
         this.loader = (LoadPojos<T>) loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+    
+    /**
+     * Initialize provider with Kotlin Coroutines-based loader
+     * 
+     * @param loader The Coroutines-based loader
+     */
+    void initializeCoroutines(fr.neamar.kiss.loader.LoadPojosCoroutine<T> loader) {
+        cancelInitialize();
+        start = System.currentTimeMillis();
+
+        Log.i(TAG, "Starting provider (Coroutines): " + this.getClass().getSimpleName());
+
+        loader.setProvider(this);
+        this.pojoScheme = loader.getScheme();
+        // Store the job for potential cancellation
+        this.loaderJob = loader.executeAsync();
+    }
 
     /**
      * Cancel running {@link LoadPojos<T>} task and set to null.
      */
     private void cancelInitialize() {
+        // Cancel AsyncTask-based loader
         if (this.loader != null) {
             this.loader.cancel(false);
             this.loader.setProvider(null);
             this.loader = null;
-            Log.i(TAG, "Cancelling provider: " + this.getClass().getSimpleName());
+            Log.i(TAG, "Cancelling provider (AsyncTask): " + this.getClass().getSimpleName());
+        }
+        
+        // Cancel Coroutines-based loader
+        if (this.loaderJob != null) {
+            this.loaderJob.cancel(null);
+            this.loaderJob = null;
+            Log.i(TAG, "Cancelling provider (Coroutines): " + this.getClass().getSimpleName());
         }
     }
 

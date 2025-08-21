@@ -88,7 +88,8 @@ public class AppProvider extends Provider<AppPojo> {
     @Override
     public void reload() {
         super.reload();
-        this.initialize(new LoadAppPojos(this));
+        // Use Kotlin Coroutines version for better performance and maintainability
+        this.initializeCoroutines(new fr.neamar.kiss.loader.LoadAppPojosCoroutine(this));
     }
 
     /**

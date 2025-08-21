@@ -51,7 +51,8 @@ public class ContactsProvider extends Provider<ContactsPojo> {
     @Override
     public void reload() {
         super.reload();
-        this.initialize(new LoadContactsPojos(this));
+        // Use Kotlin Coroutines version for better performance and maintainability
+        this.initializeCoroutines(new fr.neamar.kiss.loader.LoadContactsPojosCoroutine(this));
     }
 
     @Override
