@@ -170,6 +170,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'                 // Google Glide - 이미지 로딩/캐싱
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'         // Glide 컴파일러
     implementation 'androidx.collection:collection:1.4.5'                   // LruCache 등 컬렉션 유틸리티
+    
+    // Shizuku - 루트 권한 대안으로 시스템 API 접근
+    implementation 'dev.rikka.shizuku:api:13.1.5'                          // Shizuku API
+    implementation 'dev.rikka.shizuku:provider:13.1.5'                     // Shizuku Provider
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'      // 최신 버전 유지
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.4'   // 최신 버전 유지

@@ -33,6 +33,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- To provide access and state handling of the private space -->
     <uses-permission android:name="android.permission.ACCESS_HIDDEN_PROFILES" />
+    <!-- Shizuku 관련 권한 -->
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <!-- 앱 강제 종료를 위한 권한 (Shizuku를 통해 접근) -->
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" 
+        tools:ignore="ProtectedPermissions" />
 
     <uses-feature
         android:name="android.hardware.telephony"

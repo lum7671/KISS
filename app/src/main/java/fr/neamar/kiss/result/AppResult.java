@@ -40,6 +40,7 @@ import fr.neamar.kiss.IconsHandler;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.R;
+import fr.neamar.kiss.RootHandler;
 import fr.neamar.kiss.UIColors;
 import fr.neamar.kiss.adapter.RecordAdapter;
 import fr.neamar.kiss.notification.NotificationListener;
@@ -153,8 +154,10 @@ public class AppResult extends Result<AppPojo> {
             adapter.add(new ListPopup.Item(context, R.string.menu_app_uninstall));
         }
 
-        // append root menu if available
-        if (KissApplication.getApplication(context).getRootHandler().isRootActivated() && KissApplication.getApplication(context).getRootHandler().isRootAvailable()) {
+        // append root/shizuku menu if available
+        RootHandler rootHandler = KissApplication.getApplication(context).getRootHandler();
+        if ((rootHandler.isRootActivated() && rootHandler.isRootAvailable()) || 
+            (rootHandler.isShizukuAvailable() && rootHandler.hasShizukuPermission())) {
             adapter.add(new ListPopup.Item(context, R.string.menu_app_hibernate));
         }
 
