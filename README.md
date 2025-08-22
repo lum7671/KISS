@@ -2,6 +2,44 @@
 
 ## 📋 Changes
 
+### 🚀 v4.0.5 - Smart UI State Management Edition (2025-08-22)
+
+#### 🎯 UI 상태 추적 시스템 구현
+
+- **✨ 스마트 화면 상태 관리**: Phase 1 UI State Tracking 시스템 완전 구현
+  - UIState enum: INITIAL, ALL_APPS, SEARCH_RESULTS, HISTORY, FAVORITES_VISIBLE, MINIMALISTIC
+  - UserIntent 분석: QUICK_RETURN, HOME_RETURN, NEW_TASK 의도 자동 감지
+  - 사용자 작업 중단 방지: 메뉴 보기 중 강제 초기화 문제 해결
+- **🔧 onResume() 스마트 처리**: 앱 복귀 시 현재 화면 상태 유지
+  - handleFavoriteChangeOnResume(): 즐겨찾기 변경 시 백그라운드 처리
+  - handleDataUpdateOnResume(): 필요한 경우에만 데이터 업데이트
+  - handleAppListOnResume(): 사용자 의도에 따른 앱 목록 처리
+- **⚡ onNewIntent() 조건부 처리**: 홈 버튼 재클릭 시 지능적 동작
+  - 빠른 복귀(1초 이내): 현재 화면 상태 유지
+  - 의도적 홈 복귀: 필요한 경우에만 초기화
+  - 검색어 입력 중: 자동 클리어 후 초기 상태로 전환
+
+#### 🛠️ 메뉴 지속성 및 사용자 경험 개선
+
+- **🚫 강제 메뉴 닫힘 문제 해결**: "메뉴를 보고 있는데... 화면이 초기화가 자꾸 되니... 메뉴를 볼 수가 없네" 이슈 완전 수정
+- **📱 displayKissBar() 오버로드**: 사용자 의도 추적을 위한 새로운 매개변수 추가
+- **⏰ 시간 기반 상태 판단**: lastPauseTime, lastLaunchTime 추적으로 정확한 상황 분석
+- **🎮 백그라운드 업데이트 대기**: 사용자 활동 중 업데이트 지연 후 안전한 시점에 처리
+
+#### 📦 패키지 정보 업데이트
+
+- **🏷️ Package ID**: `kr.lum7671.kiss` (한국어 도메인 기반 고유 식별자)
+- **🔧 Activity 경로**: `kr.lum7671.kiss/fr.neamar.kiss.MainActivity`
+- **📋 실행 명령어**: `adb shell am start -n kr.lum7671.kiss/fr.neamar.kiss.MainActivity`
+- **📊 메모리 모니터링**: `adb shell dumpsys meminfo kr.lum7671.kiss`
+
+#### 🗃️ 문서화 및 분석 완료
+
+- **📄 3개 분석 문서 작성**: 화면 refresh 최적화, 아이콘 refresh 분석, Phase 1 구현 가이드
+- **🎯 기존 최적화 발견**: IconCacheManager 3단계 캐싱 시스템이 이미 존재함을 확인
+- **🔍 근본 원인 파악**: onResume()의 displayKissBar(false) 강제 호출이 주 원인이었음
+- **✅ 즉시 적용 가능한 해결책**: 복잡한 아키텍처 변경 없이 기존 코드 개선으로 문제 해결
+
 ### 🚀 v4.0.4 - Coroutines Migration Completion (2025-08-21)
 
 #### ✅ AsyncTask → Kotlin Coroutines Migration Complete
@@ -44,7 +82,7 @@
   - Memory-first hybrid database system
   - Performance profiling capabilities
   - Screen state monitoring optimizations
-  - Custom package ID (`fr.neamar.kiss.lum7671`)
+  - Custom package ID (`kr.lum7671.kiss`)
 - **🏗️ Build System**: Updated dependencies and improved conflict resolution
 - **🧪 Tested Integration**: Validated on Android emulator with full functionality
 
@@ -98,7 +136,7 @@
 - **📱 Android 13+ Optimization**: API 33+ with Android 15 target
 - **🔐 APK Signature Scheme v3**: Modern security standards
 - **⚡ Lightweight Release Build**: 1.2MB (96% size reduction from 31MB)
-- **🎯 Package ID**: `fr.neamar.kiss.lum7671` (conflict-free installation)
+- **🎯 Package ID**: `kr.lum7671.kiss` (conflict-free installation)
 - **🔧 Debug-Only Libraries**: Performance tools excluded from release builds
 
 #### 🛠️ Technical Architecture

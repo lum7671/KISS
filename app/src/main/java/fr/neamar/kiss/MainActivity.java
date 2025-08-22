@@ -140,6 +140,36 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     private boolean isScreenOn = true;
     
     /**
+     * 현재 사용자가 보고 있는 화면 상태를 나타내는 enum
+     */
+    public enum UIState {
+        INITIAL,           // 초기 상태 (히스토리 또는 빈 화면)
+        FAVORITES_VISIBLE, // 즐겨찾기 바가 보이는 상태
+        ALL_APPS,          // 전체 앱 목록 보기
+        SEARCH_RESULTS,    // 검색 결과 표시
+        HISTORY,           // 히스토리 표시
+        MINIMALISTIC      // 미니멀리스틱 모드
+    }
+
+    /**
+     * 사용자 의도 enum
+     */
+    private enum UserIntent {
+        QUICK_RETURN,  // 빠른 복귀 (앱 전환 후 바로 돌아옴)
+        HOME_RETURN,   // 일반적인 홈 복귀
+        NEW_TASK,      // 새로운 작업 시작
+        UNKNOWN        // 의도 불명
+    }
+
+    // 상태 추적 변수들
+    private UIState currentUIState = UIState.INITIAL;
+    private UIState previousUIState = UIState.INITIAL;
+    private boolean isUserInitiatedStateChange = false;
+    private boolean hasPendingBackgroundUpdate = false;
+    private long lastPauseTime = 0;
+    private long lastLaunchTime = 0;
+    
+    /**
      * 액티비티 재구성이 필요한지 스마트하게 판단
      */
     private boolean shouldRecreateActivity() {
@@ -680,20 +710,17 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
         if (KissApplication.getApplication(this).getDataHandler().allProvidersHaveLoaded) {
             displayLoader(false);
-            onFavoriteChange();
+            // 스마트 즐겨찾기 업데이트
+            handleFavoriteChangeOnResume();
         }
 
-        // We need to update the history in case an external event created new items
-        // (for instance, installed a new app, got a phone call or simply clicked on a favorite)
-        // 스마트 업데이트: 실제로 변경이 있었을 때만 업데이트
-        if (KissApplication.getApplication(this).getDataHandler().shouldUpdateOnResume()) {
-            updateSearchRecords();
-        }
+        // 스마트 데이터 업데이트
+        handleDataUpdateOnResume();
+        
         displayClearOnInput();
 
-        if (isViewingAllApps()) {
-            displayKissBar(false);
-        }
+        // 스마트 앱 목록 처리
+        handleAppListOnResume();
 
         forwarderManager.onResume();
 
@@ -720,6 +747,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @Override
     protected void onPause() {
         super.onPause();
+        lastPauseTime = System.currentTimeMillis();
         ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onPause");
         forwarderManager.onPause();
     }
@@ -752,23 +780,25 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //Set the intent so KISS can tell when it was launched as an assistant
         setIntent(intent);
+        lastLaunchTime = System.currentTimeMillis();
 
-        // This is called when the user press Home again while already browsing MainActivity
-        // onResume() will be called right after, hiding the kissbar if any.
-        // http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
-        // Animation can't happen in this method, since the activity is not resumed yet, so they'll happen in the onResume()
-        // https://github.com/Neamar/KISS/issues/569
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onNewIntent called - analyzing user intent");
+        }
+
+        // 사용자 의도 분석
+        UserIntent userIntent = analyzeUserIntent(intent);
+        
+        // 검색어가 있다면 클리어 (기존 동작 유지)
         if (!TextUtils.isEmpty(searchEditText.getText())) {
             Log.i(TAG, "Clearing search field");
             clearSearchText();
+            setUIState(UIState.INITIAL, true);
         }
 
-        // Hide kissbar when coming back to kiss
-        if (isViewingAllApps()) {
-            displayKissBar(false);
-        }
+        // 사용자 의도에 따른 앱 목록 처리
+        handleAppListOnNewIntent(userIntent);
 
         // Close the backButton context menu
         closeContextMenu();
@@ -986,10 +1016,26 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     public void displayKissBar(boolean display) {
-        this.displayKissBar(display, true);
+        this.displayKissBar(display, true, true); // 기본값: clearSearch=true, userInitiated=true
     }
 
     protected void displayKissBar(boolean display, boolean clearSearchText) {
+        this.displayKissBar(display, clearSearchText, true); // 기본값: userInitiated=true
+    }
+
+    protected void displayKissBar(boolean display, boolean clearSearchText, boolean userInitiated) {
+        // 상태 업데이트
+        if (display) {
+            setUIState(UIState.ALL_APPS, userInitiated);
+        } else {
+            setUIState(UIState.INITIAL, userInitiated);
+        }
+        
+        // 기존 로직 유지
+        displayKissBarInternal(display, clearSearchText);
+    }
+
+    private void displayKissBarInternal(boolean display, boolean clearSearchText) {
         dismissPopup();
         // get the center for the clipping circle
         ViewGroup launcherButtonWrapper = (ViewGroup) launcherButton.getParent();
@@ -1273,6 +1319,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     public void showHistory() {
+        setUIState(UIState.HISTORY, true);
         runTask(new HistorySearcher(this, false));
 
         clearButton.setVisibility(View.VISIBLE);
@@ -1292,5 +1339,173 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         }
 
         return homePackage.equals(this.getPackageName());
+    }
+
+    // ========== UI 상태 관리 메서드들 ==========
+
+    /**
+     * UI 상태를 변경하고 기록
+     */
+    private void setUIState(UIState newState, boolean isUserInitiated) {
+        if (currentUIState != newState) {
+            previousUIState = currentUIState;
+            currentUIState = newState;
+            isUserInitiatedStateChange = isUserInitiated;
+            
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, String.format("UI State changed: %s -> %s (user: %b)", 
+                    previousUIState, currentUIState, isUserInitiated));
+            }
+        }
+    }
+
+    /**
+     * 현재 UI 상태 확인
+     */
+    private UIState getCurrentUIState() {
+        return currentUIState;
+    }
+
+    /**
+     * 사용자가 의도적으로 상태를 변경했는지 확인
+     */
+    private boolean isUserInitiatedChange() {
+        return isUserInitiatedStateChange;
+    }
+
+    /**
+     * 현재 상태에서 UI 업데이트가 안전한지 확인
+     */
+    private boolean isSafeToUpdateUI() {
+        return currentUIState == UIState.INITIAL || 
+               currentUIState == UIState.MINIMALISTIC ||
+               isUserInitiatedChange();
+    }
+
+    /**
+     * 사용자 의도 분석
+     */
+    private UserIntent analyzeUserIntent(Intent intent) {
+        if (intent.hasCategory(Intent.CATEGORY_HOME)) {
+            long timeSinceLastLaunch = System.currentTimeMillis() - lastLaunchTime;
+            if (timeSinceLastLaunch < 1000) {
+                return UserIntent.QUICK_RETURN;
+            } else {
+                return UserIntent.HOME_RETURN;
+            }
+        }
+        return UserIntent.UNKNOWN;
+    }
+
+    /**
+     * Resume 시 즐겨찾기 변경 처리
+     */
+    private void handleFavoriteChangeOnResume() {
+        if (isSafeToUpdateUI() || currentUIState == UIState.FAVORITES_VISIBLE) {
+            onFavoriteChange();
+        } else {
+            hasPendingBackgroundUpdate = true;
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Deferring favorite change update - user is viewing " + currentUIState);
+            }
+        }
+    }
+
+    /**
+     * Resume 시 데이터 업데이트 처리
+     */
+    private void handleDataUpdateOnResume() {
+        DataHandler dataHandler = KissApplication.getApplication(this).getDataHandler();
+        if (dataHandler.shouldUpdateOnResume()) {
+            if (isSafeToUpdateUI()) {
+                updateSearchRecords();
+            } else {
+                hasPendingBackgroundUpdate = true;
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Deferring data update - user is actively using " + currentUIState);
+                }
+            }
+        }
+    }
+
+    /**
+     * Resume 시 앱 목록 처리
+     */
+    private void handleAppListOnResume() {
+        if (isViewingAllApps()) {
+            if (!isUserInitiatedChange() && shouldCloseAppListOnResume()) {
+                displayKissBar(false, true, false);
+            } else {
+                setUIState(UIState.ALL_APPS, false);
+            }
+        }
+    }
+
+    /**
+     * Resume 시 앱 목록을 닫아야 하는지 판단
+     */
+    private boolean shouldCloseAppListOnResume() {
+        return System.currentTimeMillis() - lastPauseTime > 30000; // 30초 이상
+    }
+
+    /**
+     * NewIntent 시 앱 목록 처리
+     */
+    private void handleAppListOnNewIntent(UserIntent userIntent) {
+        if (isViewingAllApps()) {
+            switch (userIntent) {
+                case QUICK_RETURN:
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Quick return detected - maintaining app list");
+                    }
+                    break;
+                case HOME_RETURN:
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Home return detected - closing app list");
+                    }
+                    displayKissBar(false, true, true);
+                    break;
+                case UNKNOWN:
+                default:
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Unknown intent - maintaining current state");
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 백그라운드에서 지연된 업데이트 처리
+     */
+    private void processPendingBackgroundUpdates() {
+        if (hasPendingBackgroundUpdate && isSafeToUpdateUI()) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Processing pending background updates");
+            }
+            
+            switch (currentUIState) {
+                case INITIAL:
+                case HISTORY:
+                    updateSearchRecords();
+                    break;
+                case FAVORITES_VISIBLE:
+                    onFavoriteChange();
+                    break;
+                case ALL_APPS:
+                    // 필요시 앱 목록 업데이트 로직 추가
+                    break;
+            }
+            
+            hasPendingBackgroundUpdate = false;
+        }
+    }
+
+    /**
+     * 사용자가 화면을 변경할 때 호출
+     */
+    public void onUserStateChange(UIState newState) {
+        setUIState(newState, true);
+        processPendingBackgroundUpdates();
     }
 }

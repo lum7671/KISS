@@ -86,7 +86,7 @@ fi
 echo -e "${BLUE}🔧 Release 빌드 시작...${NC}"
 echo -e "${BLUE}   - 최적화: ProGuard/R8 활성화${NC}"
 echo -e "${BLUE}   - 크기: ~1.2MB (96% 최적화)${NC}"
-echo -e "${BLUE}   - 패키지: fr.neamar.kiss.lum7671${NC}"
+echo -e "${BLUE}   - 패키지: kr.lum7671.kiss${NC}"
 
 ./gradlew assembleRelease
 
@@ -150,13 +150,13 @@ if [ "$INSTALL_APK" = true ]; then
         echo -e "${BLUE}📦 APK 설치 중...${NC}"
         
         # 기존 앱이 있으면 제거 여부 확인
-        if adb shell pm list packages | grep -q "fr.neamar.kiss.lum7671"; then
+        if adb shell pm list packages | grep -q "kr.lum7671.kiss"; then
             echo -e "${YELLOW}⚠️  기존 KISS 앱이 설치되어 있습니다${NC}"
             read -p "제거하고 새로 설치하시겠습니까? (y/N): " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -e "${YELLOW}⚠️  기존 앱 제거 중...${NC}"
-                adb uninstall fr.neamar.kiss.lum7671 || true
+                adb uninstall kr.lum7671.kiss || true
             fi
         fi
         
@@ -178,7 +178,7 @@ echo -e "${BLUE}📄 빌드 정보:${NC}"
 echo "   버전: KISS $VERSION ($VERSION_NAME)"
 echo "   빌드 번호: $VERSION_CODE"
 echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
-echo "   패키지: fr.neamar.kiss.lum7671"
+echo "   패키지: kr.lum7671.kiss"
 echo "   APK 크기: $APK_SIZE"
 echo "   파일 위치: $APK_SIGNED"
 echo "   파일명: $(basename "$APK_SIGNED")"
@@ -203,7 +203,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 - **버전**: $VERSION_NAME (빌드 $VERSION_CODE)
 - **빌드 날짜**: $(date '+%Y년 %m월 %d일 %H:%M:%S')
 - **APK 크기**: $APK_SIZE
-- **패키지명**: fr.neamar.kiss.lum7671
+- **패키지명**: kr.lum7671.kiss
 - **서명**: $([ "$KEYSTORE" = "$DEBUG_KEYSTORE" ] && echo "Debug" || echo "Release")
 
 ## 주요 최적화 사항

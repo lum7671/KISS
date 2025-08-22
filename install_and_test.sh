@@ -62,12 +62,12 @@ echo -e "   ${GREEN}• 파일 크기: $APK_SIZE${NC}"
 
 # aapt를 사용해서 패키지 정보 확인 (가능한 경우)
 if command -v aapt &> /dev/null; then
-    PACKAGE_NAME=$(aapt dump badging "$APK_TO_INSTALL" 2>/dev/null | grep "package:" | sed "s/.*name='\([^']*\)'.*/\1/" || echo "fr.neamar.kiss.lum7671")
+    PACKAGE_NAME=$(aapt dump badging "$APK_TO_INSTALL" 2>/dev/null | grep "package:" | sed "s/.*name='\([^']*\)'.*/\1/" || echo "kr.lum7671.kiss")
     VERSION_NAME=$(aapt dump badging "$APK_TO_INSTALL" 2>/dev/null | grep "versionName" | sed "s/.*versionName='\([^']*\)'.*/\1/" || echo "4.0.1")
     echo -e "   ${GREEN}• 패키지명: $PACKAGE_NAME${NC}"
     echo -e "   ${GREEN}• 버전: $VERSION_NAME${NC}"
 else
-    PACKAGE_NAME="fr.neamar.kiss.lum7671"
+    PACKAGE_NAME="kr.lum7671.kiss"
     echo -e "   ${YELLOW}• 패키지명: $PACKAGE_NAME (기본값)${NC}"
 fi
 
@@ -95,7 +95,7 @@ read -p "KISS 런처를 실행하시겠습니까? (y/N): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "${BLUE}🚀 KISS 런처 실행 중...${NC}"
-    adb shell am start -n "$PACKAGE_NAME/fr.neamar.kiss.MainActivity" || {
+    adb shell am start -n "$PACKAGE_NAME/kr.lum7671.kiss.MainActivity" || {
         echo -e "${YELLOW}⚠️  직접 실행에 실패했습니다. 앱 목록에서 KISS를 찾아 실행하세요.${NC}"
     }
 fi

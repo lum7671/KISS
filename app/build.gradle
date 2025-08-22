@@ -18,13 +18,13 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        applicationId 'fr.neamar.kiss.lum7671'  // 사용자 커스텀 ID 유지
+        applicationId 'kr.lum7671.kiss'
         minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환) - 사용자 설정 유지
         compileSdk 35
         targetSdkVersion 35
         compileSdk = 35
-        versionCode 404
-        versionName "4.0.4"
+        versionCode 405
+        versionName "4.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         // BuildConfig에 업스트림 버전 정보 추가
@@ -57,14 +57,14 @@ android {
             buildConfigField "String", "BUILD_TYPE", '"release"'
         }
         debug {
-            // fr.neamar.kiss.lum7671로 통일
+            // fr.neamar.kiss 패키지명 사용
             
             // 빌드 타입 정보 추가
             buildConfigField "String", "BUILD_TYPE", '"debug"'
         }
         profile {
             // Android 15+ 고급 프로파일링을 위한 빌드 타입
-            // fr.neamar.kiss.lum7671로 통일
+            // fr.neamar.kiss 패키지명 사용
             debuggable true
             minifyEnabled false
             shrinkResources false
