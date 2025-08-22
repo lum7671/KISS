@@ -91,21 +91,34 @@ object SetImageCoroutine {
         imageViewRef: WeakReference<ImageView>,
         resultRef: WeakReference<Result<*>>
     ): Drawable? {
-        // Check if ImageView is still valid
+        // Get references first and keep strong references during loading
         val imageView = imageViewRef.get() ?: return null
+        val result = resultRef.get() ?: return null
         
         // Verify that our operation is still current (not replaced by another)
         val currentTag = imageView.tag
-        if (currentTag !is ImageLoadingTag || currentTag.result != resultRef.get()) {
+        if (currentTag !is ImageLoadingTag || currentTag.result != result) {
             return null
         }
         
-        // Get the result and load drawable
-        val result = resultRef.get() ?: return null
         return try {
-            result.getDrawable(imageView.context)
+            // Load drawable with error handling and retry logic
+            var drawable = result.getDrawable(imageView.context)
+            
+            // 아이콘이 null이면 여러 번 재시도
+            var retryCount = 0
+            while (drawable == null && retryCount < 3) {
+                retryCount++
+                Thread.sleep((100 * retryCount).toLong()) // 점진적 지연
+                drawable = result.getDrawable(imageView.context)
+                android.util.Log.w("SetImageCoroutine", "Retrying icon load (${retryCount}/3) for ${result.javaClass.simpleName}")
+            }
+            
+            drawable
         } catch (e: Exception) {
-            null // Handle any loading errors gracefully
+            // 오류 발생 시 로그 남기고 null 반환
+            android.util.Log.w("SetImageCoroutine", "Failed to load drawable: ${e.message}")
+            null
         }
     }
     
@@ -118,18 +131,39 @@ object SetImageCoroutine {
         drawable: Drawable?
     ) {
         val imageView = imageViewRef.get() ?: return
+        val result = resultRef.get() ?: return
         
-        // Verify operation is still current and drawable is valid
+        // Verify operation is still current
         val currentTag = imageView.tag
-        if (currentTag !is ImageLoadingTag || 
-            currentTag.result != resultRef.get() || 
-            drawable == null) {
+        if (currentTag !is ImageLoadingTag || currentTag.result != result) {
             return
         }
         
-        // Set the loaded drawable and restore the Result tag
-        imageView.setImageDrawable(drawable)
-        imageView.tag = resultRef.get() // Restore original Result tag
+        // drawable이 null이어도 처리 - 기본 아이콘이라도 보여주기
+        if (drawable != null) {
+            // 정상적으로 로드된 경우
+            imageView.setImageDrawable(drawable)
+            imageView.tag = result // Restore original Result tag
+        } else {
+            // drawable이 null인 경우 - 기본 아이콘을 강제로 다시 로드
+            android.util.Log.w("SetImageCoroutine", "Drawable is null, forcing default icon load")
+            try {
+                val defaultDrawable = result.getDrawable(imageView.context)
+                if (defaultDrawable != null) {
+                    imageView.setImageDrawable(defaultDrawable)
+                    imageView.tag = result
+                } else {
+                    // 최후의 수단: 시스템 기본 아이콘
+                    val systemDefault = imageView.context.resources.getDrawable(android.R.drawable.sym_def_app_icon)
+                    imageView.setImageDrawable(systemDefault)
+                    imageView.tag = result
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("SetImageCoroutine", "Failed to set fallback icon", e)
+                // 그래도 tag는 설정해서 무한 로딩 방지
+                imageView.tag = result
+            }
+        }
     }
     
     /**

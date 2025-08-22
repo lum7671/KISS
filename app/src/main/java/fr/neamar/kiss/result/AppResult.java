@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -421,14 +422,37 @@ public class AppResult extends Result<AppPojo> {
                         IconsHandler iconsHandler = KissApplication.getApplication(context).getIconsHandler();
                         icon = iconsHandler.getDrawableIconForPackage(className, this.pojo.userHandle);
                         
-                        // 아이콘이 null인 경우 기본 아이콘 사용
+                        // 아이콘이 null인 경우 다양한 fallback 시도
                         if (icon == null) {
-                            android.util.Log.w("KISS", "Failed to load icon for " + className + ", using default");
-                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                            android.util.Log.w("KISS", "Failed to load icon for " + className + ", trying fallbacks");
+                            
+                            // 1. 패키지 매니저에서 직접 로드 시도
+                            try {
+                                PackageManager pm = context.getPackageManager();
+                                ApplicationInfo appInfo = pm.getApplicationInfo(
+                                    className.getPackageName(), 
+                                    PackageManager.GET_META_DATA
+                                );
+                                icon = pm.getApplicationIcon(appInfo);
+                            } catch (PackageManager.NameNotFoundException e) {
+                                android.util.Log.w("KISS", "Package not found for fallback: " + className.getPackageName());
+                            }
+                            
+                            // 2. 여전히 null이면 시스템 기본 아이콘
+                            if (icon == null) {
+                                android.util.Log.w("KISS", "Using system default icon for " + className);
+                                icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                            }
                         }
                     } catch (Exception e) {
                         android.util.Log.e("KISS", "Error loading icon for " + className, e);
                         // 오류 발생 시 기본 아이콘 사용
+                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                    }
+                    
+                    // 최종 안전장치
+                    if (icon == null) {
+                        android.util.Log.e("KISS", "All icon loading failed for " + className + ", using emergency fallback");
                         icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
                     }
                 }

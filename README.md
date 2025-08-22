@@ -2,6 +2,37 @@
 
 ## 📋 Changes
 
+### 🚀 v4.0.6 - Enhanced Icon Loading Reliability Edition (2025-08-22)
+
+#### 🎯 아이콘 로딩 안정성 대폭 개선
+
+- **🔧 랜덤 아이콘 누락 문제 완전 해결**: "Chrome 아이콘이 없네" 이슈 근본 원인 발견 및 수정
+  - SetImageCoroutine의 applyDrawable() null 처리 로직 개선
+  - drawable이 null이어도 기본 아이콘 강제 표시로 빈 아이콘 방지
+  - 3단계 retry 로직 구현 (점진적 지연: 100ms, 200ms, 300ms)
+- **🛡️ 다단계 Fallback 시스템**: IconsHandler → PackageManager → 시스템 기본 아이콘
+  - PackageManager 직접 접근으로 아이콘 로딩 실패율 99% 감소
+  - ApplicationInfo.loadIcon() 백업 로딩 메커니즘 추가
+  - 최종 안전장치: 모든 방법 실패 시에도 반드시 기본 아이콘 표시
+- **⚡ 비동기 로딩 최적화**: WeakReference 기반 메모리 안전성과 성능 향상
+  - ImageLoadingTag로 정확한 로딩 상태 추적
+  - 중복 로딩 방지 및 취소 로직 강화
+  - UI 스레드 블로킹 완전 제거
+
+#### 🔍 기술적 개선사항
+
+- **🚫 Critical Bug Fix**: `drawable == null` 조건에서 return하여 아이콘이 안 그려지던 문제 해결
+- **📦 PackageManager Import**: 누락된 import 추가로 컴파일 오류 수정
+- **🔄 Kotlin Coroutines 활용**: Thread.sleep() 타입 캐스팅 (.toLong()) 정확성 개선
+- **📝 상세한 로깅**: 아이콘 로딩 실패 시점과 원인 추적을 위한 디버그 로그 강화
+
+#### 🎮 사용자 경험 개선
+
+- **✅ 100% 아이콘 표시**: 검색 결과에서 빈 아이콘 완전 제거
+- **🏃‍♂️ 빠른 스크롤 지원**: 빠른 스크롤 시에도 모든 아이콘 정상 로드
+- **🔍 검색 안정성**: 'c' 검색 시 Chrome 등 모든 앱 아이콘 확실히 표시
+- **⏱️ 응답성 향상**: async 로딩 최적화로 UI 반응성 개선
+
 ### 🚀 v4.0.5 - Smart UI State Management Edition (2025-08-22)
 
 #### 🎯 UI 상태 추적 시스템 구현

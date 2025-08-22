@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Build
@@ -108,7 +109,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         excludedShortcutsAppList: Set<String>
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Use LauncherApps for API 21+
+            // Use LauncherApps for API 21+ - 활성화된 앱들
             val activityList = launcherApps.getActivityList(null, userHandle.realHandle)
             
             for (activityInfo in activityList) {
@@ -123,6 +124,59 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                     excludedShortcutsAppList
                 )
                 apps.add(app)
+            }
+            
+            // 추가로 비활성화된 앱들도 로드 (PackageManager 사용)
+            try {
+                val pm = ctx.packageManager
+                
+                // 이미 추가된 앱들의 ComponentName을 Set으로 저장
+                val existingComponents = activityList.map { 
+                    "${it.applicationInfo.packageName}/${it.name}" 
+                }.toSet()
+                
+                // 모든 설치된 패키지를 확인 (비활성화된 것 포함)
+                val allPackages = pm.getInstalledPackages(PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_UNINSTALLED_PACKAGES)
+                
+                for (packageInfo in allPackages) {
+                    try {
+                        // LAUNCHER 카테고리가 있는 Activity들을 찾기
+                        val mainIntent = Intent(Intent.ACTION_MAIN).apply {
+                            addCategory(Intent.CATEGORY_LAUNCHER)
+                            setPackage(packageInfo.packageName)
+                        }
+                        
+                        val activities = pm.queryIntentActivities(mainIntent, 
+                            PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS)
+                        
+                        for (activityInfo in activities) {
+                            val componentKey = "${activityInfo.activityInfo.packageName}/${activityInfo.activityInfo.name}"
+                            
+                            // 이미 추가된 앱이 아닌 경우만 추가
+                            if (!existingComponents.contains(componentKey)) {
+                                val isDisabled = !activityInfo.activityInfo.enabled || 
+                                    (packageInfo.applicationInfo?.enabled == false)
+                                
+                                val app = createPojo(
+                                    userHandle,
+                                    activityInfo.activityInfo.packageName,
+                                    activityInfo.activityInfo.name,
+                                    activityInfo.loadLabel(pm),
+                                    isDisabled,
+                                    excludedAppList,
+                                    excludedFromHistoryAppList,
+                                    excludedShortcutsAppList
+                                )
+                                apps.add(app)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // 개별 패키지 처리 실패 시 무시하고 계속
+                        android.util.Log.w(TAG, "Error processing package ${packageInfo.packageName}: ${e.message}")
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.w(TAG, "Error loading disabled apps: ${e.message}")
             }
         } else {
             // Fallback for older Android versions

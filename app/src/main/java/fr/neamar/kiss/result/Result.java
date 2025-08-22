@@ -379,10 +379,16 @@ public abstract class Result<T extends Pojo> {
      * @param checkViewport 뷰포트 내에 있는지 확인할지 여부
      */
     void setAsyncDrawable(ImageView view, @DrawableRes int resId, boolean checkViewport) {
-        // 뷰포트 체크가 활성화되고, 뷰가 화면에 보이지 않으면 플레이스홀더만 설정
+        // 뷰포트 체크를 더 관대하게 처리 - 완전히 화면 밖에 있을 때만 스킵
         if (checkViewport && !isViewInViewport(view)) {
             view.setImageResource(resId);
             view.setTag(null);
+            // 지연 로딩: 잠시 후 다시 시도
+            view.post(() -> {
+                if (isViewInViewport(view)) {
+                    setAsyncDrawable(view, resId, false); // 재시도 시 viewport 체크 비활성화
+                }
+            });
             return;
         }
         
@@ -391,8 +397,7 @@ public abstract class Result<T extends Pojo> {
             // Check if we're already loading the same result
             Object currentTag = view.getTag();
             if (this.equals(currentTag)) {
-                ((Result<?>) currentTag).setDrawableCache(view.getDrawable());
-                return;
+                return; // 이미 로딩 중이면 중복 방지
             }
             
             if (isDrawableCached()) {
@@ -432,8 +437,9 @@ public abstract class Result<T extends Pojo> {
                 int parentTop = parentLocation[1];
                 int parentBottom = parentTop + parent.getHeight();
                 
-                // 뷰가 부모의 보이는 영역과 교차하는지 확인
-                return viewTop < parentBottom && viewBottom > parentTop;
+                // 여유 공간을 두어 더 관대하게 판단 (뷰 높이의 2배 여유)
+                int margin = view.getHeight() * 2;
+                return viewTop < (parentBottom + margin) && viewBottom > (parentTop - margin);
             }
             parent = (ViewGroup) parent.getParent();
         }
