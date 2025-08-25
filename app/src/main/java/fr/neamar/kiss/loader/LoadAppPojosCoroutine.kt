@@ -126,20 +126,25 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                 apps.add(app)
             }
             
+            // 비활성화된 앱 로딩 기능을 임시로 비활성화 (중복 및 실행 오류 방지)
+            /*
             // 추가로 비활성화된 앱들도 로드 (PackageManager 사용)
             try {
                 val pm = ctx.packageManager
                 
-                // 이미 추가된 앱들의 ComponentName을 Set으로 저장
-                val existingComponents = activityList.map { 
-                    "${it.applicationInfo.packageName}/${it.name}" 
-                }.toSet()
+                // 이미 추가된 앱들의 패키지명을 Set으로 저장 (더 안전한 방법)
+                val existingPackages = activityList.map { it.applicationInfo.packageName }.toSet()
                 
                 // 모든 설치된 패키지를 확인 (비활성화된 것 포함)
                 val allPackages = pm.getInstalledPackages(PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_UNINSTALLED_PACKAGES)
                 
                 for (packageInfo in allPackages) {
                     try {
+                        // 이미 추가된 패키지는 스킵 (중복 방지)
+                        if (existingPackages.contains(packageInfo.packageName)) {
+                            continue
+                        }
+                        
                         // LAUNCHER 카테고리가 있는 Activity들을 찾기
                         val mainIntent = Intent(Intent.ACTION_MAIN).apply {
                             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -150,25 +155,26 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                             PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS)
                         
                         for (activityInfo in activities) {
-                            val componentKey = "${activityInfo.activityInfo.packageName}/${activityInfo.activityInfo.name}"
+                            val isDisabled = !activityInfo.activityInfo.enabled || 
+                                (packageInfo.applicationInfo?.enabled == false)
                             
-                            // 이미 추가된 앱이 아닌 경우만 추가
-                            if (!existingComponents.contains(componentKey)) {
-                                val isDisabled = !activityInfo.activityInfo.enabled || 
-                                    (packageInfo.applicationInfo?.enabled == false)
-                                
-                                val app = createPojo(
-                                    userHandle,
-                                    activityInfo.activityInfo.packageName,
-                                    activityInfo.activityInfo.name,
-                                    activityInfo.loadLabel(pm),
-                                    isDisabled,
-                                    excludedAppList,
-                                    excludedFromHistoryAppList,
-                                    excludedShortcutsAppList
-                                )
-                                apps.add(app)
+                            // 비활성화된 앱이나 실행할 수 없는 앱은 스킵
+                            if (isDisabled) {
+                                android.util.Log.d(TAG, "Skipping disabled app: ${activityInfo.activityInfo.packageName}")
+                                continue
                             }
+                            
+                            val app = createPojo(
+                                userHandle,
+                                activityInfo.activityInfo.packageName,
+                                activityInfo.activityInfo.name,
+                                activityInfo.loadLabel(pm),
+                                isDisabled,
+                                excludedAppList,
+                                excludedFromHistoryAppList,
+                                excludedShortcutsAppList
+                            )
+                            apps.add(app)
                         }
                     } catch (e: Exception) {
                         // 개별 패키지 처리 실패 시 무시하고 계속
@@ -178,6 +184,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
             } catch (e: Exception) {
                 android.util.Log.w(TAG, "Error loading disabled apps: ${e.message}")
             }
+            */
         } else {
             // Fallback for older Android versions
             loadAppsLegacy(ctx, userHandle, apps, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList)
