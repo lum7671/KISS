@@ -2,6 +2,72 @@
 
 ## 📋 Changes
 
+### 🚀 v4.0.8 - Java 17 LTS Modernization Edition (2025-08-25)
+
+#### 🎯 Java 17 LTS 기반 현대화 완료
+
+- **☕ Java 17 LTS 완전 전환**: OpenJDK 17.0.16 기반 안정적인 빌드 환경 구축
+  - JVM Target 17: `-Xjvm-default=all`, `-Xjsr305=strict` 최적화 적용
+  - Android Gradle Plugin 8.7.3: Java 17 완전 지원 버전
+  - Gradle 8.13: 최신 안정 빌드 시스템
+- **🔧 Kotlin 2.0.21 업그레이드**: K2 컴파일러 안정화 및 성능 향상
+  - kotlinx-coroutines: 1.7.3 → 1.8.1 (Flow.stateIn 버그 수정)
+  - 컴파일 시간 단축 및 바이트코드 최적화
+  - Null 안전성 강화 및 타입 추론 개선
+- **📚 AndroidX 라이브러리 최신화**: 2025년 8월 기준 안정 버전 적용
+  - androidx.appcompat: 1.6.1 → 1.7.0
+  - androidx.fragment: 1.6.2 → 1.8.4
+  - androidx.lifecycle: 2.7.0 → 2.8.5
+  - androidx.annotation: 1.9.1 → 1.8.2
+
+#### 🛡️ 성능 및 안정성 개선
+
+- **🚫 Facebook Flipper 제거**: Deprecated 디버깅 도구 완전 제거
+  - OkHttp Logging Interceptor로 대체 (4.12.0)
+  - Chrome DevTools 및 Android Studio Profiler 활용 권장
+  - 의존성 충돌 해결 및 APK 크기 최적화
+- **💾 메모리 관리 최적화**: LeakCanary 2.14 + ANR Watchdog 1.4.0 유지
+  - 메모리 누수 탐지 시스템 강화
+  - ANR (Application Not Responding) 감지 및 분석
+  - Background 프로세스 모니터링 개선
+- **⚡ 컴파일러 최적화**: Java 17 특화 설정 적용
+  - `-Xlint:deprecation`, `-Xlint:unchecked` 경고 활성화
+  - UTF-8 인코딩 강제 적용
+  - 컴파일 시간 최적화 및 에러 조기 발견
+
+#### 📱 Android Studio 2025.1.2 Narwhal 완전 지원
+
+- **🔗 패키지 구조 표준화**: applicationId와 namespace 분리 완료
+  - applicationId: `kr.lum7671.kiss` (사용자 커스텀 ID 유지)
+  - namespace: `fr.neamar.kiss` (원저자 namespace 존중)
+  - Activity 경로: `fr.neamar.kiss.MainActivity` (표준 호환)
+- **🧪 에뮬레이터 테스트 성공**: 실제 구동 검증 완료
+  - `adb shell am start -n kr.lum7671.kiss/fr.neamar.kiss.MainActivity`
+  - 빌드 성공: 37초, 100개 deprecation 경고 (향후 개선 대상)
+  - 기능 동작: 검색, 설정, 아이콘 로딩 모두 정상
+
+#### 🔮 향후 개선 로드맵
+
+- **1단계 (높은 우선순위)**: Deprecation 경고 해결
+  - `onBackPressed()` → `OnBackPressedCallback` 전환
+  - `getParcelableExtra()` → type-safe 메서드 전환
+  - Android Preference → AndroidX Preference 마이그레이션
+- **2단계 (중간 우선순위)**: 최신 라이브러리 검토
+  - Glide 5.0-rc01 호환성 테스트
+  - Fragment 1.9.x 업데이트 평가
+  - kotlinx-coroutines 1.9.x+ 검토
+- **3단계 (낮은 우선순위)**: Android 15 API 활용
+  - 새로운 Permission 모델 적용
+  - Edge-to-Edge 디스플레이 최적화
+  - Predictive Back Gesture 지원
+
+#### 📊 기술적 성과
+
+- **✅ 빌드 시스템**: 2025년 8월 기준 최신 안정 환경
+- **✅ 호환성**: Android 13+ (API 33) 최적화 유지
+- **✅ 성능**: Java 17 LTS 기반 안정성 확보
+- **✅ 미래 지향**: 장기 지원 가능한 기술 스택 구축
+
 ### 🚀 v4.0.7 - Shizuku Integration Success Edition (2025-08-25)
 
 #### 🎯 Shizuku API 통합 완료 - 루트리스 앱 휴면화 구현
