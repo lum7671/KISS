@@ -157,7 +157,7 @@ public class AppResult extends Result<AppPojo> {
         // append root/shizuku menu if available
         RootHandler rootHandler = KissApplication.getApplication(context).getRootHandler();
         if ((rootHandler.isRootActivated() && rootHandler.isRootAvailable()) || 
-            (rootHandler.isShizukuAvailable() && rootHandler.hasShizukuPermission())) {
+            (rootHandler.isShizukuActivated() && rootHandler.isShizukuAvailable() && rootHandler.hasShizukuPermission())) {
             adapter.add(new ListPopup.Item(context, R.string.menu_app_hibernate));
         }
 

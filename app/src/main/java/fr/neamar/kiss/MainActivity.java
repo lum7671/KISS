@@ -339,6 +339,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
         
+        // 빌드 정보 로깅
+        Log.i(TAG, "Build Date: " + fr.neamar.kiss.utils.VersionInfo.getBuildDate());
+        Log.i(TAG, "Full Version Info: " + fr.neamar.kiss.utils.VersionInfo.getFullVersionInfo());
+        
         // Profile 모드에서 액티비티 생명주기 로깅
         ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onCreate");
         ActionPerformanceTracker.getInstance().initialize(this);
@@ -772,6 +776,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             } catch (IllegalArgumentException e) {
                 Log.w(TAG, "Screen state receiver was not registered", e);
             }
+        }
+        
+        // RootHandler 리소스 정리
+        KissApplication app = KissApplication.getApplication(this);
+        if (app != null && app.getRootHandler() != null) {
+            app.getRootHandler().destroy();
         }
         
         forwarderManager.onDestroy();

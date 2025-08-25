@@ -30,6 +30,9 @@ public class ShizukuModeSwitch extends SwitchPreference {
     protected void onClick() {
         if (!isChecked()) {
             // Shizuku 모드를 켜려고 할 때
+            // 먼저 상태를 새로 고침
+            KissApplication.getApplication(getContext()).getRootHandler().refreshShizukuStatus();
+            
             if (!KissApplication.getApplication(getContext()).getRootHandler().isShizukuAvailable()) {
                 // Shizuku가 사용 불가능한 경우 오류 다이얼로그 표시
                 new AlertDialog.Builder(getContext())
@@ -50,10 +53,22 @@ public class ShizukuModeSwitch extends SwitchPreference {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // 권한 요청 후 다시 시도
-                            if (KissApplication.getApplication(getContext()).getRootHandler().hasShizukuPermission()) {
-                                ShizukuModeSwitch.super.onClick();
-                            }
+                            // 권한 요청 후 잠시 대기 후 다시 확인
+                            new android.os.Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 상태 새로고침 후 재확인
+                                    KissApplication.getApplication(getContext()).getRootHandler().refreshShizukuStatus();
+                                    if (KissApplication.getApplication(getContext()).getRootHandler().hasShizukuPermission()) {
+                                        ShizukuModeSwitch.super.onClick();
+                                    } else {
+                                        new AlertDialog.Builder(getContext())
+                                            .setMessage(R.string.shizuku_permission_denied)
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                    }
+                                }
+                            }, 1000); // 1초 대기
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, null)

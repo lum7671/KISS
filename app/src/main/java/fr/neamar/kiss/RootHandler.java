@@ -18,9 +18,10 @@ public class RootHandler {
     private ShizukuHandler shizukuHandler = null;
 
     RootHandler(Context ctx) {
-        resetRootHandler(ctx);
-        // Shizuku 핸들러 초기화
+        // Shizuku 핸들러 먼저 초기화
         shizukuHandler = new ShizukuHandler(ctx);
+        // 그 다음 리셋 호출
+        resetRootHandler(ctx);
     }
 
     public boolean isRootActivated() {
@@ -75,6 +76,22 @@ public class RootHandler {
     }
 
     /**
+     * Shizuku 활성화 상태 확인
+     */
+    public boolean isShizukuActivated() {
+        return shizukuHandler != null && shizukuHandler.isShizukuActivated();
+    }
+
+    /**
+     * Shizuku 상태 새로고침
+     */
+    public void refreshShizukuStatus() {
+        if (shizukuHandler != null) {
+            shizukuHandler.refreshShizukuStatus();
+        }
+    }
+
+    /**
      * 앱 최대 절전 모드 - 루트 또는 Shizuku 사용
      */
     public boolean hibernateApp(String packageName) {
@@ -98,6 +115,16 @@ public class RootHandler {
         
         Log.w(TAG, "Neither Shizuku nor root access available for hibernation");
         return false;
+    }
+
+    /**
+     * 리소스 정리 (메모리 누수 방지)
+     */
+    public void destroy() {
+        if (shizukuHandler != null) {
+            shizukuHandler.removeShizukuListeners();
+            shizukuHandler = null;
+        }
     }
 
     private boolean executeRootShell(String command) {
