@@ -2,6 +2,68 @@
 
 ## 📋 Changes
 
+### 🚀 v4.0.7 - Shizuku Integration Success Edition (2025-08-25)
+
+#### 🎯 Shizuku API 통합 완료 - 루트리스 앱 휴면화 구현
+
+- **✅ Shizuku 서비스 연동 성공**: 루트 권한 없이도 앱 강제 종료 및 휴면화 기능 제공
+  - ShizukuProvider 통합으로 API 초기화 문제 완전 해결
+  - `Shizuku.pingBinder()` 정상 응답 및 권한 인증 완료
+  - 공식 Shizuku-API 패턴에 맞는 구현으로 안정성 확보
+- **🔧 AndroidManifest.xml 설정 완료**: ShizukuProvider 등록 및 권한 설정
+  - `rikka.shizuku.ShizukuProvider` 공식 설정 적용
+  - `moe.shizuku.manager.permission.API_V23` 권한 추가
+  - `FORCE_STOP_PACKAGES` 권한으로 앱 종료 기능 지원
+- **🛡️ 포괄적 에러 처리**: 상세한 로깅 및 사용자 피드백 시스템
+  - `isPreV11()` 버전 호환성 체크 추가
+  - `shouldShowRequestPermissionRationale()` 권한 상태 분석
+  - IllegalStateException, RuntimeException 포괄적 예외 처리
+
+#### 🏗️ ShizukuHandler 아키텍처 개선
+
+- **📱 리스너 기반 API 구현**: 공식 DemoActivity 패턴 적용
+  - OnRequestPermissionResultListener: 권한 요청 결과 처리
+  - OnBinderReceivedListener: 바인더 연결 상태 추적
+  - OnBinderDeadListener: 서비스 연결 해제 감지
+- **🔄 라이프사이클 관리**: 메모리 누수 방지 및 안전한 리소스 정리
+  - onCreate()에서 리스너 등록, onDestroy()에서 제거
+  - WeakReference 패턴으로 메모리 안전성 확보
+  - removeShizukuListeners()로 정확한 리소스 해제
+- **⚡ 스마트 상태 관리**: 캐싱 및 실시간 상태 추적
+  - isShizukuAvailable 캐싱으로 불필요한 API 호출 방지
+  - refreshShizukuStatus()로 상태 변경 시 즉시 갱신
+  - 권한 상태 변경 시 자동 재검증 시스템
+
+#### 🔧 기술적 세부사항
+
+- **🏆 API 호환성**: Shizuku API v13.1.5 완전 지원
+  - pre-v11 버전 지원 중단으로 최신 기능 활용
+  - Sui 자동 초기화 지원 (v12.1.0+)
+  - UserService 및 RemoteBinder 호출 준비 완료
+- **📋 권한 체크 강화**: PackageManager.PERMISSION_GRANTED 정확한 비교
+  - checkSelfPermission() 결과 코드 분석 (0=GRANTED, -1=DENIED)
+  - 권한 거부 시 상세한 안내 메시지 제공
+  - 사용자 액션 가이드: "Shizuku 앱에서 수동으로 권한 부여"
+- **🛠️ RootHandler 통합**: Shizuku 우선, 전통적 root 백업 전략
+  - hibernateApp() 메서드에서 Shizuku 먼저 시도
+  - 실패 시 기존 root 방식으로 자동 Fallback
+  - destroy() 메서드로 완전한 리소스 정리
+
+#### 🎮 사용자 경험 및 실제 동작
+
+- **✅ 설정 UI 완성**: Settings → Advanced → Shizuku mode 스위치
+  - 실시간 가용성 검증 및 사용자 피드백
+  - 권한 없음/서비스 없음 상황별 안내 메시지
+  - Toast 메시지로 즉각적인 상태 알림
+- **🚀 성능 최적화**: 비동기 처리 및 UI 블로킹 방지
+  - 백그라운드에서 Shizuku 상태 확인
+  - 메인 스레드 영향 없는 권한 요청 처리
+  - 앱 휴면화 작업의 논블로킹 실행
+- **📱 실제 기능 동작**: 앱 목록에서 휴면화 메뉴 활성화
+  - 장기간 미사용 앱 자동 휴면화 준비
+  - 배터리 최적화 및 성능 향상 기여
+  - 사용자 개인정보 보호 강화 (앱 접근 제한)
+
 ### 🚀 v4.0.6 - Enhanced Icon Loading Reliability Edition (2025-08-22)
 
 #### 🎯 아이콘 로딩 안정성 대폭 개선
