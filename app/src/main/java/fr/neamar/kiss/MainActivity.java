@@ -356,8 +356,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         /*
          * Initialize preferences
          */
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        androidx.preference.PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
 
         /*
          * Initialize all forwarders
@@ -637,6 +637,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     @Override
     public void onBackPressed() {
+        handleBackPress();
+    }
+
+    private void handleBackPress() {
         if (mPopup != null) {
             mPopup.dismiss();
         } else if (isViewingAllApps()) {
@@ -1241,9 +1245,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         hider.fixScroll();
     }
 
-    public void showDialog(DialogFragment dialog) {
-        // Temporary empty implementation to resolve compile errors
-        // TODO: Fix dialog fragment compatibility
+    @SuppressWarnings("deprecation")
+    public void showDialog(android.app.DialogFragment dialog) {
+        // Using deprecated DialogFragment for backward compatibility
+        // TODO: Migrate to androidx.fragment.app.DialogFragment when refactoring to FragmentActivity
+        dialog.show(getFragmentManager(), "dialog");
     }
 
     @Override

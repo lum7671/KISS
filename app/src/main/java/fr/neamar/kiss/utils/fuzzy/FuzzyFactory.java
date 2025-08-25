@@ -2,7 +2,7 @@ package fr.neamar.kiss.utils.fuzzy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 

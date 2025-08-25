@@ -444,19 +444,31 @@ public class AppResult extends Result<AppPojo> {
                             // 2. 여전히 null이면 시스템 기본 아이콘
                             if (icon == null) {
                                 android.util.Log.w("KISS", "Using system default icon for " + className);
-                                icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                    icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
+                                } else {
+                                    icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                                }
                             }
                         }
                     } catch (Exception e) {
                         android.util.Log.e("KISS", "Error loading icon for " + className, e);
                         // 오류 발생 시 기본 아이콘 사용
-                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
+                        } else {
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                        }
                     }
                     
                     // 최종 안전장치
                     if (icon == null) {
                         android.util.Log.e("KISS", "All icon loading failed for " + className + ", using emergency fallback");
-                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
+                        } else {
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                        }
                     }
                 }
             }

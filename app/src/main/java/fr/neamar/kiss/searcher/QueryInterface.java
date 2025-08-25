@@ -1,7 +1,5 @@
 package fr.neamar.kiss.searcher;
 
-import android.app.DialogFragment;
-
 import fr.neamar.kiss.ui.ListPopup;
 
 public interface QueryInterface {
@@ -12,5 +10,6 @@ public interface QueryInterface {
 
     void registerPopup(ListPopup popup);
 
-    void showDialog(DialogFragment dialog);
+    @SuppressWarnings("deprecation")
+    void showDialog(android.app.DialogFragment dialog);
 }

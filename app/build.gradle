@@ -20,9 +20,8 @@ android {
     defaultConfig {
         applicationId 'kr.lum7671.kiss'
         minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환) - 사용자 설정 유지
-        compileSdk 35
-        targetSdkVersion 35
         compileSdk = 35
+        targetSdkVersion 35
         versionCode 407
         versionName "4.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -67,7 +66,7 @@ android {
             // fr.neamar.kiss 패키지명 사용
             debuggable true
             minifyEnabled false
-            shrinkResources false
+            shrinkResources = false
             // 프로파일링을 위해 최적화 비활성화
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             

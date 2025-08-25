@@ -5,12 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
 import fr.neamar.kiss.BuildConfig;
 
+@SuppressWarnings("deprecation")
 public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChangeListener {
     private static final String TAG = SystemUiVisibilityHelper.class.getSimpleName();
     private final Activity mActivity;
@@ -31,7 +31,7 @@ public class SystemUiVisibilityHelper implements View.OnSystemUiVisibilityChange
     public SystemUiVisibilityHelper(Activity activity) {
         mActivity = activity;
         mHandler = new Handler(Looper.getMainLooper());
-        prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(activity);
         View decorView = mActivity.getWindow()
                 .getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(this);

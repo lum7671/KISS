@@ -154,7 +154,12 @@ object SetImageCoroutine {
                     imageView.tag = result
                 } else {
                     // 최후의 수단: 시스템 기본 아이콘
-                    val systemDefault = imageView.context.resources.getDrawable(android.R.drawable.sym_def_app_icon)
+                    val systemDefault = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        imageView.context.resources.getDrawable(android.R.drawable.sym_def_app_icon, imageView.context.theme)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        imageView.context.resources.getDrawable(android.R.drawable.sym_def_app_icon)
+                    }
                     imageView.setImageDrawable(systemDefault)
                     imageView.tag = result
                 }

@@ -109,6 +109,18 @@ public class InterfaceTweaks extends Forwarder {
         UIColors.applyOverlay(act, prefs);
     }
 
+    private static int getColorCompat(Resources resources, int colorResId) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return resources.getColor(colorResId, null);
+        } else {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return resources.getColor(colorResId, null);
+        } else {
+            return resources.getColor(colorResId);
+        }
+        }
+    }
+
     void onCreate() {
         UIColors.clearPrimaryColorCache();
         UIColors.updateThemePrimaryColor(mainActivity);
@@ -191,10 +203,10 @@ public class InterfaceTweaks extends Forwarder {
                 if (getSearchBackgroundColor() == Color.WHITE) {
                     mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_light);
                     mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_light);
-                } else if (getSearchBackgroundColor() == res.getColor(R.color.kiss_background_light_transparent)) {
+                } else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_light_transparent)) {
                     mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_light);
                     mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_light);
-                } else if (getSearchBackgroundColor() == res.getColor(R.color.kiss_background_dark_transparent)) {
+                } else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_dark_transparent)) {
                     mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_dark);
                     mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_dark);
                 } else if (getSearchBackgroundColor() == Color.BLACK) {
@@ -222,9 +234,9 @@ public class InterfaceTweaks extends Forwarder {
 
                 if (getSearchBackgroundColor() == Color.WHITE)
                     mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_light);
-                else if (getSearchBackgroundColor() == res.getColor(R.color.kiss_background_light_transparent))
+                else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_light_transparent))
                     mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_semi_trans_light);
-                else if (getSearchBackgroundColor() == res.getColor(R.color.kiss_background_dark_transparent))
+                else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_dark_transparent))
                     mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_semi_trans_dark);
                 else if (getSearchBackgroundColor() == Color.BLACK)
                     mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_amoled);
@@ -274,11 +286,19 @@ public class InterfaceTweaks extends Forwarder {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             ProgressBar loaderBar = mainActivity.findViewById(R.id.loaderBar);
-            loaderBar.getIndeterminateDrawable().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                loaderBar.getIndeterminateDrawable().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
+            } else {
+                loaderBar.getIndeterminateDrawable().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
+            }
         }
 
         // Kissbar background
-        mainActivity.kissBar.getBackground().mutate().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            mainActivity.kissBar.getBackground().mutate().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
+        } else {
+            mainActivity.kissBar.getBackground().mutate().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
+        }
     }
 
     private int getSearchBackgroundColor() {

@@ -152,7 +152,8 @@ public class SearchResult extends Result<SearchPojo> {
             try {
                 query = URLEncoder.encode(pojo.query, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                query = URLEncoder.encode(pojo.query);
+                // Use UTF-8 as fallback instead of deprecated encode() method
+                query = URLEncoder.encode(pojo.query, java.nio.charset.StandardCharsets.UTF_8);
             }
             String urlWithQuery = pojo.url.replaceAll("%s|\\{q\\}", query);
             Uri uri = Uri.parse(urlWithQuery);

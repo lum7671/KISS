@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.LauncherApps;
 import android.os.Build;
 import android.os.UserManager;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
