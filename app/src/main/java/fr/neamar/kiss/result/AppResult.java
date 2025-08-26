@@ -510,6 +510,8 @@ public class AppResult extends Result<AppPojo> {
                     }
                 }
 
+                // resolveActivity 체크 (Lollipop+에서는 LauncherApps로 직접 실행하므로, 실제로는 system이 체크)
+                Log.d(TAG, "[doLaunch] startMainActivity: " + className.getPackageName() + "/" + className.getClassName());
                 launcher.startMainActivity(className, pojo.userHandle.getRealHandle(), sourceBounds, opts);
             } else {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -517,6 +519,16 @@ public class AppResult extends Result<AppPojo> {
                 intent.setComponent(className);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 setSourceBounds(intent, v);
+
+                // resolveActivity 체크
+                PackageManager pm = context.getPackageManager();
+                if (intent.resolveActivity(pm) == null) {
+                    Log.e(TAG, "[resolveActivity FAILED] 실행 불가 인텐트: " + className.getPackageName() + "/" + className.getClassName());
+                    Toast.makeText(context, "실행 불가 인텐트: " + className.getPackageName() + "/" + className.getClassName(), Toast.LENGTH_LONG).show();
+                    return;
+                } else {
+                    Log.d(TAG, "[resolveActivity OK] 실행 가능한 인텐트: " + className.getPackageName() + "/" + className.getClassName());
+                }
                 context.startActivity(intent);
             }
         } catch (ActivityNotFoundException | NullPointerException | SecurityException e) {

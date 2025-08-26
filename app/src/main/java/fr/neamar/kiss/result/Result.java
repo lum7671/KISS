@@ -25,10 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amplitude.api.Amplitude;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
@@ -291,17 +287,9 @@ public abstract class Result<T extends Pojo> {
     }
 
     public final void launch(Context context, View v, int position) {
-        Log.i("log", "Launching " + pojo.id);
+    Log.i("KISS_RESULT_TRACE", "launch() called: Result type=" + this.getClass().getSimpleName() + ", pojo=" + (pojo != null ? pojo.getClass().getSimpleName() : "null") + ", id=" + (pojo != null ? pojo.id : "null") + ", position=" + position);
 
-        try {
-            JSONObject eventProperties = new JSONObject();
-            eventProperties.put("type", pojo.getClass().getSimpleName());
-            eventProperties.put("relevance", pojo.relevance);
-            eventProperties.put("position", position);
-            Amplitude.getInstance().logEvent("Result clicked", eventProperties);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    doLaunch(context, v);
     recordLaunch(context, null);
     }
 

@@ -29,30 +29,39 @@ public class LaunchAppAction implements UserAction {
     @Override
     public ActionResult execute(@NonNull Context context) {
         try {
-            Log.d(TAG, "Launching app: " + appPojo.getName());
-            
+            Log.d(TAG, "Launching app: " + appPojo.getName() + " (" + appPojo.packageName + "/" + appPojo.activityName + ")");
+
             // Intent 생성
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setComponent(new ComponentName(appPojo.packageName, appPojo.activityName));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-            
+
+            // 인텐트 실행 가능 여부 확인
+            PackageManager pm = context.getPackageManager();
+            if (intent.resolveActivity(pm) == null) {
+                Log.e(TAG, "[resolveActivity FAILED] 실행 불가 인텐트: " + appPojo.packageName + "/" + appPojo.activityName);
+                return ActionResult.failure("실행 불가 인텐트: " + appPojo.getName(), null);
+            } else {
+                Log.d(TAG, "[resolveActivity OK] 실행 가능한 인텐트: " + appPojo.packageName + "/" + appPojo.activityName);
+            }
+
             // 멀티 유저 지원
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 context.startActivity(intent);
             } else {
                 context.startActivity(intent);
             }
-            
+
             Log.i(TAG, "Successfully launched app: " + appPojo.getName());
             return ActionResult.success("앱이 실행되었습니다: " + appPojo.getName());
-            
+
         } catch (SecurityException e) {
-            Log.e(TAG, "Security exception launching app: " + appPojo.getName(), e);
+            Log.e(TAG, "Security exception launching app: " + appPojo.getName() + " (" + appPojo.packageName + "/" + appPojo.activityName + ")", e);
             return ActionResult.failure("앱 실행 권한이 없습니다: " + appPojo.getName(), e);
-            
+
         } catch (Exception e) {
-            Log.e(TAG, "Failed to launch app: " + appPojo.getName(), e);
+            Log.e(TAG, "Failed to launch app: " + appPojo.getName() + " (" + appPojo.packageName + "/" + appPojo.activityName + ")\n" + Log.getStackTraceString(e));
             return ActionResult.failure("앱 실행 중 오류가 발생했습니다: " + appPojo.getName(), e);
         }
     }
