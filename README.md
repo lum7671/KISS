@@ -1,4 +1,15 @@
+
 # KISS
+
+## 🚀 v4.1.1 - Provider 등록 버그 수정 & 안정화 (2025-08-26)
+
+### 🐞 버그 수정 및 개선 사항 (v4.1.1)
+
+- **🛠️ 데이터 Provider 등록 버그 수정:** AppProvider, ContactsProvider, ShortcutsProvider가 <provider>가 아닌 <service>로 올바르게 등록되도록 복구
+- **🔒 ProGuard 예외 추가:** 데이터 관련 Provider 클래스 난독화/제거 방지 규칙 추가
+- **✅ 릴리즈 빌드 및 에뮬레이터 정상 동작 확인**
+
+---
 
 ## � v4.1.0 - Upstream Sync & Build Reliability Edition (2025-08-26)
 

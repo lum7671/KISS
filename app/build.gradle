@@ -22,8 +22,8 @@ android {
         minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환) - 사용자 설정 유지
         compileSdk = 35
         targetSdkVersion 35
-        versionCode 410
-        versionName "4.1.0"
+        versionCode 411
+        versionName "4.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // BuildConfig에 업스트림 버전 정보 추가
         buildConfigField "String", "UPSTREAM_VERSION", '"3.22.1"'
