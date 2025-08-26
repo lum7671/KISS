@@ -6,6 +6,11 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.amplitude.api.Amplitude;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,6 +93,15 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         long time = System.currentTimeMillis() - start;
 
         Log.i(TAG, "Time to load " + this.getClass().getSimpleName() + ": " + time + "ms");
+        try {
+            org.json.JSONObject eventProperties = new org.json.JSONObject();
+            eventProperties.put("type", getClass().getSimpleName());
+            eventProperties.put("pojo_count", results.size());
+            eventProperties.put("time", time);
+            com.amplitude.api.Amplitude.getInstance().logEvent("Provider loaded", eventProperties);
+        } catch (org.json.JSONException e) {
+            e.printStackTrace();
+        }
         // Store results
         this.loaded = true;
         this.pojos = results;

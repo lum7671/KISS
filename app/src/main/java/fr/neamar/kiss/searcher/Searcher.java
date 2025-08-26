@@ -7,6 +7,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.CallSuper;
+import com.amplitude.api.Amplitude;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -149,6 +152,16 @@ public abstract class Searcher implements Runnable {
 
         long time = System.currentTimeMillis() - start;
         Log.v(TAG, "Time to run query `" + query + "` on " + getClass().getSimpleName() + " to completion: " + time + "ms");
+        try {
+            JSONObject eventProperties = new JSONObject();
+            eventProperties.put("type", getClass().getSimpleName());
+            eventProperties.put("length", query.replace("<null>", "").length());
+            eventProperties.put("time", time);
+            eventProperties.put("allProvidersHaveLoaded", KissApplication.getApplication(activity).getDataHandler().allProvidersHaveLoaded);
+            Amplitude.getInstance().logEvent("Search", eventProperties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void onCancelled() {

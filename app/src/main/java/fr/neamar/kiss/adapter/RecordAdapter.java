@@ -113,11 +113,10 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
 
     public void onClick(final int position, View v) {
         final Result<?> result;
-
         try {
             result = results.get(position);
-            result.launch(v.getContext(), v, parent);
-        } catch (IndexOutOfBoundsException e) {
+            result.launch(v.getContext(), v, position);
+        } catch (IndexOutOfBoundsException | ArrayIndexOutOfBoundsException e) {
             Log.v(TAG, "Unable to click", e);
         }
     }

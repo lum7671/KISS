@@ -22,6 +22,11 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.amplitude.api.Amplitude;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,7 +219,16 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
     @Override
     public void onClick(View v) {
         ViewHolder viewHolder = (ViewHolder) v.getTag();
+        try {
+            org.json.JSONObject eventProperties = new org.json.JSONObject();
+            eventProperties.put("type", viewHolder.result.getClass().getSimpleName());
+            eventProperties.put("favorite_id", viewHolder.pojo.getFavoriteId());
+            com.amplitude.api.Amplitude.getInstance().logEvent("Favorite clicked", eventProperties);
+        } catch (org.json.JSONException e) {
+            e.printStackTrace();
+        }
         viewHolder.result.fastLaunch(mainActivity, v);
+        v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
         v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
     }
 

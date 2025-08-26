@@ -25,6 +25,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -285,6 +290,20 @@ public abstract class Result<T extends Pojo> {
         parent.removeResult(context, this);
     }
 
+    public final void launch(Context context, View v, int position) {
+        Log.i("log", "Launching " + pojo.id);
+
+        try {
+            JSONObject eventProperties = new JSONObject();
+            eventProperties.put("type", pojo.getClass().getSimpleName());
+            eventProperties.put("relevance", pojo.relevance);
+            eventProperties.put("position", position);
+            Amplitude.getInstance().logEvent("Result clicked", eventProperties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        recordLaunch(context);
     public final void launch(Context context, View v, @Nullable QueryInterface queryInterface) {
         Log.i(this.getClass().getSimpleName(), "Launching " + pojo.id);
 
@@ -333,6 +352,7 @@ public abstract class Result<T extends Pojo> {
      * @param context android context
      */
     public void fastLaunch(Context context, View v) {
+        this.launch(context, v, -1);
         this.launch(context, v, null);
     }
 
