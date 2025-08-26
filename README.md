@@ -1,10 +1,20 @@
 # KISS
 
-## 📋 Changes
+## � v4.1.0 - Upstream Sync & Build Reliability Edition (2025-08-26)
 
-### 🚀 v4.0.9 - Package ID & Version Update Edition (2025-08-26)
+### 🆕 주요 변경 사항 (v4.1.0)
 
-#### 🆕 주요 변경 사항
+- **🔀 업스트림 완전 동기화:** Neamar/KISS 최신 master 브랜치와 충돌 없는 병합 및 코드 정리
+- **🧹 불필요 코드 제거:** Legacy Java Loader(LoadContactsPojos.java) 등 더 이상 사용하지 않는 파일 삭제
+- **🛡️ R8/ProGuard 빌드 오류 해결:** javax.annotation.Nullable 관련 R8 minify 오류 완전 해결  
+  (annotation-api, JetBrains annotations, ProGuard 규칙 적용)
+- **🔧 빌드 시스템 안정화:** Gradle/AGP 최신화, 빌드 캐시 초기화, 불필요 설정 정리
+- **📦 의존성 관리 개선:** OkHttp 등 주요 라이브러리 annotation 종속성 문제 해결
+- **✅ 최종 빌드 성공:** 모든 경고(100+ deprecation)는 남아있으나, 빌드 및 에뮬레이터 실행 100% 정상 동작 확인
+
+## 🚀 v4.0.9 - Package ID & Version Update Edition (2025-08-26)
+
+### 🆕 주요 변경 사항
 
 - **📦 applicationId 변경:** `kr.lum7671.kiss`로 표준화 (기존: fr.neamar.kiss)
 - **🔢 versionCode:** 409로 증가
@@ -12,7 +22,7 @@
 - **🛠️ 유지보수:** 최신 upstream 기반 코드 정리 및 빌드 안정화
 - **✅ 에뮬레이터 테스트:** 빌드 및 실행 정상 동작 확인
 
-#### 🔀 업스트림(Neamar/KISS) 주요 변경 사항(v3.22.1 기반)
+### 🔀 업스트림(Neamar/KISS) 주요 변경 사항(v3.22.1 기반)
 
 - **🔒 Private Space 지원**: Android 15+ Private Space 통합
 - **👥 멀티 프로필/워크 프로필 개선**: 사용자 프로필 관리 강화
@@ -25,9 +35,9 @@
 - Activity 경로: `fr.neamar.kiss.MainActivity` (adb 명령어 등 호환)
 - 100개 이상의 deprecated 경고는 향후 단계적으로 개선 예정
 
-### 🚀 v4.0.8 - Java 17 LTS Modernization Edition (2025-08-25)
+## 🚀 v4.0.8 - Java 17 LTS Modernization Edition (2025-08-25)
 
-#### 🎯 Java 17 LTS 기반 현대화 완료
+### 🎯 Java 17 LTS 기반 현대화 완료
 
 - **☕ Java 17 LTS 완전 전환**: OpenJDK 17.0.16 기반 안정적인 빌드 환경 구축
   - JVM Target 17: `-Xjvm-default=all`, `-Xjsr305=strict` 최적화 적용
@@ -43,7 +53,7 @@
   - androidx.lifecycle: 2.7.0 → 2.8.5
   - androidx.annotation: 1.9.1 → 1.8.2
 
-#### 🛡️ 성능 및 안정성 개선
+### 🛡️ 성능 및 안정성 개선
 
 - **🚫 Facebook Flipper 제거**: Deprecated 디버깅 도구 완전 제거
   - OkHttp Logging Interceptor로 대체 (4.12.0)
@@ -58,7 +68,7 @@
   - UTF-8 인코딩 강제 적용
   - 컴파일 시간 최적화 및 에러 조기 발견
 
-#### 📱 Android Studio 2025.1.2 Narwhal 완전 지원
+### 📱 Android Studio 2025.1.2 Narwhal 완전 지원
 
 - **🔗 패키지 구조 표준화**: applicationId와 namespace 분리 완료
   - applicationId: `kr.lum7671.kiss` (사용자 커스텀 ID 유지)
@@ -69,7 +79,7 @@
   - 빌드 성공: 37초, 100개 deprecation 경고 (향후 개선 대상)
   - 기능 동작: 검색, 설정, 아이콘 로딩 모두 정상
 
-#### 🔮 향후 개선 로드맵
+### 🔮 향후 개선 로드맵
 
 - **1단계 (높은 우선순위)**: Deprecation 경고 해결
   - `onBackPressed()` → `OnBackPressedCallback` 전환
@@ -84,16 +94,16 @@
   - Edge-to-Edge 디스플레이 최적화
   - Predictive Back Gesture 지원
 
-#### 📊 기술적 성과
+### 📊 기술적 성과
 
 - **✅ 빌드 시스템**: 2025년 8월 기준 최신 안정 환경
 - **✅ 호환성**: Android 13+ (API 33) 최적화 유지
 - **✅ 성능**: Java 17 LTS 기반 안정성 확보
 - **✅ 미래 지향**: 장기 지원 가능한 기술 스택 구축
 
-### 🚀 v4.0.7 - Shizuku Integration Success Edition (2025-08-25)
+## 🚀 v4.0.7 - Shizuku Integration Success Edition (2025-08-25)
 
-#### 🎯 Shizuku API 통합 완료 - 루트리스 앱 휴면화 구현
+### 🎯 Shizuku API 통합 완료 - 루트리스 앱 휴면화 구현
 
 - **✅ Shizuku 서비스 연동 성공**: 루트 권한 없이도 앱 강제 종료 및 휴면화 기능 제공
   - ShizukuProvider 통합으로 API 초기화 문제 완전 해결
@@ -108,7 +118,7 @@
   - `shouldShowRequestPermissionRationale()` 권한 상태 분석
   - IllegalStateException, RuntimeException 포괄적 예외 처리
 
-#### 🏗️ ShizukuHandler 아키텍처 개선
+### 🏗️ ShizukuHandler 아키텍처 개선
 
 - **📱 리스너 기반 API 구현**: 공식 DemoActivity 패턴 적용
   - OnRequestPermissionResultListener: 권한 요청 결과 처리
@@ -123,7 +133,7 @@
   - refreshShizukuStatus()로 상태 변경 시 즉시 갱신
   - 권한 상태 변경 시 자동 재검증 시스템
 
-#### 🔧 기술적 세부사항
+### 🔧 기술적 세부사항
 
 - **🏆 API 호환성**: Shizuku API v13.1.5 완전 지원
   - pre-v11 버전 지원 중단으로 최신 기능 활용
@@ -138,7 +148,7 @@
   - 실패 시 기존 root 방식으로 자동 Fallback
   - destroy() 메서드로 완전한 리소스 정리
 
-#### 🎮 사용자 경험 및 실제 동작
+### 🎮 사용자 경험 및 실제 동작
 
 - **✅ 설정 UI 완성**: Settings → Advanced → Shizuku mode 스위치
   - 실시간 가용성 검증 및 사용자 피드백
@@ -153,9 +163,9 @@
   - 배터리 최적화 및 성능 향상 기여
   - 사용자 개인정보 보호 강화 (앱 접근 제한)
 
-### 🚀 v4.0.6 - Enhanced Icon Loading Reliability Edition (2025-08-22)
+## 🚀 v4.0.6 - Enhanced Icon Loading Reliability Edition (2025-08-22)
 
-#### 🎯 아이콘 로딩 안정성 대폭 개선
+### 🎯 아이콘 로딩 안정성 대폭 개선
 
 - **🔧 랜덤 아이콘 누락 문제 완전 해결**: "Chrome 아이콘이 없네" 이슈 근본 원인 발견 및 수정
   - SetImageCoroutine의 applyDrawable() null 처리 로직 개선
@@ -170,23 +180,23 @@
   - 중복 로딩 방지 및 취소 로직 강화
   - UI 스레드 블로킹 완전 제거
 
-#### 🔍 기술적 개선사항
+### 🔍 기술적 개선사항
 
 - **🚫 Critical Bug Fix**: `drawable == null` 조건에서 return하여 아이콘이 안 그려지던 문제 해결
 - **📦 PackageManager Import**: 누락된 import 추가로 컴파일 오류 수정
 - **🔄 Kotlin Coroutines 활용**: Thread.sleep() 타입 캐스팅 (.toLong()) 정확성 개선
 - **📝 상세한 로깅**: 아이콘 로딩 실패 시점과 원인 추적을 위한 디버그 로그 강화
 
-#### 🎮 사용자 경험 개선
+### 🎮 사용자 경험 개선
 
 - **✅ 100% 아이콘 표시**: 검색 결과에서 빈 아이콘 완전 제거
 - **🏃‍♂️ 빠른 스크롤 지원**: 빠른 스크롤 시에도 모든 아이콘 정상 로드
 - **🔍 검색 안정성**: 'c' 검색 시 Chrome 등 모든 앱 아이콘 확실히 표시
 - **⏱️ 응답성 향상**: async 로딩 최적화로 UI 반응성 개선
 
-### 🚀 v4.0.5 - Smart UI State Management Edition (2025-08-22)
+## 🚀 v4.0.5 - Smart UI State Management Edition (2025-08-22)
 
-#### 🎯 UI 상태 추적 시스템 구현
+### 🎯 UI 상태 추적 시스템 구현
 
 - **✨ 스마트 화면 상태 관리**: Phase 1 UI State Tracking 시스템 완전 구현
   - UIState enum: INITIAL, ALL_APPS, SEARCH_RESULTS, HISTORY, FAVORITES_VISIBLE, MINIMALISTIC
@@ -201,30 +211,30 @@
   - 의도적 홈 복귀: 필요한 경우에만 초기화
   - 검색어 입력 중: 자동 클리어 후 초기 상태로 전환
 
-#### 🛠️ 메뉴 지속성 및 사용자 경험 개선
+### 🛠️ 메뉴 지속성 및 사용자 경험 개선
 
 - **🚫 강제 메뉴 닫힘 문제 해결**: "메뉴를 보고 있는데... 화면이 초기화가 자꾸 되니... 메뉴를 볼 수가 없네" 이슈 완전 수정
 - **📱 displayKissBar() 오버로드**: 사용자 의도 추적을 위한 새로운 매개변수 추가
 - **⏰ 시간 기반 상태 판단**: lastPauseTime, lastLaunchTime 추적으로 정확한 상황 분석
 - **🎮 백그라운드 업데이트 대기**: 사용자 활동 중 업데이트 지연 후 안전한 시점에 처리
 
-#### 📦 패키지 정보 업데이트
+### 📦 패키지 정보 업데이트
 
 - **🏷️ Package ID**: `kr.lum7671.kiss` (한국어 도메인 기반 고유 식별자)
 - **🔧 Activity 경로**: `kr.lum7671.kiss/fr.neamar.kiss.MainActivity`
 - **📋 실행 명령어**: `adb shell am start -n kr.lum7671.kiss/fr.neamar.kiss.MainActivity`
 - **📊 메모리 모니터링**: `adb shell dumpsys meminfo kr.lum7671.kiss`
 
-#### 🗃️ 문서화 및 분석 완료
+### 🗃️ 문서화 및 분석 완료
 
 - **📄 3개 분석 문서 작성**: 화면 refresh 최적화, 아이콘 refresh 분석, Phase 1 구현 가이드
 - **🎯 기존 최적화 발견**: IconCacheManager 3단계 캐싱 시스템이 이미 존재함을 확인
 - **🔍 근본 원인 파악**: onResume()의 displayKissBar(false) 강제 호출이 주 원인이었음
 - **✅ 즉시 적용 가능한 해결책**: 복잡한 아키텍처 변경 없이 기존 코드 개선으로 문제 해결
 
-### 🚀 v4.0.4 - Coroutines Migration Completion (2025-08-21)
+## 🚀 v4.0.4 - Coroutines Migration Completion (2025-08-21)
 
-#### ✅ AsyncTask → Kotlin Coroutines Migration Complete
+### ✅ AsyncTask → Kotlin Coroutines Migration Complete
 
 - **🎉 Level 5 완료**: 모든 AsyncTask가 Kotlin Coroutines로 전환 완료
 - **🏗️ LoadPojosCoroutine 시스템**: 모든 데이터 로딩 작업의 통합 기반 클래스
@@ -238,16 +248,16 @@
 - **⚡ 성능 최적화**: 비동기 처리 성능 향상 및 UI 블로킹 제거
 - **📚 완전한 문서화**: 5단계 마이그레이션 가이드 및 기술 문서 완성
 
-#### 🔧 기술적 개선사항
+### 🔧 기술적 개선사항
 
 - **SetImageCoroutine**: UI 이미지 로딩 AsyncTask 대체
 - **CoroutineUtils 확장**: Java-Kotlin 상호 운용성 향상
 - **에러 처리 강화**: 포괄적인 try-catch 및 로깅 시스템
 - **빌드 안정성**: 모든 레벨 완료 후 성공적인 빌드 및 테스트 확인
 
-### 🚀 v4.0.3 - Upstream Integration Edition (2025-08-20)
+## 🚀 v4.0.3 - Upstream Integration Edition (2025-08-20)
 
-#### 🔀 Merged Upstream v3.22.1+ Latest Features
+### 🔀 Merged Upstream v3.22.1+ Latest Features
 
 - **🔒 Private Space Support**: Android 15+ Private Space integration with
   `ACCESS_HIDDEN_PROFILES` permission
@@ -257,7 +267,7 @@
 - **🔧 User Handle Management**: Enhanced support for multi-user environments
 - **📱 App Loading Optimizations**: Private profile aware app discovery and loading
 
-#### 🔧 Compatibility & Stability
+### 🔧 Compatibility & Stability
 
 - **⚙️ Maintained Custom Features**: All lum7671 optimizations preserved during
   merge
@@ -268,16 +278,16 @@
 - **🏗️ Build System**: Updated dependencies and improved conflict resolution
 - **🧪 Tested Integration**: Validated on Android emulator with full functionality
 
-#### 🛠️ Technical Details
+### 🛠️ Technical Details
 
 - **Conflict Resolution**: Successfully merged 5 major file conflicts
 - **API Compatibility**: Maintained Android 13+ (API 33) minimum support
 - **Performance Preservation**: All custom optimizations retained
 - **Database Sync**: Thread-safe initialization with memory DB features
 
-### 🚀 v4.0.2 - Coroutines Migration Edition (2025-08-14)
+## 🚀 v4.0.2 - Coroutines Migration Edition (2025-08-14)
 
-#### 🔄 AsyncTask → Kotlin Coroutines Migration
+### 🔄 AsyncTask → Kotlin Coroutines Migration
 
 - **⚡ Modern Async Architecture**: Complete migration from deprecated AsyncTask to Kotlin Coroutines
 - **🏗️ CoroutineUtils Framework**: Custom utility class for seamless Java-Kotlin interop
@@ -287,9 +297,9 @@
 - **✅ Production Ready**: Validated on Android emulator with stable performance
 - **📈 Future-Proof**: Structured concurrency with proper lifecycle management
 
-### 🚀 v4.0.0 - Optimized Performance Edition (2025-08-12)
+## 🚀 v4.0.0 - Optimized Performance Edition (2025-08-12)
 
-#### 🔀 Merged Upstream v3.22.1 Features
+### 🔀 Merged Upstream v3.22.1 Features
 
 - **⚙️ UI Improvements**: Icon settings moved to user interface section
 - **🎯 Better Alignment**: Notification dots align with app names (no-icon mode)
@@ -300,7 +310,7 @@
 - **📺 Display Options**: Larger display options (thanks @nikhold)
 - **🏢 Work Profile**: Allow uninstalling work profile apps
 
-#### 🎯 Major Performance Optimizations
+### 🎯 Major Performance Optimizations
 
 - **🏃‍♂️ 3-Tier Icon Caching System**: Glide + LRU Cache implementation
   - Frequent Cache (64MB) + Recent Cache (32MB) + Memory Cache (128MB)
@@ -313,7 +323,7 @@
   - BroadcastReceiver-based monitoring
   - Intelligent activity recreation logic
 
-#### 📦 Build & Compatibility Improvements
+### 📦 Build & Compatibility Improvements
 
 - **📱 Android 13+ Optimization**: API 33+ with Android 15 target
 - **🔐 APK Signature Scheme v3**: Modern security standards
@@ -321,14 +331,14 @@
 - **🎯 Package ID**: `kr.lum7671.kiss` (conflict-free installation)
 - **🔧 Debug-Only Libraries**: Performance tools excluded from release builds
 
-#### 🛠️ Technical Architecture
+### 🛠️ Technical Architecture
 
 - **Java 17 + Gradle 8.13**: Modern build system
 - **Proven Libraries**: Glide, AndroidX LruCache, LeakCanary (debug)
 - **Multi-Build Support**: Release, Debug, Profile configurations
 - **Memory Management**: Smart trimming and background optimization
 
-#### 📋 Version Information Display
+### 📋 Version Information Display
 
 - **🏷️ Enhanced Version Name**: `4.0.0-based-on-3.22.1` (shows upstream version)
 - **📊 BuildConfig Fields**: Added upstream version, build date, optimizer info
@@ -336,7 +346,7 @@
 - **🔍 Transparent Attribution**: Shows original author version and optimization details
 - **📱 Runtime Access**: `VersionInfo` utility class for programmatic access
 
-#### 📊 Performance Metrics
+### 📊 Performance Metrics
 
 - **App Launch Time**: 30-50% faster icon loading
 - **Memory Usage**: 20-30% reduction with smart caching
