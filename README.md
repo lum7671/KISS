@@ -2,6 +2,29 @@
 
 ## 📋 Changes
 
+### 🚀 v4.0.9 - Package ID & Version Update Edition (2025-08-26)
+
+#### 🆕 주요 변경 사항
+
+- **📦 applicationId 변경:** `kr.lum7671.kiss`로 표준화 (기존: fr.neamar.kiss)
+- **🔢 versionCode:** 409로 증가
+- **🏷️ versionName:** 4.0.9로 업데이트
+- **🛠️ 유지보수:** 최신 upstream 기반 코드 정리 및 빌드 안정화
+- **✅ 에뮬레이터 테스트:** 빌드 및 실행 정상 동작 확인
+
+#### 🔀 업스트림(Neamar/KISS) 주요 변경 사항(v3.22.1 기반)
+
+- **🔒 Private Space 지원**: Android 15+ Private Space 통합
+- **👥 멀티 프로필/워크 프로필 개선**: 사용자 프로필 관리 강화
+- **🛡️ 데이터베이스 동기화 및 스레드 안정성 개선**
+- **📱 앱 로딩 최적화**: Private profile 인식 및 빠른 앱 탐색
+- **⚙️ 기존 KISS 기능 및 UI 최적화 유지**
+- **🧪 공식 릴리즈와의 호환성 및 안정성 확보**
+
+- namespace는 기존과 동일하게 `fr.neamar.kiss` 유지 (원저자 호환성)
+- Activity 경로: `fr.neamar.kiss.MainActivity` (adb 명령어 등 호환)
+- 100개 이상의 deprecated 경고는 향후 단계적으로 개선 예정
+
 ### 🚀 v4.0.8 - Java 17 LTS Modernization Edition (2025-08-25)
 
 #### 🎯 Java 17 LTS 기반 현대화 완료

@@ -57,6 +57,11 @@ import android.widget.AdapterView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import android.widget.TextView;
+import android.text.TextUtils;
+import android.graphics.Rect;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 
 import com.amplitude.api.Amplitude;

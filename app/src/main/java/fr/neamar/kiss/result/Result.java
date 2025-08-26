@@ -302,8 +302,9 @@ public abstract class Result<T extends Pojo> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    recordLaunch(context, null);
+    }
 
-        recordLaunch(context);
     public final void launch(Context context, View v, @Nullable QueryInterface queryInterface) {
         Log.i(this.getClass().getSimpleName(), "Launching " + pojo.id);
 
