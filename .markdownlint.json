@@ -9,5 +9,7 @@
     "tables": false
   },
   "MD033": false,
-  "MD034": false
+  "MD034": false,
+  "MD007": { "indent": 2 },
+  "MD005": true
 }

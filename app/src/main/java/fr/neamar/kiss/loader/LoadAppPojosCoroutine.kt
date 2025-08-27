@@ -113,12 +113,20 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
             val activityList = launcherApps.getActivityList(null, userHandle.realHandle)
             
             for (activityInfo in activityList) {
+                val suspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
+                    (activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
+                } else {
+                    false
+                }
+                val disabled = !activityInfo.applicationInfo.enabled
+                android.util.Log.d(TAG, "LauncherApps: package=" + activityInfo.applicationInfo.packageName + ", disabled=" + disabled + ", suspended=" + suspended + ", flags=" + activityInfo.applicationInfo.flags)
                 val app = createPojo(
                     userHandle,
                     activityInfo.applicationInfo.packageName,
                     activityInfo.name,
                     activityInfo.label,
-                    !activityInfo.applicationInfo.enabled,
+                    disabled,
+                    suspended,
                     excludedAppList,
                     excludedFromHistoryAppList,
                     excludedShortcutsAppList
@@ -157,6 +165,21 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                         for (activityInfo in activities) {
                             val isDisabled = !activityInfo.activityInfo.enabled || 
                                 (packageInfo.applicationInfo?.enabled == false)
+                            val isSuspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                try {
+                                    val field = activityInfo.activityInfo.applicationInfo.javaClass.getDeclaredField("isSuspended")
+                                    field.getBoolean(activityInfo.activityInfo.applicationInfo)
+                                } catch (e: Exception) {
+                                    false
+                                }
+                            } else false || (packageInfo.applicationInfo?.let {
+                                try {
+                                    val field = it.javaClass.getDeclaredField("isSuspended")
+                                    field.getBoolean(it)
+                                } catch (e: Exception) {
+                                    false
+                                }
+                            } == true)
                             
                             // 비활성화된 앱이나 실행할 수 없는 앱은 스킵
                             if (isDisabled) {
@@ -170,6 +193,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                                 activityInfo.activityInfo.name,
                                 activityInfo.loadLabel(pm),
                                 isDisabled,
+                                isSuspended,
                                 excludedAppList,
                                 excludedFromHistoryAppList,
                                 excludedShortcutsAppList
@@ -208,12 +232,20 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         val activitiesInfo = pm.queryIntentActivities(mainIntent, 0)
         
         for (activityInfo in activitiesInfo) {
+            val suspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
+                (activityInfo.activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
+            } else {
+                false
+            }
+            val disabled = !activityInfo.activityInfo.enabled
+            android.util.Log.d(TAG, "Legacy: package=" + activityInfo.activityInfo.packageName + ", disabled=" + disabled + ", suspended=" + suspended + ", flags=" + activityInfo.activityInfo.applicationInfo.flags)
             val app = createPojo(
                 userHandle,
                 activityInfo.activityInfo.packageName,
                 activityInfo.activityInfo.name,
                 activityInfo.loadLabel(pm),
-                !activityInfo.activityInfo.enabled,
+                disabled,
+                suspended,
                 excludedAppList,
                 excludedFromHistoryAppList,
                 excludedShortcutsAppList
@@ -253,6 +285,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         activityName: String,
         label: CharSequence,
         disabled: Boolean,
+        suspended: Boolean,
         excludedAppList: Set<String>,
         excludedFromHistoryAppList: Set<String>,
         excludedShortcutsAppList: Set<String>
@@ -263,7 +296,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         val isExcludedFromHistory = excludedFromHistoryAppList.contains(id)
         val isExcludedShortcuts = excludedShortcutsAppList.contains(packageName)
         
-        val app = AppPojo(id, packageName, activityName, userHandle, isExcluded, isExcludedFromHistory, isExcludedShortcuts, disabled)
+        val app = AppPojo(id, packageName, activityName, userHandle, isExcluded, isExcludedFromHistory, isExcludedShortcuts, disabled, suspended)
         app.name = label.toString()
         app.tags = tagsHandler.getTags(app.id)
         

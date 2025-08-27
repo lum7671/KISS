@@ -23,6 +23,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Glide + LruCache + 3단계 캐싱 전략 사용
  */
 public class IconCacheManager {
+    /**
+     * 특정 앱(키)의 아이콘 캐시를 모두 무효화 (frequent/recent/memory)
+     */
+    public void invalidateIcon(String key) {
+        frequentCache.remove(key);
+        recentCache.remove(key);
+        memoryCache.remove(key);
+        usageCount.remove(key);
+        Log.v(TAG, "invalidateIcon: " + key);
+    }
     private static final String TAG = "IconCacheManager";
     
     // 캐시 크기 설정 (메모리 기반)

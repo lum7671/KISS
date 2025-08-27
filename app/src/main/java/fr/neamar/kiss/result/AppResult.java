@@ -427,7 +427,7 @@ public class AppResult extends Result<AppPojo> {
                         
                         // 아이콘이 null인 경우 다양한 fallback 시도
                         if (icon == null) {
-                            android.util.Log.w("KISS", "Failed to load icon for " + className + ", trying fallbacks");
+                            // fallback: failed to load icon
                             
                             // 1. 패키지 매니저에서 직접 로드 시도
                             try {
@@ -438,12 +438,12 @@ public class AppResult extends Result<AppPojo> {
                                 );
                                 icon = pm.getApplicationIcon(appInfo);
                             } catch (PackageManager.NameNotFoundException e) {
-                                android.util.Log.w("KISS", "Package not found for fallback: " + className.getPackageName());
+                                // fallback: package not found
                             }
                             
                             // 2. 여전히 null이면 시스템 기본 아이콘
                             if (icon == null) {
-                                android.util.Log.w("KISS", "Using system default icon for " + className);
+                                // fallback: using system default icon
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                     icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
                                 } else {
@@ -452,7 +452,7 @@ public class AppResult extends Result<AppPojo> {
                             }
                         }
                     } catch (Exception e) {
-                        android.util.Log.e("KISS", "Error loading icon for " + className, e);
+                        // error loading icon
                         // 오류 발생 시 기본 아이콘 사용
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                             icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
@@ -463,7 +463,7 @@ public class AppResult extends Result<AppPojo> {
                     
                     // 최종 안전장치
                     if (icon == null) {
-                        android.util.Log.e("KISS", "All icon loading failed for " + className + ", using emergency fallback");
+                        // all icon loading failed, using emergency fallback
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                             icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
                         } else {
@@ -473,8 +473,14 @@ public class AppResult extends Result<AppPojo> {
                 }
             }
         }
-        DrawableUtils.setDisabled(icon, this.pojo.isDisabled());
-        return icon;
+    // 캐시 무시: 항상 새 Drawable 객체 생성 (테스트 목적)
+    Drawable freshIcon = icon != null ? icon.getConstantState() != null ? icon.getConstantState().newDrawable().mutate() : icon.mutate() : null;
+    boolean isDisabled = this.pojo.isDisabled();
+    String pkg = (this.pojo instanceof fr.neamar.kiss.pojo.AppPojo) ? ((fr.neamar.kiss.pojo.AppPojo)this.pojo).packageName : "unknown";
+    // debug: AppResult.getIcon
+    boolean isSuspended = (this.pojo instanceof fr.neamar.kiss.pojo.AppPojo) && ((fr.neamar.kiss.pojo.AppPojo)this.pojo).isSuspended();
+    DrawableUtils.setDisabled(freshIcon, isDisabled, isSuspended);
+    return freshIcon;
     }
 
     @Override
@@ -511,7 +517,7 @@ public class AppResult extends Result<AppPojo> {
                 }
 
                 // resolveActivity 체크 (Lollipop+에서는 LauncherApps로 직접 실행하므로, 실제로는 system이 체크)
-                Log.d(TAG, "[doLaunch] startMainActivity: " + className.getPackageName() + "/" + className.getClassName());
+                // debug: startMainActivity
                 launcher.startMainActivity(className, pojo.userHandle.getRealHandle(), sourceBounds, opts);
             } else {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -523,16 +529,16 @@ public class AppResult extends Result<AppPojo> {
                 // resolveActivity 체크
                 PackageManager pm = context.getPackageManager();
                 if (intent.resolveActivity(pm) == null) {
-                    Log.e(TAG, "[resolveActivity FAILED] 실행 불가 인텐트: " + className.getPackageName() + "/" + className.getClassName());
+                    // error: resolveActivity FAILED
                     Toast.makeText(context, "실행 불가 인텐트: " + className.getPackageName() + "/" + className.getClassName(), Toast.LENGTH_LONG).show();
                     return;
                 } else {
-                    Log.d(TAG, "[resolveActivity OK] 실행 가능한 인텐트: " + className.getPackageName() + "/" + className.getClassName());
+                    // debug: resolveActivity OK
                 }
                 context.startActivity(intent);
             }
         } catch (ActivityNotFoundException | NullPointerException | SecurityException e) {
-            Log.w(TAG, "Unable to launch activity", e);
+            // warning: Unable to launch activity
             // Application was just removed?
             // (null pointer exception can be thrown on Lollipop+ when app is missing)
             Toast.makeText(context, R.string.application_not_found, Toast.LENGTH_LONG).show();

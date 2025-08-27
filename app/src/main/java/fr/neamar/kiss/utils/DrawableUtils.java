@@ -38,11 +38,16 @@ public class DrawableUtils {
     private static final String TAG = DrawableUtils.class.getSimpleName();
     private static final IconShape[] TEARDROP_SHAPES = {IconShape.SHAPE_TEARDROP_BR, IconShape.SHAPE_TEARDROP_BL, IconShape.SHAPE_TEARDROP_TL, IconShape.SHAPE_TEARDROP_TR};
     private static final ColorFilter DISABLED_COLOR_FILTER;
+    private static final int DISABLED_ALPHA = 128; // 0~255, 128=50% 투명도
 
     static {
-        // initialize color filter for disabled icons
+        // initialize color filter for disabled icons (흑백 + 투명도)
         ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
+        matrix.setSaturation(0); // 흑백
+        // alpha 조정: setScale(r, g, b, a)
+        ColorMatrix alphaMatrix = new ColorMatrix();
+        alphaMatrix.setScale(1f, 1f, 1f, 0.5f); // alpha 50%
+        matrix.postConcat(alphaMatrix);
         DISABLED_COLOR_FILTER = new ColorMatrixColorFilter(matrix);
     }
 
@@ -409,7 +414,7 @@ public class DrawableUtils {
                 drawAsHole = false;
             else if (!Character.UnicodeBlock.BASIC_LATIN.toString().equals(blockString)) {
                 // log untested glyphs
-                Log.d(TAG, "Codepoint " + codepoint + " with glyph " + glyph + " is in block " + block);
+                // debug: codepoint block
             }
         }
         // we can't draw images (emoticons and symbols) using SRC_IN with transparent color, the result is a square
@@ -467,13 +472,30 @@ public class DrawableUtils {
         }
     }
 
-    public static void setDisabled(Drawable drawable, boolean disabled) {
-        if (drawable != null) {
-            if (disabled) {
-                drawable.setColorFilter(DISABLED_COLOR_FILTER);
-            } else {
-                drawable.clearColorFilter();
-            }
+    /**
+     * 최신 Android 권장 방식:
+     *  - isDisabled: enabled == false 또는 getApplicationEnabledSetting() != ENABLED
+     *  - isSuspended: (ApplicationInfo.flags & FLAG_SUSPENDED) != 0
+     *
+     * @param drawable 아이콘 Drawable
+     * @param isDisabled 앱이 비활성화 상태면 true
+     * @param isSuspended 앱이 suspended(중지) 상태면 true
+     */
+    public static void setDisabled(Drawable drawable, boolean isDisabled, boolean isSuspended) {
+        if (drawable == null) {
+            // debug: setDisabled called with null drawable
+            return;
+        }
+        boolean shouldGray = isDisabled || isSuspended;
+    // debug: setDisabled called
+        if (shouldGray) {
+            drawable.setColorFilter(DISABLED_COLOR_FILTER);
+            drawable.setAlpha(DISABLED_ALPHA); // 투명도 적용
+            // debug: ColorFilter/Alpha applied
+        } else {
+            drawable.clearColorFilter();
+            drawable.setAlpha(255); // 원래대로
+            // debug: ColorFilter/Alpha cleared
         }
     }
 

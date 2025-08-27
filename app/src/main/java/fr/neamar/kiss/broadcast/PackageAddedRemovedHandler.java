@@ -34,6 +34,23 @@ public class PackageAddedRemovedHandler extends BroadcastReceiver {
             return;
         }
 
+
+        // 앱 활성/비활성 상태 변경 시 아이콘 캐시 무효화 (invalidate)
+        if (Intent.ACTION_PACKAGE_CHANGED.equals(action)) {
+            for (String packageName : packageNames) {
+                // 해당 패키지의 모든 런처 액티비티에 대해 invalidateIcon 호출
+                ComponentName launchingComponent = fr.neamar.kiss.utils.PackageManagerUtils.getLaunchingComponent(ctx, packageName, user);
+                if (launchingComponent != null) {
+                    String cacheKey = fr.neamar.kiss.pojo.AppPojo.getComponentName(
+                        launchingComponent.getPackageName(),
+                        launchingComponent.getClassName(),
+                        user
+                    );
+                    fr.neamar.kiss.utils.IconCacheManager.getInstance(ctx).invalidateIcon(cacheKey);
+                }
+            }
+        }
+
         if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
             if (!replacing) {
                 for (String packageName : packageNames) {

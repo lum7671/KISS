@@ -137,9 +137,9 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                                 appDrawable = iconsHandler.getDrawableIconForPackage(PackageManagerUtils.getLaunchingComponent(context, componentName, userHandle), userHandle);
                             }
                         } catch (NullPointerException e) {
-                            Log.e(TAG, "Unable to get activity icon for '" + pojo.getName() + "'", e);
+                            // error: Unable to get activity icon
                         } catch (URISyntaxException e) {
-                            Log.e(TAG, "Unable to parse uri for '" + pojo.getName() + "'", e);
+                            // error: Unable to parse uri
                         }
                     }
 
@@ -153,7 +153,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                 }
             }
         }
-        DrawableUtils.setDisabled(appDrawable, this.pojo.isDisabled());
+    DrawableUtils.setDisabled(appDrawable, this.pojo.isDisabled(), false); // ShortcutPojo는 suspended 개념 없음
         return appDrawable;
     }
 
@@ -180,10 +180,10 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                                 icon = launcherApps.getShortcutIconDrawable(shortcutInfo, 0);
                             } catch (IllegalStateException e) {
                                 // do nothing if user is locked or not running
-                                Log.w(TAG, "Unable to get shortcut icon for '" + pojo.getName() + "', user is locked or not running", e);
+                                // warning: Unable to get shortcut icon, user is locked or not running
                             } catch (NullPointerException e) {
                                 // shortcuts may use invalid icons, see https://github.com/Neamar/KISS/issues/2158
-                                Log.e(TAG, "Unable to get shortcut icon for '" + pojo.getName() + "'", e);
+                                // error: Unable to get shortcut icon
                             }
                         }
                     }
@@ -197,7 +197,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                 }
             }
         }
-        DrawableUtils.setDisabled(icon, this.pojo.isDisabled());
+    DrawableUtils.setDisabled(icon, this.pojo.isDisabled(), false); // ShortcutPojo는 suspended 개념 없음
         return icon;
     }
 
@@ -236,7 +236,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                     launcherApps.startShortcut(shortcutInfo, v.getClipBounds(), null);
                     return;
                 } catch (ActivityNotFoundException | IllegalStateException e) {
-                    Log.w(TAG, "Unable to launch shortcut " + pojo.getName(), e);
+                    // warning: Unable to launch shortcut
                 }
             }
         }
