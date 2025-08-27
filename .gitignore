@@ -1,4 +1,9 @@
 #######################
+# Kotlin compiler/IDE 세션 및 캐시 파일
+.kotlin/
+*.salive
+.kotlin/sessions/
+
 # Android development #
 #######################
 
