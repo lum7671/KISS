@@ -1,15 +1,15 @@
 # 최근 구현/수정 내역 (2025-08-27 기준)
 
-## 1. suspended/disabled 앱 아이콘 회색(그레이) 처리 및 캐시 무효화 개선
+## 1. suspended/disabled 앱 아이콘 회색(그레이) 처리 및 캐시 무효화 개선 (구현 완료)
 
-- Android 7.0+에서 ApplicationInfo.flags & FLAG_SUSPENDED를 활용하여 suspended(휴면) 상태를 robust하게 감지하도록 개선
-- AppPojo에 suspended 필드 및 isSuspended() 추가, isDisabled()는 disabled || suspended 반환
-- AppResult, ShortcutsResult 등에서 DrawableUtils.setDisabled 호출 시 isDisabled, isSuspended 모두 전달하도록 시그니처 및 호출부 통일
-- DrawableUtils.setDisabled(Drawable, boolean, boolean): suspended/disabled 중 하나라도 true면 ColorMatrixColorFilter(흑백) + alpha(반투명) 적용
-- 모든 관련 호출부(앱/단축키/캐시 등)에서 새로운 setDisabled 시그니처로 통일
-- 앱 상태 변경 시 캐시 무효화(invalidate) 및 항상 fresh Drawable에 필터 적용하도록 개선
-- debug/logging 코드(모든 Log.d/w/e 등) 전면 제거 및 소스 정리
-- 실제 suspended 앱(ADB로 suspend) 및 disabled 앱 모두 회색/반투명 아이콘 정상 동작 확인
+- Android 7.0+에서 ApplicationInfo.flags & FLAG_SUSPENDED를 활용하여 suspended(휴면) 상태 robust 감지 (완료)
+- AppPojo에 suspended 필드 및 isSuspended() 추가, isDisabled()는 disabled || suspended 반환 (완료)
+- AppResult, ShortcutsResult 등에서 DrawableUtils.setDisabled 호출 시 isDisabled, isSuspended 모두 전달하도록 시그니처 및 호출부 통일 (완료)
+- DrawableUtils.setDisabled(Drawable, boolean, boolean): suspended/disabled 중 하나라도 true면 ColorMatrixColorFilter(흑백) + alpha(반투명) 적용 (완료)
+- 모든 관련 호출부(앱/단축키/캐시 등)에서 새로운 setDisabled 시그니처로 통일 (완료)
+- 앱 상태 변경 시 캐시 무효화(invalidate) 및 항상 fresh Drawable에 필터 적용 (완료)
+- debug/logging 코드(모든 Log.d/w/e 등) 전면 제거 및 소스 정리 (완료)
+- 실제 suspended 앱(ADB로 suspend) 및 disabled 앱 모두 회색/반투명 아이콘 정상 동작 확인 (완료)
 
 ---
 
@@ -105,36 +105,31 @@ KISS 런처에서 비활성화(disabled) 또는 frozen(휴면) 상태의 앱을 
   
 ## TODO(구현 우선순위 및 향후 개선 방향)
 
-1. **앱의 활성/비활성 상태 변경 시 캐시 무효화(invalidate) 및 즉시 반영**
+1. **자주 사용하는 앱(히스토리/사용빈도 기반)은 캐시에 고정 슬롯 또는 우선 캐시로 관리**
 
-- (disabled 앱이 목록에 표시될 경우) 앱의 enabled/disabled 상태가 바뀔 때 해당 앱의 아이콘 캐시를 명시적으로 삭제(invalidate)
-- 또는 매번 아이콘을 그릴 때 원본 Drawable을 복제 후 ColorFilter를 적용하는 방식
-- 관련 코드 개선 및 invalidate 로직 추가 필요
+- SQLite 등에서 관리하는 자주 사용하는 앱 목록을 frequentCache 등 캐시의 고정 영역에 우선적으로 유지
+- LRU 캐시에서 자동으로 밀려나지 않도록 strong reference 또는 별도 캐시 영역 활용
+- 자주 노출되는 앱의 아이콘은 항상 빠르게 표시되어 UX 및 성능 모두 향상
+- DB(히스토리/사용빈도)와 연동해 캐시 관리 로직 개선 필요
 
-2. **회색(그레이) 톤 변환에 투명도(Alpha) 조정 추가**
+2. **아이콘 캐시에 lifetime(유효 기간, 만료 시간) 적용**
 
-- 단순 흑백 변환만으로 부족할 경우, alpha 값을 낮춰 비활성화 상태를 더욱 명확히 표현
+- 캐시 저장 시 timestamp(저장 시간)를 함께 기록하고, 일정 시간이 지나면 자동으로 캐시를 무효화
+- 앱 상태 변화(활성/비활성 등)가 없어도, 일정 주기로 아이콘이 새로고침되어 UI 일관성 및 메모리 관리에 도움
+- 만료 시간(예: 1분, 5분, 10분 등)은 옵션으로 조정 가능
+- 코드 구조상 LruCache, Glide 등과의 연동 및 성능 영향도 함께 고려 필요
 
-3. **앱 목록 필터링 로직 개선(옵션화)**
+3. **(우선순위 낮음) 캐시된 아이콘의 disabled 상태를 하루 1회 등 주기적으로 일괄 검증/무효화**
+
+- 매번 검증하면 성능·배터리 소모가 크므로, 앱 실행 시 또는 하루 1회 등으로 제한
+- 캐시된 아이콘의 앱 상태를 일괄 점검하여, disabled 상태가 바뀐 앱의 캐시만 무효화
+- 일반적으로는 필요 없으나, 캐시 업데이트가 잘 안될 때 보완책으로 활용 가능
+
+4. **(우선순위 낮음) 앱 목록 필터링 로직 개선(옵션화)**
 
 - disabled/frozen 앱도 항상 목록에 표시할지, 숨길지 옵션화
 - 표시할 경우, isDisabled/isFrozen 등 상태값을 기반으로 회색/반투명 아이콘 처리
 - frozen(휴면) 상태 감지를 위한 별도 로직 필요할 수 있음
-
-3. **자주 사용하는 앱(히스토리/사용빈도 기반)은 캐시에 고정 슬롯 또는 우선 캐시로 관리**
-   - SQLite 등에서 관리하는 자주 사용하는 앱 목록을 frequentCache 등 캐시의 고정 영역에 우선적으로 유지
-   - LRU 캐시에서 자동으로 밀려나지 않도록 strong reference 또는 별도 캐시 영역 활용
-   - 자주 노출되는 앱의 아이콘은 항상 빠르게 표시되어 UX 및 성능 모두 향상
-   - DB(히스토리/사용빈도)와 연동해 캐시 관리 로직 개선 필요
-4. **아이콘 캐시에 lifetime(유효 기간, 만료 시간) 적용**
-   - 캐시 저장 시 timestamp(저장 시간)를 함께 기록하고, 일정 시간이 지나면 자동으로 캐시를 무효화
-   - 앱 상태 변화(활성/비활성 등)가 없어도, 일정 주기로 아이콘이 새로고침되어 UI 일관성 및 메모리 관리에 도움
-   - 만료 시간(예: 1분, 5분, 10분 등)은 옵션으로 조정 가능
-   - 코드 구조상 LruCache, Glide 등과의 연동 및 성능 영향도 함께 고려 필요
-5. **(우선순위 낮음) 캐시된 아이콘의 disabled 상태를 하루 1회 등 주기적으로 일괄 검증/무효화**
-   - 매번 검증하면 성능·배터리 소모가 크므로, 앱 실행 시 또는 하루 1회 등으로 제한
-   - 캐시된 아이콘의 앱 상태를 일괄 점검하여, disabled 상태가 바뀐 앱의 캐시만 무효화
-   - 일반적으로는 필요 없으나, 캐시 업데이트가 잘 안될 때 보완책으로 활용 가능
 
 ## 참고
 
