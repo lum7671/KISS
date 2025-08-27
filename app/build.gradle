@@ -5,6 +5,18 @@ buildscript {
         }
         mavenCentral()
     }
+    // ---
+    // 태그 추천 라이브러리 개발을 위한 1. 라이브러리 구조 및 의존성 설정
+    // (ai-tag-library 모듈이 생성되어 있다면 아래와 같이 의존성 추가)
+    // implementation project(":ai-tag-library")
+    //
+    // ai-tag-library 모듈의 build.gradle에는 다음 의존성 예시를 참고하여 추가
+    // implementation 'androidx.room:room-runtime:2.5.0'
+    // implementation 'androidx.room:room-ktx:2.5.0'
+    // kapt 'androidx.room:room-compiler:2.5.0'
+    // implementation 'com.google.ai.client.generativeai:generativeai:0.7.0'
+    // implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    // ---
 }
 
 plugins {
