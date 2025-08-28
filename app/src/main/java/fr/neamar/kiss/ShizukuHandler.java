@@ -15,10 +15,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+
 import java.lang.reflect.Method;
 
 import rikka.shizuku.Shizuku;
-import rikka.shizuku.ShizukuBinderWrapper;
 import rikka.shizuku.SystemServiceHelper;
 
 /**
@@ -331,41 +331,142 @@ public class ShizukuHandler {
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean forceStopPackage(String packageName) {
+        // 간단한 공식 패턴: 1) 바인더 획득 2) IActivityManager 인터페이스 획득(가능하면 Stub.asInterface, 없으면 Stub$Proxy 생성자) 3) forceStopPackage 호출
         try {
-            // Shizuku를 통해 시스템 서비스에 접근
-            Object activityManager = SystemServiceHelper.getSystemService(Context.ACTIVITY_SERVICE);
-            
-            if (activityManager == null) {
-                Log.e(TAG, "Failed to get ActivityManager service");
-                return false;
-            }
+            // Use the official Shizuku pattern per documentation:
+            // prefer Shizuku.getSystemService("activity"). If that fails, fall back to
+            // SystemServiceHelper.getSystemService("activity"). Avoid calling
+            // non-existent overloads like SystemServiceHelper.getSystemService(name, ShizukuBinderWrapper.get()).
+            android.os.IBinder binder = null;
+            try {
+                Object svc = null;
+                try {
+                    // Shizuku.getSystemService(...) is not available in this API version.
+                    // Use SystemServiceHelper which is provided by the Shizuku API dependency.
+                    svc = SystemServiceHelper.getSystemService("activity");
+                } catch (Throwable t) {
+                    Log.w(TAG, "SystemServiceHelper.getSystemService failed", t);
+                    svc = null;
+                }
 
-            // 먼저 단일 매개변수 메서드 시도
-            try {
-                Method forceStopMethod = activityManager.getClass().getMethod("forceStopPackage", String.class);
-                forceStopMethod.invoke(activityManager, packageName);
-                Log.i(TAG, "Successfully hibernated app (single param): " + packageName);
-                return true;
-            } catch (NoSuchMethodException e) {
-                Log.d(TAG, "Single parameter method not found, trying with user ID");
-            }
-            
-            // 사용자 ID 포함 메서드 시도 (Android 8.0+)
-            try {
-                Method forceStopMethodWithUser = activityManager.getClass().getMethod("forceStopPackage", String.class, int.class);
-                int currentUserId = android.os.Process.myUserHandle().hashCode(); // 근사치
-                forceStopMethodWithUser.invoke(activityManager, packageName, currentUserId);
-                Log.i(TAG, "Successfully hibernated app (with user ID): " + packageName);
-                return true;
-            } catch (NoSuchMethodException e) {
-                Log.e(TAG, "Neither forceStopPackage method variant found");
+                if (svc == null) {
+                    Log.e(TAG, "Failed to obtain activity service via Shizuku/SystemServiceHelper");
+                    return false;
+                }
+
+                if (svc instanceof android.os.IBinder) {
+                    binder = (android.os.IBinder) svc;
+                } else {
+                    // Rare: svc not an IBinder. Try to extract/wrap if possible.
+                    try {
+                        android.os.IBinder rawBinder = svc instanceof android.os.IBinder ? (android.os.IBinder) svc : null;
+                        if (rawBinder != null) {
+                            binder = rawBinder;
+                        } else {
+                            Log.w(TAG, "Activity service returned non-IBinder: " + (svc != null ? svc.getClass().getName() : "null"));
+                        }
+                    } catch (Throwable t) {
+                        Log.w(TAG, "Unexpected exception while handling activity service result", t);
+                    }
+                }
+
+                if (binder == null) {
+                    Log.e(TAG, "No binder available for activity service");
+                    return false;
+                }
+            } catch (Throwable outer) {
+                Log.e(TAG, "Unexpected failure while obtaining activity binder via Shizuku/SystemServiceHelper", outer);
                 return false;
             }
-            
+            Object am = resolveIActivityManagerFromBinder(binder);
+            if (am == null) {
+                Log.e(TAG, "Failed to resolve IActivityManager from binder");
+                // fallback: try shell command via Shizuku
+                Log.i(TAG, "Falling back to shell 'am force-stop' via Shizuku");
+                try {
+                    String cmd = "am force-stop " + packageName;
+                    // Use Shizuku to execute shell command
+                    String output = null;
+                    try {
+                        // Shizuku API provides exec method in provider package; use reflection to avoid direct dependency issues
+                        Class<?> shizukuClass = Class.forName("rikka.shizuku.Shizuku");
+                        Method execMethod = null;
+                        try {
+                            execMethod = shizukuClass.getMethod("exec", String[].class);
+                        } catch (NoSuchMethodException nsme) {
+                            // fallback to exec(String) or other signatures
+                            try {
+                                execMethod = shizukuClass.getMethod("exec", String.class);
+                            } catch (NoSuchMethodException nsme2) {
+                                execMethod = null;
+                            }
+                        }
+
+                        if (execMethod != null) {
+                            execMethod.setAccessible(true);
+                            if (execMethod.getParameterTypes()[0].equals(String[].class)) {
+                                Object res = execMethod.invoke(null, (Object) new String[]{"sh", "-c", cmd});
+                                output = res != null ? res.toString() : null;
+                            } else {
+                                Object res = execMethod.invoke(null, cmd);
+                                output = res != null ? res.toString() : null;
+                            }
+                        } else {
+                            Log.w(TAG, "No Shizuku.exec method found to run shell command");
+                        }
+                    } catch (Throwable t) {
+                        Log.w(TAG, "Failed to exec shell via Shizuku reflection", t);
+                    }
+
+                    Log.i(TAG, "Shell fallback output: " + output);
+                    return true;
+                } catch (Throwable tb) {
+                    Log.e(TAG, "Shell fallback also failed", tb);
+                    return false;
+                }
+            }
+            int userId = android.os.Process.myUid() / 100000;
+            Method forceStop = am.getClass().getMethod("forceStopPackage", String.class, int.class, int.class);
+            forceStop.invoke(am, packageName, userId, 0);
+            Log.i(TAG, "Successfully hibernated app via Shizuku: " + packageName);
+            return true;
+        } catch (NoSuchMethodException nsme) {
+            Log.e(TAG, "forceStopPackage method missing on IActivityManager instance", nsme);
+            return false;
         } catch (Exception e) {
-            Log.e(TAG, "Failed to force stop package: " + packageName, e);
+            Log.e(TAG, "Failed to force stop package via Shizuku: " + packageName, e);
             return false;
         }
+    }
+
+    /**
+     * Helper: try to obtain IActivityManager instance from a service binder.
+     * Tries Stub.asInterface(IBinder) first; if missing, tries new Stub$Proxy(IBinder).
+     */
+    private Object resolveIActivityManagerFromBinder(android.os.IBinder binder) {
+        try {
+            Class<?> stubClass = Class.forName("android.app.IActivityManager$Stub");
+            // try static asInterface
+            try {
+                Method asInterface = stubClass.getMethod("asInterface", android.os.IBinder.class);
+                return asInterface.invoke(null, binder);
+            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException ex) {
+                // fallback to Proxy constructor
+                try {
+                    Class<?> proxyClass = Class.forName("android.app.IActivityManager$Stub$Proxy");
+                    java.lang.reflect.Constructor<?> ctor = proxyClass.getDeclaredConstructor(android.os.IBinder.class);
+                    ctor.setAccessible(true);
+                    return ctor.newInstance(binder);
+                } catch (Throwable t) {
+                    Log.w(TAG, "Failed to instantiate Stub$Proxy", t);
+                }
+            }
+        } catch (ClassNotFoundException cnfe) {
+            Log.w(TAG, "IActivityManager$Stub class not found", cnfe);
+        } catch (Throwable t) {
+            Log.w(TAG, "Unexpected error resolving IActivityManager", t);
+        }
+        return null;
     }
 
     /**
