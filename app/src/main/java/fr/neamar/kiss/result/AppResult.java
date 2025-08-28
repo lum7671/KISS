@@ -384,13 +384,14 @@ public class AppResult extends Result<AppPojo> {
     }
 
     private void hibernate(Context context, AppPojo app) {
-        String msg = context.getResources().getString(R.string.toast_hibernate_completed);
-        if (!KissApplication.getApplication(context).getRootHandler().hibernateApp(pojo.packageName)) {
-            msg = context.getResources().getString(R.string.toast_hibernate_error);
-        } else {
+        String result = KissApplication.getApplication(context).getRootHandler().hibernateApp(pojo.packageName);
+        String msg;
+        if (result == null) {
+            msg = context.getResources().getString(R.string.toast_hibernate_completed);
             KissApplication.getApplication(context).getDataHandler().reloadApps();
+        } else {
+            msg = result;
         }
-
         Toast.makeText(context, String.format(msg, app.getName()), Toast.LENGTH_SHORT).show();
     }
 

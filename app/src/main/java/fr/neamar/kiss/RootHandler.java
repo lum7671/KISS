@@ -94,27 +94,32 @@ public class RootHandler {
     /**
      * 앱 최대 절전 모드 - 루트 또는 Shizuku 사용
      */
-    public boolean hibernateApp(String packageName) {
+    /**
+     * @return null이면 성공, 아니면 실패 사유(메시지)
+     */
+    public String hibernateApp(String packageName) {
         // 1순위: Shizuku 사용 (더 안전하고 안정적)
         if (shizukuHandler != null && shizukuHandler.isShizukuActivated() && 
             shizukuHandler.isShizukuAvailable() && shizukuHandler.hasShizukuPermission()) {
             Log.d(TAG, "Hibernating app using Shizuku: " + packageName);
-            return shizukuHandler.hibernateApp(packageName);
+            String shizukuResult = shizukuHandler.hibernateAppWithReason(packageName);
+            if (shizukuResult == null) return null;
+            return shizukuResult;
         }
-        
         // 2순위: 전통적인 루트 권한 사용
         if (isRootActivated && isRootAvailable()) {
             Log.d(TAG, "Hibernating app using root: " + packageName);
             try {
-                return executeRootShell("am force-stop " + packageName);
+                boolean ok = executeRootShell("am force-stop " + packageName);
+                if (ok) return null;
+                else return "루트 명령 실행 실패";
             } catch (Exception e) {
                 Log.e(TAG, "Failed to hibernate app using root: " + packageName, e);
-                return false;
+                return "루트 명령 실행 중 예외 발생";
             }
         }
-        
         Log.w(TAG, "Neither Shizuku nor root access available for hibernation");
-        return false;
+        return "Shizuku/루트 권한이 모두 필요합니다.";
     }
 
     /**

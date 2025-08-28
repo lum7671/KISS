@@ -1,3 +1,8 @@
+
+
+    // ...existing code...
+
+
 package fr.neamar.kiss;
 
 import android.content.Context;
@@ -21,6 +26,33 @@ import rikka.shizuku.SystemServiceHelper;
  * 루트 권한 없이도 앱 강제 종료 등의 기능을 제공
  */
 public class ShizukuHandler {
+
+    /**
+     * @return null이면 성공, 아니면 실패 사유(메시지)
+     */
+    public String hibernateAppWithReason(String packageName) {
+        if (!isShizukuActivated()) {
+            Log.w(TAG, "Shizuku mode is not activated");
+            return "Shizuku 모드가 활성화되어 있지 않습니다.";
+        }
+        if (!isShizukuAvailable()) {
+            Log.w(TAG, "Shizuku is not available");
+            return "Shizuku 서비스가 실행 중이 아닙니다.";
+        }
+        if (!hasShizukuPermission()) {
+            Log.w(TAG, "Shizuku permission not granted");
+            return "Shizuku 권한이 없습니다.";
+        }
+        try {
+            Log.d(TAG, "Attempting to hibernate app: " + packageName);
+            boolean ok = forceStopPackage(packageName);
+            if (ok) return null;
+            else return "시스템 서비스 접근 실패 (forceStopPackage)";
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to hibernate app: " + packageName, e);
+            return "Shizuku를 통한 앱 종료 중 예외 발생";
+        }
+    }
 
     private static final String TAG = ShizukuHandler.class.getSimpleName();
     private static final int SHIZUKU_PERMISSION_REQUEST_CODE = 1001;
