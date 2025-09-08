@@ -50,7 +50,7 @@ echo "$AVDS" | while read line; do
 done
 
 # 기본 AVD 설정 (Intel CPU 최적화)
-DEFAULT_AVD="Medium_Phone_API_36"
+DEFAULT_AVD="Galaxy_Note20_Ultra"
 SELECTED_AVD=""
 
 # 명령행 인수로 AVD 지정 가능
