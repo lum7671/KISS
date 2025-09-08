@@ -1,5 +1,53 @@
 # KISS
 
+## 🚀 v4.1.6 - Upstream Core Bug Fixes & Stability Edition (2025-09-08)
+
+### 🔧 업스트림 핵심 버그 수정 적용
+
+- **🐛 Spinner Spinning 문제 해결**: 앱 시작 시 무한 로딩 스피너 현상 완전 해결
+  - 프로바이더 로딩 순서 최적화 및 `FULL_LOAD_OVER` 인텐트 타이밍 조정
+  - `MainActivity`의 `displayLoader()` 호출 로직 개선
+- **🛡️ 메모리 누수 방지 강화**: Provider 생명주기 관리 개선
+  - `Provider.onDestroy()` 메소드 추가로 서비스 종료 시 안전한 리소스 정리
+  - `loadOver()` 메소드에서 완료된 작업 참조 자동 해제
+- **⚡ 프로바이더 로딩 로직 간소화**: `isAllProvidersLoaded()` 메소드 추가
+  - 업스트림의 간소화된 로직 적용으로 중복 상태 관리 제거
+  - `handleProviderLoaded()` 최적화로 불필요한 반복 체크 방지
+
+### 📱 Android 15+ 호환성 강화
+
+- **🎨 Edge-to-Edge 디스플레이 지원**: Android 15 (VANILLA_ICE_CREAM) 완전 대응
+  - `UIColors.getNotificationBarColor()`에서 Android 15+는 투명 상태바 적용
+  - 상태바 색상 변경 불가 정책에 맞는 자동 처리
+- **⚙️ 설정 UI 자동 조정**: Android 15+에서 불필요한 설정 자동 숨김
+  - `SettingsActivity`에서 상태바 색상 설정 항목 자동 제거
+  - 시스템 정책 변경에 따른 사용자 혼란 방지
+- **🔧 네비게이션 바 최적화**: Android Q+ 네비게이션 바 컨트라스트 비활성화
+  - `window.setNavigationBarContrastEnforced(false)` 적용
+  - 더 일관된 사용자 인터페이스 제공
+
+### 🏗️ 아키텍처 개선 및 현재 구조 보존
+
+- **✅ Kotlin Coroutines 구조 유지**: 기존 현대적 비동기 처리 방식 보존
+  - 업스트림의 AsyncTask 복귀 대신 Coroutines 기반 유지
+  - `initializeCoroutines()` 메소드 및 `kotlinx.coroutines.Job` 활용 지속
+- **📊 성능 로깅 기능 보존**: Amplitude 기반 성능 모니터링 유지
+  - 프로바이더 로딩 시간 추적 및 분석 기능 지속
+  - 사용자 행동 패턴 분석을 통한 지속적 최적화
+- **🔄 하이브리드 접근법**: 업스트림 안정성 + 커스텀 기능의 최적 조합
+  - 핵심 버그 수정은 적용, 성능 향상 기능은 보존
+  - 안정성과 기능성의 균형 달성
+
+### 🛠️ 기술적 세부사항
+
+- **📋 적용된 업스트림 커밋**:
+  - `a498c518c`: Spinner spinning 문제 수정
+  - `00d1e8070`: allProvidersHaveLoaded 로직 간소화  
+  - `396582ab8`: Android 15+ 상태바 색상 설정 숨기기
+- **🔧 ErrorProne 버전 업데이트**: 2.42.0 → 2.41.0 (업스트림 동기화)
+- **🏠 JAVA_HOME 경로 업데이트**: Homebrew OpenJDK 17 경로로 변경
+- **✅ 빌드 및 테스트**: 에뮬레이터 설치 및 동작 검증 완료
+
 ## 🚀 v4.1.5 - Release parity & Shizuku reliability fixes (2025-08-28)
 
 ### 🆕 주요 변경 사항 (v4.1.5)
