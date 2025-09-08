@@ -125,6 +125,10 @@ public class SettingsActivity extends PreferenceActivity implements
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             removePreference("icons-section", DrawableUtils.KEY_THEMED_ICONS);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            // Android 15+에서는 edge-to-edge 앱에서 상태바 색상 변경 불가
+            removePreference("colors-section", "notification-bar-color");
+        }
         if (!ShortcutUtil.canDeviceShowShortcuts()) {
             removePreference("exclude_apps_category", "reset-excluded-app-shortcuts");
             removePreference("search-providers", "enable-shortcuts");

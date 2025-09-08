@@ -49,6 +49,12 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         this.reload();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cancelInitialize();
+    }
+
     /**
      * Initialize provider with Kotlin Coroutines-based loader
      * 
@@ -102,7 +108,9 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         } catch (org.json.JSONException e) {
             e.printStackTrace();
         }
-        // Store results
+        
+        // Store results and cleanup loader to prevent memory leaks
+        this.loaderJob = null; // Clear the completed job reference
         this.loaded = true;
         this.pojos = results;
 

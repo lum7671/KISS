@@ -217,7 +217,10 @@ public class UIColors {
     }
 
     private static int getNotificationBarColor(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            // Android 15+에서는 edge-to-edge 앱에서 상태바 색상 변경 불가
+            return COLOR_TRANSPARENT;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // use accent color from system if available
             return getColor(context, "notification-bar-color", getNotificationBarColorRes(context));
         } else {

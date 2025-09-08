@@ -330,15 +330,14 @@ public class DataHandler extends BroadcastReceiver
      * might be ready now
      */
     protected void handleProviderLoaded() {
-        if (this.allProvidersHaveLoaded) {
+        // 업스트림 로직 적용: 간소화된 체크
+        if (!isAllProvidersLoaded()) {
             return;
         }
 
-        // Make sure that all providers are fully connected
-        for (ProviderEntry entry : this.providers.values()) {
-            if (entry.provider == null || !entry.provider.isLoaded()) {
-                return;
-            }
+        // 이미 로딩 완료된 경우 중복 처리 방지
+        if (this.allProvidersHaveLoaded) {
+            return;
         }
 
         long time = System.currentTimeMillis() - start;
@@ -364,6 +363,19 @@ public class DataHandler extends BroadcastReceiver
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Unable to send broadcast: " + MainActivity.FULL_LOAD_OVER);
         }
+    }
+
+    /**
+     * Check if all providers have finished loading (업스트림 로직 적용)
+     * Uses individual provider loaded flags instead of global state
+     */
+    public boolean isAllProvidersLoaded() {
+        for (ProviderEntry entry : this.providers.values()) {
+            if (entry.provider == null || !entry.provider.isLoaded()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
