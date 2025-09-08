@@ -46,6 +46,21 @@ android {
             enableV2Signing = true
             enableV3Signing = true
         }
+        release {
+            def keystorePropertiesFile = rootProject.file("keystore/keystore.properties")
+            if (keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+                
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
     }
 
     buildTypes {
@@ -53,7 +68,7 @@ android {
             minifyEnabled true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig = signingConfigs.debug  // 디버그 키로 서명
+            signingConfig = signingConfigs.release  // 릴리즈 키로 서명
             buildConfigField "String", "BUILD_TYPE", '"release"'
         }
         debug {

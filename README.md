@@ -490,3 +490,48 @@ Public Telegram chat: <https://t.me/joinchat/_eDeAIQJU1FlNjM0>
 
 |![Less interface](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Search anything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![Customize everything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |![Settings](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
+
+## 🛠️ 빌드 및 설치 가이드
+
+### 📦 APK 빌드
+
+```bash
+# Debug 빌드 (개발/테스트용)
+./gradlew assembleDebug
+
+# Release 빌드 (배포용 - 서명 포함)
+./gradlew assembleRelease
+
+# Profile 빌드 (성능 분석용)
+./gradlew assembleProfile
+```
+
+### 🔐 서명 시스템
+
+이 프로젝트는 일관된 APK 서명을 위해 전용 keystore를 포함합니다:
+
+- **위치**: `keystore/kiss-release.keystore`
+- **설정**: `keystore/keystore.properties` 
+- **용도**: Release 빌드 자동 서명으로 업데이트 호환성 보장
+
+**⚠️ 주의사항**: 
+- 기존 4.1.5 버전이 설치된 경우, 서명 불일치로 인해 제거 후 재설치 필요
+- 향후 버전부터는 동일한 서명으로 정상 업데이트 가능
+
+### 📱 설치 방법
+
+```bash
+# ADB를 통한 설치
+adb install app/build/outputs/apk/release/app-release.apk
+
+# 기존 버전 제거 후 설치 (서명 충돌 시)
+adb uninstall kr.lum7671.kiss
+adb install app/build/outputs/apk/release/app-release.apk
+```
+
+### 🔧 개발 환경 요구사항
+
+- **Java**: OpenJDK 17 (권장: Homebrew 설치)
+- **Android SDK**: API 35 (Android 15)
+- **최소 API**: 33 (Android 13)
+- **IDE**: Android Studio 2025.1.2+ 또는 VSCode
