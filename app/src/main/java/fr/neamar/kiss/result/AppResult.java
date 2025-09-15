@@ -465,11 +465,8 @@ public class AppResult extends Result<AppPojo> {
                     // 최종 안전장치
                     if (icon == null) {
                         // all icon loading failed, using emergency fallback
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
-                        } else {
-                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
-                        }
+                        // minSdkVersion 33이므로 LOLLIPOP 체크 불필요
+                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
                     }
                 }
             }
@@ -494,50 +491,30 @@ public class AppResult extends Result<AppPojo> {
     @Override
     public void doLaunch(Context context, View v) {
         try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                assert launcher != null;
-                Rect sourceBounds = null;
+            // minSdkVersion 33이므로 LOLLIPOP 체크 불필요
+            LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            assert launcher != null;
+            Rect sourceBounds = null;
                 Bundle opts = null;
 
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    // We're on a modern Android and can display activity animations
-                    // If AppResult, find the icon
-                    View potentialIcon = v.findViewById(R.id.item_app_icon);
-                    if (potentialIcon == null) {
-                        // If favorite, find the icon
-                        potentialIcon = v.findViewById(R.id.favorite);
-                    }
+                // minSdkVersion 33이므로 M 체크도 불필요 - 항상 애니메이션 지원
+                // If AppResult, find the icon
+                View potentialIcon = v.findViewById(R.id.item_app_icon);
+                if (potentialIcon == null) {
+                    // If favorite, find the icon
+                    potentialIcon = v.findViewById(R.id.favorite);
+                }
 
-                    if (potentialIcon != null) {
-                        sourceBounds = getViewBounds(potentialIcon);
+                if (potentialIcon != null) {
+                    sourceBounds = getViewBounds(potentialIcon);
 
-                        // If we got an icon, we create options to get a nice animation
-                        opts = ActivityOptions.makeClipRevealAnimation(potentialIcon, 0, 0, potentialIcon.getMeasuredWidth(), potentialIcon.getMeasuredHeight()).toBundle();
-                    }
+                    // If we got an icon, we create options to get a nice animation
+                    opts = ActivityOptions.makeClipRevealAnimation(potentialIcon, 0, 0, potentialIcon.getMeasuredWidth(), potentialIcon.getMeasuredHeight()).toBundle();
                 }
 
                 // resolveActivity 체크 (Lollipop+에서는 LauncherApps로 직접 실행하므로, 실제로는 system이 체크)
                 // debug: startMainActivity
                 launcher.startMainActivity(className, pojo.userHandle.getRealHandle(), sourceBounds, opts);
-            } else {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setComponent(className);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                setSourceBounds(intent, v);
-
-                // resolveActivity 체크
-                PackageManager pm = context.getPackageManager();
-                if (intent.resolveActivity(pm) == null) {
-                    // error: resolveActivity FAILED
-                    Toast.makeText(context, "실행 불가 인텐트: " + className.getPackageName() + "/" + className.getClassName(), Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    // debug: resolveActivity OK
-                }
-                context.startActivity(intent);
-            }
         } catch (ActivityNotFoundException | NullPointerException | SecurityException e) {
             // warning: Unable to launch activity
             // Application was just removed?

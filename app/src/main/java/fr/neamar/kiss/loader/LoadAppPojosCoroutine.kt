@@ -75,12 +75,8 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         val manager = ctx.getSystemService(Context.USER_SERVICE) as UserManager
         val launcherApps = ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         
-        // Get all user profiles
-        val profiles = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            manager.userProfiles
-        } else {
-            listOf(android.os.Process.myUserHandle())
-        }
+        // Get all user profiles - minSdkVersion 33이므로 LOLLIPOP 체크 불필요
+        val profiles = manager.userProfiles
         
         for (profile in profiles) {
             val userHandle = UserHandle(ctx, profile)
@@ -108,16 +104,13 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         excludedFromHistoryAppList: Set<String>,
         excludedShortcutsAppList: Set<String>
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Use LauncherApps for API 21+ - 활성화된 앱들
-            val activityList = launcherApps.getActivityList(null, userHandle.realHandle)
+        // minSdkVersion 33이므로 LOLLIPOP 체크 불필요 - 항상 LauncherApps 사용
+        // Use LauncherApps for API 21+ - 활성화된 앱들
+        val activityList = launcherApps.getActivityList(null, userHandle.realHandle)
             
             for (activityInfo in activityList) {
-                val suspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
-                    (activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
-                } else {
-                    false
-                }
+                // minSdkVersion 33이므로 SDK 28 체크 불필요
+                val suspended = (activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
                 val disabled = !activityInfo.applicationInfo.enabled
                 android.util.Log.d(TAG, "LauncherApps: package=" + activityInfo.applicationInfo.packageName + ", disabled=" + disabled + ", suspended=" + suspended + ", flags=" + activityInfo.applicationInfo.flags)
                 val app = createPojo(
@@ -209,51 +202,8 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                 android.util.Log.w(TAG, "Error loading disabled apps: ${e.message}")
             }
             */
-        } else {
-            // Fallback for older Android versions
-            loadAppsLegacy(ctx, userHandle, apps, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList)
-        }
     }
-    
-    @WorkerThread
-    private fun loadAppsLegacy(
-        ctx: Context,
-        userHandle: UserHandle,
-        apps: MutableList<AppPojo>,
-        excludedAppList: Set<String>,
-        excludedFromHistoryAppList: Set<String>,
-        excludedShortcutsAppList: Set<String>
-    ) {
-        val pm = ctx.packageManager
-        val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-        
-        val activitiesInfo = pm.queryIntentActivities(mainIntent, 0)
-        
-        for (activityInfo in activitiesInfo) {
-            val suspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
-                (activityInfo.activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
-            } else {
-                false
-            }
-            val disabled = !activityInfo.activityInfo.enabled
-            android.util.Log.d(TAG, "Legacy: package=" + activityInfo.activityInfo.packageName + ", disabled=" + disabled + ", suspended=" + suspended + ", flags=" + activityInfo.activityInfo.applicationInfo.flags)
-            val app = createPojo(
-                userHandle,
-                activityInfo.activityInfo.packageName,
-                activityInfo.activityInfo.name,
-                activityInfo.loadLabel(pm),
-                disabled,
-                suspended,
-                excludedAppList,
-                excludedFromHistoryAppList,
-                excludedShortcutsAppList
-            )
-            apps.add(app)
-        }
-    }
-    
+
     @WorkerThread
     private fun applyCustomAppInfo(ctx: Context, apps: List<AppPojo>) {
         val customApps = DBHelper.getCustomAppData(ctx)

@@ -196,53 +196,16 @@ public class InterfaceTweaks extends Forwarder {
                 mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar);
                 mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar);
             } else {
-                // Before API21, you can't access values from current theme using ?attr/
-                // So we made different drawable for each theme (#931).
-                Resources res = mainActivity.getResources();
-
-                if (getSearchBackgroundColor() == Color.WHITE) {
-                    mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_light);
-                    mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_light);
-                } else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_light_transparent)) {
-                    mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_light);
-                    mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_light);
-                } else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_dark_transparent)) {
-                    mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_dark);
-                    mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_semi_trans_dark);
-                } else if (getSearchBackgroundColor() == Color.BLACK) {
-                    mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_amoled);
-                    mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_amoled);
-                } else {
-                    mainActivity.findViewById(R.id.externalFavoriteBar).setBackgroundResource(R.drawable.rounded_search_bar_pre21_dark);
-                    mainActivity.findViewById(R.id.searchEditLayout).setBackgroundResource(R.drawable.rounded_search_bar_pre21_dark);
-                }
+                // minSdkVersion 33이므로 LOLLIPOP 이상 - 항상 tint 적용 가능
+                mainActivity.kissBar.setBackgroundResource(R.drawable.rounded_kiss_bar);
             }
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            // Tinting is not properly applied pre lollipop if there is no solid background, so we need to manually set the background color
-            mainActivity.kissBar.setBackgroundColor(UIColors.getPrimaryColor(mainActivity));
         }
 
         if (prefs.getBoolean("pref-rounded-list", false)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout);
-                // clip list content to rounded corners
-                mainActivity.listContainer.setClipToOutline(true);
-            } else {
-                // Before API21, you can't access values from current theme using ?attr/
-                // So we made different drawable for each theme (#931).
-                Resources res = mainActivity.getResources();
-
-                if (getSearchBackgroundColor() == Color.WHITE)
-                    mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_light);
-                else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_light_transparent))
-                    mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_semi_trans_light);
-                else if (getSearchBackgroundColor() == getColorCompat(res, R.color.kiss_background_dark_transparent))
-                    mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_semi_trans_dark);
-                else if (getSearchBackgroundColor() == Color.BLACK)
-                    mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_amoled);
-                else
-                    mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout_pre21_dark);
-            }
+            // minSdkVersion 33이므로 항상 LOLLIPOP 이상
+            mainActivity.findViewById(R.id.resultLayout).setBackgroundResource(R.drawable.rounded_result_layout);
+            // clip list content to rounded corners
+            mainActivity.listContainer.setClipToOutline(true);
         }
     }
 
@@ -265,10 +228,9 @@ public class InterfaceTweaks extends Forwarder {
             layoutParams = (RelativeLayout.LayoutParams) mainActivity.findViewById(R.id.embeddedFavoritesBar).getLayoutParams();
             layoutParams.addRule(RelativeLayout.RIGHT_OF, 0);
             layoutParams.addRule(RelativeLayout.LEFT_OF, mainActivity.whiteLauncherButton.getId());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                layoutParams.addRule(RelativeLayout.END_OF, 0);
-                layoutParams.addRule(RelativeLayout.START_OF, mainActivity.whiteLauncherButton.getId());
-            }
+            // minSdkVersion 33이므로 JELLY_BEAN_MR1 체크 불필요
+            layoutParams.addRule(RelativeLayout.END_OF, 0);
+            layoutParams.addRule(RelativeLayout.START_OF, mainActivity.whiteLauncherButton.getId());
         }
     }
 
@@ -284,21 +246,12 @@ public class InterfaceTweaks extends Forwarder {
         ImageView launcherButton = mainActivity.findViewById(R.id.launcherButton);
         launcherButton.setColorFilter(primaryColorOverride);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            ProgressBar loaderBar = mainActivity.findViewById(R.id.loaderBar);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                loaderBar.getIndeterminateDrawable().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
-            } else {
-                loaderBar.getIndeterminateDrawable().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
-            }
-        }
+        // minSdkVersion 33이므로 LOLLIPOP 체크 불필요 - 항상 Q 이상이므로 BlendModeColorFilter 사용
+        ProgressBar loaderBar = mainActivity.findViewById(R.id.loaderBar);
+        loaderBar.getIndeterminateDrawable().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
 
-        // Kissbar background
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            mainActivity.kissBar.getBackground().mutate().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
-        } else {
-            mainActivity.kissBar.getBackground().mutate().setColorFilter(primaryColorOverride, PorterDuff.Mode.SRC_IN);
-        }
+        // Kissbar background - 항상 Q 이상이므로 BlendModeColorFilter 사용
+        mainActivity.kissBar.getBackground().mutate().setColorFilter(new android.graphics.BlendModeColorFilter(primaryColorOverride, android.graphics.BlendMode.SRC_IN));
     }
 
     private int getSearchBackgroundColor() {

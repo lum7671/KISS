@@ -54,9 +54,9 @@ public class IconCacheManager {
     private static volatile IconCacheManager instance;
     
     private IconCacheManager(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext(); // Application Context 사용으로 메모리 누수 방지
         // Coil 설정
-        imageLoader = new ImageLoader.Builder(context.getApplicationContext())
+        imageLoader = new ImageLoader.Builder(this.context)
                 .memoryCachePolicy(coil.request.CachePolicy.ENABLED)     // 메모리 캐시 활성화
                 .diskCachePolicy(coil.request.CachePolicy.ENABLED)       // 디스크 캐시 활성화
                 .build();

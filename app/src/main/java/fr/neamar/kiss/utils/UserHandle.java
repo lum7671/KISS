@@ -37,11 +37,8 @@ public class UserHandle implements Parcelable {
     }
 
     public UserHandle(Context context, android.os.UserHandle userHandle) {
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            // OS does not provide any APIs for multi-user support
-            this.serial = 0;
-            this.handle = null;
-        } else if (userHandle != null && Process.myUserHandle().equals(userHandle)) {
+        // minSdkVersion 33이므로 JELLY_BEAN_MR1 체크 불필요 - 항상 멀티유저 지원
+        if (userHandle != null && Process.myUserHandle().equals(userHandle)) {
             // For easier processing the current user is also stored as `null`, even
             // if there is multi-user support
             this.serial = 0;
