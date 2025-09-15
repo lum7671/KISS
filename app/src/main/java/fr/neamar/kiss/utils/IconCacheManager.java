@@ -8,19 +8,17 @@ import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
+import coil.request.Disposable;
+import coil.target.Target;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 고성능 아이콘 캐시 매니저
- * Glide + LruCache + 3단계 캐싱 전략 사용
+ * Coil + LruCache + 3단계 캐싱 전략 사용
  */
 public class IconCacheManager {
     /**
@@ -48,20 +46,20 @@ public class IconCacheManager {
     // 사용 빈도 추적
     private final ConcurrentHashMap<String, AtomicInteger> usageCount = new ConcurrentHashMap<>();
     
-    // Glide 인스턴스
-    private final RequestManager glide;
-    private final RequestOptions iconRequestOptions;
+    // Coil 인스턴스
+    private final ImageLoader imageLoader;
+    private final Context context;
     
     // 싱글톤
     private static volatile IconCacheManager instance;
     
     private IconCacheManager(Context context) {
-        // Glide 설정
-        glide = Glide.with(context.getApplicationContext());
-        iconRequestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)  // 디스크 캐시 활성화
-                .skipMemoryCache(false)                    // Glide 메모리 캐시 활성화
-                .centerCrop();
+        this.context = context;
+        // Coil 설정
+        imageLoader = new ImageLoader.Builder(context.getApplicationContext())
+                .memoryCachePolicy(coil.request.CachePolicy.ENABLED)     // 메모리 캐시 활성화
+                .diskCachePolicy(coil.request.CachePolicy.ENABLED)       // 디스크 캐시 활성화
+                .build();
         
         // 1단계: 빈번한 사용 아이콘 (가장 빠름)
         frequentCache = new LruCache<String, Drawable>(FREQUENT_CACHE_SIZE) {
@@ -174,25 +172,32 @@ public class IconCacheManager {
     }
     
     /**
-     * Glide를 통한 비동기 아이콘 로딩
+     * Coil을 통한 비동기 아이콘 로딩
      */
     public void loadIconAsync(String key, Object source, IconLoadCallback callback) {
-        glide.asDrawable()
-                .load(source)
-                .apply(iconRequestOptions)
-                .into(new CustomTarget<Drawable>() {
+        ImageRequest request = new ImageRequest.Builder(context)
+                .data(source)
+                .target(new Target() {
                     @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        // 로드 완료 후 캐시에 저장
-                        putIcon(key, resource);
-                        callback.onIconLoaded(key, resource);
+                    public void onStart(@Nullable Drawable placeholder) {
+                        // 로딩 시작
                     }
                     
                     @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    public void onSuccess(@NonNull Drawable result) {
+                        // 로드 완료 후 캐시에 저장
+                        putIcon(key, result);
+                        callback.onIconLoaded(key, result);
+                    }
+                    
+                    @Override
+                    public void onError(@Nullable Drawable error) {
                         callback.onIconLoadFailed(key);
                     }
-                });
+                })
+                .build();
+        
+        imageLoader.enqueue(request);
     }
     
     /**

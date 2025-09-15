@@ -1,0 +1,13 @@
+plugins {
+    id 'com.autonomousapps.dependency-analysis' version '2.1.4'
+}
+
+dependencyAnalysis {
+    issues {
+        all {
+            onAny {
+                severity('fail')
+            }
+        }
+    }
+}

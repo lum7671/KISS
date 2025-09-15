@@ -11,6 +11,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android' version '2.0.21'  // Java 17 안정 지원 버전
     id 'net.ltgt.errorprone' version '4.1.0'  // 안정 버전 유지
+    id 'com.github.ben-manes.versions' version '0.50.0'  // 의존성 업데이트 확인
 }
 
 android {
@@ -116,22 +117,22 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    // Kotlin & Coroutines 지원 (Java 17 안정 지원 버전)
+    // Kotlin & Coroutines 지원 - 최신 버전으로 업데이트
     implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.21"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'  // 업데이트: 1.8.1 → 1.10.2
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'     // 업데이트: 1.8.1 → 1.10.2
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.5'  // LifecycleScope 지원
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5' // ViewModelScope 지원
     
-    androidTestImplementation 'androidx.test:runner:1.5.2'         // 호환성 유지
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'  // 호환성 유지  
-    androidTestImplementation 'androidx.test:rules:1.5.0'          // 호환성 유지
+    androidTestImplementation 'androidx.test:runner:1.7.0'         // 업데이트: 1.5.2 → 1.7.0
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'  // 업데이트: 3.5.1 → 3.7.0  
+    androidTestImplementation 'androidx.test:rules:1.7.0'          // 업데이트: 1.5.0 → 1.7.0
 
-    implementation 'androidx.annotation:annotation:1.8.2'   // Java 17 지원 안정 버전
-    implementation 'androidx.appcompat:appcompat:1.7.0'     // Java 17 지원 안정 버전  
-    implementation 'androidx.fragment:fragment:1.8.4'       // Java 17 지원 안정 버전
+    implementation 'androidx.annotation:annotation:1.9.1'   // 업데이트: 1.8.2 → 1.9.1
+    implementation 'androidx.appcompat:appcompat:1.7.1'     // 업데이트: 1.7.0 → 1.7.1  
+    implementation 'androidx.fragment:fragment:1.8.9'       // 업데이트: 1.8.4 → 1.8.9
     implementation 'androidx.preference:preference:1.2.1'   // 안정 버전 유지
-    implementation 'androidx.recyclerview:recyclerview:1.3.2' // 안정 버전 유지
+    implementation 'androidx.recyclerview:recyclerview:1.4.0' // 업데이트: 1.3.2 → 1.4.0
 
     // 성능 분석 & 디버깅 도구들 (DEBUG 빌드에만 포함)
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'  // 메모리 누수 탐지
@@ -147,8 +148,8 @@ dependencies {
     // 성능 모니터링 (DEBUG/PROFILE 빌드에만 포함)
     debugImplementation 'androidx.benchmark:benchmark-macro-junit4:1.3.3'   // 벤치마크 테스트
     profileImplementation 'androidx.benchmark:benchmark-macro-junit4:1.3.3' // 프로파일 빌드용
-    debugImplementation 'androidx.tracing:tracing:1.2.0'                    // 시스템 추적
-    profileImplementation 'androidx.tracing:tracing:1.2.0'                  // 프로파일 빌드용
+    debugImplementation 'androidx.tracing:tracing:1.3.0'                    // 업데이트: 1.2.0 → 1.3.0
+    profileImplementation 'androidx.tracing:tracing:1.3.0'                  // 업데이트: 1.2.0 → 1.3.0
 
     // 고급 성능 프로파일링 도구들 (PROFILE 빌드 전용)
     profileImplementation 'androidx.startup:startup-runtime:1.1.1'          // 시작 시간 추적
@@ -168,10 +169,12 @@ dependencies {
     // 메모리 분석 도구
     debugImplementation 'com.squareup.curtains:curtains:1.2.5'             // 액티비티 라이프사이클 모니터링
 
-    // 이미지 로딩 및 캐싱 최적화
-    implementation 'com.github.bumptech.glide:glide:4.16.0'                 // Google Glide - 안정적인 버전 유지
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'         // Glide 컴파일러
-    implementation 'androidx.collection:collection:1.4.5'                   // LruCache 등 컬렉션 유틸리티
+    // 이미지 로딩 및 캐싱 최적화 - Coil로 교체 (Kotlin-first, 경량)
+    implementation 'io.coil-kt:coil:2.7.0'                              // Coil 코어
+    implementation 'io.coil-kt:coil-base:2.7.0'                         // Coil 베이스  
+    // implementation 'com.github.bumptech.glide:glide:4.16.0'          // Glide 제거
+    // annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'  // Glide 컴파일러 제거
+    implementation 'androidx.collection:collection:1.4.5'               // LruCache 등 컬렉션 유틸리티
 
     // Shizuku - 루트 권한 대안으로 시스템 API 접근
     implementation 'dev.rikka.shizuku:api:13.1.5'                          // Shizuku API
@@ -183,8 +186,8 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-library:3.0'               // 최신 버전 유지
 
     errorprone('com.google.errorprone:error_prone_core:2.42.0')          // 안정적인 버전 유지
-    // Amplitude SDK (업스트림 추가)
-    implementation 'com.amplitude:android-sdk:2.16.0'
+    // Amplitude SDK (업스트림 추가) - 최신 안정화 버전으로 업데이트
+    implementation 'com.amplitude:android-sdk:2.40.3'
 
     // R8/R8 minify 오류 해결용 javax.annotation-api 추가
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
@@ -204,3 +207,4 @@ tasks.withType(JavaCompile).configureEach {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
+

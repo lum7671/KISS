@@ -1,0 +1,20 @@
+plugins {
+    id 'io.gitlab.arturbosch.detekt' version '1.23.4'
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("${projectDir}/detekt.yml")
+    
+    reports {
+        html.required = true
+        xml.required = true
+        txt.required = true
+        sarif.required = true
+    }
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4"
+}

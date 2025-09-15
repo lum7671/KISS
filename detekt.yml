@@ -1,0 +1,32 @@
+style:
+  UnusedImports:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateFunction:
+    active: true
+  UnusedPrivateProperty:
+    active: true
+
+complexity:
+  ComplexMethod:
+    active: true
+    threshold: 15
+  LongMethod:
+    active: true
+    threshold: 60
+  LongParameterList:
+    active: true
+    threshold: 6
+
+potential-bugs:
+  UnusedParameter:
+    active: true
+  UnusedVariable:
+    active: true
+
+performance:
+  SpreadOperator:
+    active: true
+  ForEachOnRange:
+    active: true
