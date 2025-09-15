@@ -137,3 +137,4 @@ app/release/
 
 tmp
 node_modules
+app/build/
