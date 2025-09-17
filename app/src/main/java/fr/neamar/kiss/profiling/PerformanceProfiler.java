@@ -7,7 +7,7 @@ import android.os.Environment;
 import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
-import androidx.tracing.Trace;
+// import androidx.tracing.Trace; // debug/profile 빌드에서만 사용
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class PerformanceProfiler {
      */
     private void collectPerformanceData() {
         try {
-            Trace.beginSection("PerformanceProfiler.collectData");
+            // DEBUG/PROFILE 빌드에서만 활성화: Trace.beginSection("PerformanceProfiler.collectData");
             
             long currentTime = System.currentTimeMillis();
             long uptime = SystemClock.elapsedRealtime();
@@ -187,7 +187,7 @@ public class PerformanceProfiler {
         } catch (Exception e) {
             Log.e(TAG, "Error collecting performance data", e);
         } finally {
-            Trace.endSection();
+            // DEBUG/PROFILE 빌드에서만 활성화: Trace.endSection();
         }
     }
     

@@ -41,7 +41,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 
 // 성능 추적을 위한 import
-import androidx.tracing.Trace;
+// import androidx.tracing.Trace; // debug/profile 빌드에서만 사용
 import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.profiling.ProfileManager;
 import fr.neamar.kiss.profiling.ActionPerformanceTracker;
@@ -773,7 +773,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      */
     @SuppressLint("CommitPrefEdits")
     protected void onResume() {
-        Trace.beginSection("MainActivity.onResume");  // 성능 추적 시작
+    // DEBUG/PROFILE 빌드에서만 활성화: Trace.beginSection("MainActivity.onResume");  // 성능 추적 시작
         ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onResume");
         Log.d(TAG, "onResume()");
 
@@ -785,7 +785,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             // may require using a new UI
             prefs.edit().putBoolean("require-layout-update", false).apply();
             this.recreate();
-            Trace.endSection();  // 성능 추적 종료
+            // DEBUG/PROFILE 빌드에서만 활성화: Trace.endSection();  // 성능 추적 종료
             return;
         }
 
@@ -823,7 +823,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         }
 
         super.onResume();
-        Trace.endSection();  // 성능 추적 종료
+    // DEBUG/PROFILE 빌드에서만 활성화: Trace.endSection();  // 성능 추적 종료
     }
 
 

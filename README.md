@@ -1,5 +1,29 @@
 # KISS
 
+## 🚀 v4.1.7 - Code Cleanup & Modernization Edition (2025-09-17)
+
+### 🧹 코드 정리 및 최적화 (`cleanup/code-optimization` 브랜치)
+
+- **🗑️ 불필요한/사용하지 않는 소스 대거 제거**
+  - Legacy Java 파일, 실험적 Controller/Repository/Action 시스템, 미사용 메서드 및 데드 코드 삭제
+  - minSdkVersion(33) 기준 불필요한 SDK 버전 체크 및 pre21 리소스 완전 제거
+  - 사용하지 않는 import, 리소스, 테스트 코드 정리
+- **🔍 정적 분석 기반 코드 최적화**
+  - Android Lint, Detekt 등 도구 활용해 미사용 코드, 리소스, 함수 자동 탐지 및 제거
+  - 메모리 누수, deprecated API, obsolete 조건문 등 코드 품질 문제 개선
+- **📦 라이브러리 현대화 및 경량화**
+  - 사용하지 않는 라이브러리 8종 완전 제거 (benchmark, startup, profileinstaller 등)
+  - Glide → Coil로 이미지 로딩 시스템 전환 (Kotlin-first, 경량화)
+  - Kotlin Coroutines 1.10.2, AndroidX, Amplitude 등 주요 라이브러리 최신화
+- **⚡ 성능 및 빌드 최적화**
+  - 빌드 시간 단축, APK 크기 감소, 메모리 사용량 절감
+  - 불필요한 빌드/테스트 스크립트 `scripts/` 폴더로 이동
+- **🛡️ 안정성 및 유지보수성 강화**
+  - 핵심 기능(Kotlin Coroutines, Shizuku, PerformanceProfiler 등)은 모두 보존
+  - 코드베이스 단순화로 향후 업스트림 동기화 및 유지보수 용이
+
+---
+
 ## 🚀 v4.1.6 - Upstream Core Bug Fixes & Stability Edition (2025-09-08)
 
 ### 🔧 업스트림 핵심 버그 수정 적용
@@ -511,10 +535,11 @@ Public Telegram chat: <https://t.me/joinchat/_eDeAIQJU1FlNjM0>
 이 프로젝트는 일관된 APK 서명을 위해 전용 keystore를 포함합니다:
 
 - **위치**: `keystore/kiss-release.keystore`
-- **설정**: `keystore/keystore.properties` 
+- **설정**: `keystore/keystore.properties`
 - **용도**: Release 빌드 자동 서명으로 업데이트 호환성 보장
 
-**⚠️ 주의사항**: 
+**⚠️ 주의사항**:
+
 - 기존 4.1.5 버전이 설치된 경우, 서명 불일치로 인해 제거 후 재설치 필요
 - 향후 버전부터는 동일한 서명으로 정상 업데이트 가능
 
