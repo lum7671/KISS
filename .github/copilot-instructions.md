@@ -1,6 +1,6 @@
 # KISS Launcher - AI Coding Agent Instructions
 
-KISS is a customized Android launcher with advanced features like Shizuku integration, hibernation capabilities, and performance optimizations. This is a fork with significant Korean localization and modern Android API support.
+KISS is a customized Android launcher with advanced features like Shizuku integration, hibernation capabilities, and performance optimizations. This is a Korean-localized fork (v4.1.7) with modern Android API support and recent code cleanup optimizations.
 
 ## Architecture Overview
 
@@ -12,8 +12,8 @@ KISS is a customized Android launcher with advanced features like Shizuku integr
 
 ### Provider Loading System
 ```kotlin
-// Providers use Coroutines (not AsyncTask) for background loading
-LoadPojosCoroutine<T> -> Provider.loadOver(results) -> LOAD_OVER broadcast -> MainActivity updates UI
+// Background loading with Coroutines and memory-safe references
+LoadPojosCoroutine<T> -> executeAsync() -> doInBackground() -> Provider.loadOver(results) -> LOAD_OVER broadcast -> MainActivity updates UI
 ```
 
 Key broadcasts: `START_LOAD`, `LOAD_OVER` (individual provider), `FULL_LOAD_OVER` (all providers ready)
@@ -25,38 +25,66 @@ Key broadcasts: `START_LOAD`, `LOAD_OVER` (individual provider), `FULL_LOAD_OVER
 
 ## Critical Patterns
 
-### Kotlin Coroutines Migration
-This codebase has migrated from AsyncTask to Kotlin Coroutines. Always use:
+### Kotlin Coroutines Implementation
+Complete migration from AsyncTask to Coroutines using `LoadPojosCoroutine<T>`:
 ```kotlin
-class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(context, "app://") {
+abstract class LoadPojosCoroutine<T : Pojo>(context: Context, protected val pojoScheme: String) {
+    protected val contextRef = WeakReference(context)
+    
     @WorkerThread
-    override fun doInBackground(): List<AppPojo> { /* background work */ }
+    protected abstract fun doInBackground(): List<T>
+    
+    fun executeAsync(): Job = CoroutineUtils.runAsyncWithResult(...)
 }
+```
+
+### CoroutineUtils Patterns
+For simple background tasks, use these established patterns:
+```kotlin
+// Simple background execution
+CoroutineUtils.execute(background: Runnable)
+
+// Background + UI callback
+CoroutineUtils.runAsync(background: AsyncRunnable, callback: AsyncRunnable?)
+
+// With result return
+CoroutineUtils.runAsyncWithResult<T>(background: AsyncCallable<T>, callback: AsyncCallback<T>)
+
+// WeakReference pattern for UI components
+CoroutineUtils.runAsyncWithWeakReference<T, R>(target, background, callback)
 ```
 
 ### Shizuku & Root Integration
 - **ShizukuHandler**: Modern privilege escalation using Shizuku API for app hibernation
 - **RootHandler**: Wrapper supporting both root and Shizuku methods
 - App hibernation priority: Shizuku (safer) → Root (fallback)
+- **AIDL Integration**: Never import AIDL interfaces directly (`import android.app.IActivityManager`), use reflection with Stub.asInterface
+- **Critical Pattern**: Always check `isShizukuReady()` before attempting system service access
 
 ### Memory Management
-- Use `WeakReference` for Context in background tasks
+- Use `WeakReference` for Context in background tasks: `WeakReference(context)`
 - Providers clean up via `Provider.onDestroy()` and `removeShizukuListeners()`
 - Job cancellation in `cancelInitialize()` prevents memory leaks
 
-## Build System
+## Build System (v4.1.7)
 
 ### Gradle Configuration
-- Target SDK 35, Min SDK 33 (Android 13+)
-- Kotlin 2.0.21 with Java 17 compatibility
-- Three build types: `debug`, `release`, `profile` (for performance analysis)
-- Uses Error Prone for static analysis
+- **Current**: Target SDK 35, Min SDK 33 (Android 13+), Version 4.1.7
+- **Kotlin**: 2.0.21 with Java 17 compatibility (`-Xjvm-default=all`)
+- **Build Types**: `debug`, `release`, `profile` (for performance analysis with `debuggable=true`)
+- **Static Analysis**: Error Prone 2.42.0, Detekt for code quality
 
-### Key Dependencies
-- Kotlin Coroutines (replacing AsyncTask patterns)
-- Coil (image loading, replaced Glide)
-- Shizuku (privilege escalation)
-- Amplitude (analytics/performance tracking)
+### Key Dependencies (Post-Cleanup)
+- **Coroutines**: kotlinx-coroutines-android 1.10.2 (replacing AsyncTask patterns)
+- **Image Loading**: Coil 2.7.0 (replaced Glide, Kotlin-first and lightweight)
+- **Privilege Escalation**: Shizuku API 13.1.5
+- **Analytics**: Amplitude 2.40.3 for performance tracking
+- **Memory Debugging**: LeakCanary 2.14 (debug only)
+
+### Removed Dependencies (Code Cleanup)
+- Legacy benchmark, startup, profileinstaller libraries
+- Flipper debugging tools (replaced with Chrome DevTools + Android Studio Profiler)
+- Glide image loading (replaced with Coil)
 
 ## Development Workflows
 
@@ -71,6 +99,12 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
 fastlane android beta  # Upload to beta
 fastlane android prod  # Production release
 ```
+
+### Profile Build for Performance Analysis
+- **Profile APK**: Includes debuggable flag and performance tracking
+- **Custom Signing**: Use `apksigner` (not `jarsigner`) for Android 13+ compatibility
+- **Performance Logging**: ProfileManager and ActionPerformanceTracker enabled
+- **Log Location**: `/storage/emulated/0/Android/data/.../files/kiss_profile_logs/`
 
 ### Performance Optimization
 - Use `ProfileManager` for performance tracking
@@ -129,3 +163,11 @@ if (shizukuHandler.isShizukuReady()) {
 - `git` branch strategy: `dev` for features, upstream merges via `cleanup/` branches
 
 Focus on the Provider-POJO-Result data flow and Coroutines-based async patterns when making changes. The codebase prioritizes performance and memory efficiency while maintaining backwards compatibility with the KISS launcher ecosystem.
+
+## Recent v4.1.7 Code Cleanup
+
+The v4.1.7 release (2025-09-17) included major code cleanup and modernization:
+- **Dead Code Removal**: Eliminated legacy Java files, experimental Controller/Repository/Action systems, unused methods
+- **Dependency Cleanup**: Removed 8 unused libraries, modernized image loading (Glide → Coil)
+- **Performance Optimization**: Reduced APK size, build time, and memory usage through static analysis
+- **Stability Improvements**: All core features preserved (Coroutines, Shizuku, Performance Profiler) while simplifying codebase
