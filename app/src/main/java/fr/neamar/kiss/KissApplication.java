@@ -103,11 +103,8 @@ public class KissApplication extends Application {
 
     public void initDataHandler() {
         DataHandler dataHandler = getDataHandler();
-        if (dataHandler != null && dataHandler.allProvidersHaveLoaded) {
-            // Already loaded! We still need to fire the FULL_LOAD event
-            Intent i = new Intent(MainActivity.FULL_LOAD_OVER);
-            sendBroadcast(i);
-        }
+        // No broadcast needed - MainActivity will check isAllProvidersLoaded() directly
+        // The loading completion is handled in DataHandler.handleProviderLoaded()
     }
 
     public IconsHandler getIconsHandler() {

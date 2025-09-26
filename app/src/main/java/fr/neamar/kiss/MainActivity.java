@@ -96,7 +96,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     public static final String START_LOAD = "fr.neamar.summon.START_LOAD";
     public static final String LOAD_OVER = "fr.neamar.summon.LOAD_OVER";
-    public static final String FULL_LOAD_OVER = "fr.neamar.summon.FULL_LOAD_OVER";
+    // FULL_LOAD_OVER removed - using direct isAllProvidersLoaded() check instead
+    // public static final String FULL_LOAD_OVER = "fr.neamar.summon.FULL_LOAD_OVER";
 
     protected static final String TAG = MainActivity.class.getSimpleName();
 
@@ -250,7 +251,13 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(screenStateReceiver, filter);
+        
+        // Android 13+ 보안 향상
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(screenStateReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(screenStateReceiver, filter);
+        }
     }
     
     /**
@@ -364,8 +371,6 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         ActionPerformanceTracker.getInstance().initialize(this);
         ActionPerformanceTracker.getInstance().trackAppStartupPhase("ACTIVITY_CREATE", SystemClock.elapsedRealtime());
 
-        KissApplication.getApplication(this).initDataHandler();
-
         // 화면 상태 모니터링 리시버 초기화
         initScreenStateReceiver();
 
@@ -386,20 +391,20 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          */
         IntentFilter intentFilterLoad = new IntentFilter(START_LOAD);
         IntentFilter intentFilterLoadOver = new IntentFilter(LOAD_OVER);
-        IntentFilter intentFilterFullLoadOver = new IntentFilter(FULL_LOAD_OVER);
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //noinspection ConstantConditions
                 if (intent.getAction().equalsIgnoreCase(LOAD_OVER)) {
                     updateSearchRecords();
-                } else if (intent.getAction().equalsIgnoreCase(FULL_LOAD_OVER)) {
-                    Log.v(TAG, "All providers are done loading.");
-
-                    displayLoader(false);
-
-                    // Run GC once to free all the garbage accumulated during provider initialization
-                    System.gc();
+                    
+                    // Check if all providers are loaded (upstream approach)
+                    if (KissApplication.getApplication(MainActivity.this).getDataHandler().isAllProvidersLoaded()) {
+                        Log.v(TAG, "All providers are done loading.");
+                        displayLoader(false);
+                        // Run GC once to free all the garbage accumulated during provider initialization
+                        System.gc();
+                    }
                 }
 
                 // New provider might mean new favorites
@@ -414,12 +419,23 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             // In practice, this means other apps can trigger a refresh of search results if they want by sending a broadcast.
             this.registerReceiver(mReceiver, intentFilterLoad, Context.RECEIVER_EXPORTED);
             this.registerReceiver(mReceiver, intentFilterLoadOver, Context.RECEIVER_EXPORTED);
-            this.registerReceiver(mReceiver, intentFilterFullLoadOver, Context.RECEIVER_EXPORTED);
         }
         else {
             this.registerReceiver(mReceiver, intentFilterLoad);
             this.registerReceiver(mReceiver, intentFilterLoadOver);
-            this.registerReceiver(mReceiver, intentFilterFullLoadOver);
+        }
+
+        /*
+         * Android 15+ Edge-to-edge display support
+         */
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+            getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            );
         }
 
         /*
@@ -442,8 +458,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         /*
          * Initialize components behavior
          * Note that a lot of behaviors are also initialized through the forwarderManager.onCreate() call.
+         * {@code initDataHandler} must be called after {@link MainActivity#displayLoader(boolean)} and after
+         * {@link MainActivity#mReceiver} is registered.
+         * If {@code dataHandler} is already existing at this point this may result in undefined behaviour.
          */
         displayLoader(true);
+        KissApplication.getApplication(this).initDataHandler();
 
         // Add touch listener for history popup to root view
         findViewById(android.R.id.content).setOnTouchListener(this);
@@ -791,7 +811,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
         dismissPopup();
 
-        if (KissApplication.getApplication(this).getDataHandler().allProvidersHaveLoaded) {
+        if (KissApplication.getApplication(this).getDataHandler().isAllProvidersLoaded()) {
             displayLoader(false);
             // 스마트 즐겨찾기 업데이트
             handleFavoriteChangeOnResume();

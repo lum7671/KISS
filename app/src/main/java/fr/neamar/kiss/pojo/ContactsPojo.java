@@ -60,7 +60,12 @@ public final class ContactsPojo extends Pojo {
     public void setPhone(String phone, boolean homeNumber) {
         if (!TextUtils.isEmpty(phone)) {
             this.phone = phone;
-            this.normalizedPhone = PhoneNormalizer.simplifyPhoneNumber(phone);
+            try {
+                this.normalizedPhone = PhoneNormalizer.simplifyPhoneNumber(phone);
+            } catch (Exception e) {
+                // If phone normalization fails, disable deduplication for this contact
+                this.normalizedPhone = null;
+            }
             this.homeNumber = homeNumber;
         } else {
             this.phone = null;

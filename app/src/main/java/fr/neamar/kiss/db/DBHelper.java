@@ -25,6 +25,7 @@ import fr.neamar.kiss.KissApplication;
 
 public class DBHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
+    private static volatile DBHelper instance;
     private static SQLiteDatabase database = null;
     private static SQLiteDatabase memoryDatabase = null;
     
@@ -51,6 +52,20 @@ public class DBHelper {
     }
 
     private DBHelper() {
+        // Private constructor to prevent direct instantiation
+    }
+    
+    /**
+     * Get singleton instance of DBHelper (upstream pattern)
+     * Ensures only one database instance is used throughout the app
+     */
+    public static synchronized DBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DBHelper();
+            // Initialize database on first access
+            getDatabase(context.getApplicationContext());
+        }
+        return instance;
     }
 
     private static SQLiteDatabase getDatabase(Context context) {

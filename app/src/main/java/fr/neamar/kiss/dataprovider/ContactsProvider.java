@@ -147,7 +147,13 @@ public class ContactsProvider extends Provider<ContactsPojo> {
      * @return a contactpojo, or null.
      */
     public ContactsPojo findByPhone(String phoneNumber) {
-        StringNormalizer.Result simplifiedPhoneNumber = PhoneNormalizer.simplifyPhoneNumber(phoneNumber);
+        StringNormalizer.Result simplifiedPhoneNumber = null;
+        try {
+            simplifiedPhoneNumber = PhoneNormalizer.simplifyPhoneNumber(phoneNumber);
+        } catch (Exception e) {
+            // If phone normalization fails, return null (no match found)
+            return null;
+        }
 
         for (ContactsPojo pojo : getPojos()) {
             if (pojo.normalizedPhone != null && pojo.normalizedPhone.equals(simplifiedPhoneNumber)) {

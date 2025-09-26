@@ -327,16 +327,10 @@ public class DataHandler extends BroadcastReceiver
 
     /**
      * Called when some event occurred that makes us believe that all data providers
-     * might be ready now
+     * might be ready now (업스트림 간소화 버전)
      */
     protected void handleProviderLoaded() {
-        // 업스트림 로직 적용: 간소화된 체크
         if (!isAllProvidersLoaded()) {
-            return;
-        }
-
-        // 이미 로딩 완료된 경우 중복 처리 방지
-        if (this.allProvidersHaveLoaded) {
             return;
         }
 
@@ -355,13 +349,11 @@ public class DataHandler extends BroadcastReceiver
 
         this.allProvidersHaveLoaded = true;
 
-        // Broadcast the fact that the new providers list is ready
+        // Provider loading complete - no broadcast needed, MainActivity checks directly
         try {
             this.context.unregisterReceiver(this);
-            Intent i = new Intent(MainActivity.FULL_LOAD_OVER);
-            this.context.sendBroadcast(i);
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Unable to send broadcast: " + MainActivity.FULL_LOAD_OVER);
+            Log.e(TAG, "Unable to unregister receiver", e);
         }
     }
 

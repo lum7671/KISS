@@ -1,5 +1,66 @@
 # KISS
 
+## 🚀 v4.1.8 - Upstream Integration & Core Bug Fixes Edition (2025-09-26)
+
+### 🔀 Neamar 업스트림 핵심 개선사항 통합 (Phase 1-4)
+
+- **🐛 Phase 1: 스피너 무한 회전 문제 해결**
+  - MainActivity 초기화 순서 최적화로 앱 시작 시 로딩 스피너 멈춤 현상 완전 해결
+  - `displayLoader(true)` 호출을 `initDataHandler()` 이전으로 이동
+  - DataHandler 준비 완료 전에 로더 UI 우선 표시하도록 수정
+
+- **⚡ Phase 2: DataHandler 로직 단순화**
+  - 복잡한 `FULL_LOAD_OVER` 브로드캐스트 시스템 제거
+  - `isAllProvidersLoaded()` 메서드를 통한 직접 확인 방식 도입
+  - CPU 사용량 감소 및 프로바이더 로딩 성능 향상
+
+- **💾 Phase 3: 데이터베이스 싱글톤 패턴 적용**
+  - DBHelper에 thread-safe한 싱글톤 패턴 구현
+  - `volatile` 키워드와 `getInstance(Context)` 메서드로 단일 인스턴스 보장
+  - 메모리 사용량 최적화 및 데이터베이스 인스턴스 중복 제거
+
+- **🛡️ Phase 4: 예외 처리 강화 및 Android 15+ 호환성**
+  - **연락처 안전성**: `ContactsPojo.setPhone()` 및 `ContactsProvider.findByPhone()`에 try-catch 블록 추가
+  - **Android 15+ Edge-to-edge**: 투명 상태바/네비게이션 바 및 전체 화면 레이아웃 지원
+  - **보안 향상**: Android 13+ RECEIVER_EXPORTED 플래그로 BroadcastReceiver 보안 강화
+
+### � 기술적 구현 세부사항
+
+- **MainActivity.java 개선**
+  - onCreate() 메서드에서 초기화 순서 조정으로 UI 응답성 향상
+  - Android 15+ Edge-to-edge 디스플레이 지원 코드 추가
+  - RECEIVER_EXPORTED 플래그로 BroadcastReceiver 보안 강화
+
+- **DataHandler.java 최적화**
+  - `handleProviderLoaded()` 메서드 간소화로 성능 향상
+  - `isAllProvidersLoaded()` 직접 확인 메서드 도입
+  - 불필요한 브로드캐스트 송신 코드 제거
+
+- **DBHelper.java 싱글톤 패턴**
+  - `volatile static DBHelper instance` 필드 추가
+  - `getInstance(Context)` 메서드로 thread-safe 인스턴스 관리
+  - 메모리 누수 방지 및 성능 최적화
+
+- **ContactsPojo.java & ContactsProvider.java 안전성**
+  - 전화번호 정규화 실패 시 예외 처리로 앱 크래시 방지
+  - 정규화 실패 시 중복 제거 비활성화로 데이터 일관성 유지
+
+### 🎯 업스트림 동기화 전략
+
+- **선택적 통합**: 성능과 안정성 개선사항만 엄선하여 적용
+- **기존 기능 보존**: Kotlin Coroutines, Shizuku 통합, 성능 프로파일러 등 커스텀 기능 유지
+- **단계별 검증**: 각 Phase별 빌드 테스트로 안정성 확보
+- **하위 호환성**: 기존 사용자 설정 및 데이터 완전 보존
+
+### 📋 검증 완료 사항
+
+- ✅ **빌드 성공**: 모든 Phase에서 Gradle 빌드 100% 성공
+- ✅ **기능 동작**: 앱 검색, 설정, 프로바이더 로딩 모두 정상
+- ✅ **성능 개선**: 스피너 문제 해결 및 메모리 사용량 최적화
+- ✅ **호환성**: Android 13-15 전 버전에서 정상 동작 확인
+
+---
+
 ## 🚀 v4.1.7 - Code Cleanup & Modernization Edition (2025-09-17)
 
 ### 🧹 코드 정리 및 최적화 (`cleanup/code-optimization` 브랜치)
