@@ -76,18 +76,13 @@ import fr.neamar.kiss.dataprovider.simpleprovider.SearchProvider;
 import fr.neamar.kiss.forwarder.ForwarderManager;
 import fr.neamar.kiss.pojo.SearchPojo;
 import fr.neamar.kiss.result.Result;
-import fr.neamar.kiss.searcher.ApplicationsSearcher;
 import fr.neamar.kiss.searcher.ApplicationsSearcherCoroutine;
-import fr.neamar.kiss.searcher.HistorySearcher;
 import fr.neamar.kiss.searcher.HistorySearcherCoroutine;
 import fr.neamar.kiss.searcher.NullSearcherCoroutine;
 import fr.neamar.kiss.searcher.QueryInterface;
-import fr.neamar.kiss.searcher.QuerySearcher;
 import fr.neamar.kiss.searcher.QuerySearcherCoroutine;
 import fr.neamar.kiss.searcher.Searcher;
-import fr.neamar.kiss.searcher.TagsSearcher;
 import fr.neamar.kiss.searcher.TagsSearcherCoroutine;
-import fr.neamar.kiss.searcher.UntaggedSearcher;
 import fr.neamar.kiss.searcher.UntaggedSearcherCoroutine;
 import fr.neamar.kiss.ui.AnimatedListView;
 import fr.neamar.kiss.ui.BottomPullEffectView;
@@ -1177,11 +1172,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             // Needs to be done after setting the text content to empty
             isDisplayingKissBar = true;
 
-            if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
-                runTaskCoroutine(new ApplicationsSearcherCoroutine(MainActivity.this, false));
-            } else {
-                runTask(new ApplicationsSearcher(MainActivity.this, false));
-            }
+            runTaskCoroutine(new ApplicationsSearcherCoroutine(MainActivity.this, false));
 
             // Reveal the bar
             int animationDuration = getResources().getInteger(
@@ -1255,11 +1246,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         if (isRefresh && isViewingAllApps()) {
             // Refreshing while viewing all apps (for instance app installed or uninstalled in the background)
             ActionPerformanceTracker.getInstance().trackSearchAction(query, 1, 0); // SEARCH_TYPING
-            if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
-                runTaskCoroutine(new ApplicationsSearcherCoroutine(this, isRefresh));
-            } else {
-                runTask(new ApplicationsSearcher(this, isRefresh));
-            }
+            runTaskCoroutine(new ApplicationsSearcherCoroutine(this, isRefresh));
             ActionPerformanceTracker.getInstance().endAction("SEARCH_APPS");
             return;
         }
@@ -1271,13 +1258,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             ActionPerformanceTracker.getInstance().endAction("SEARCH_EMPTY");
         } else {
             ActionPerformanceTracker.getInstance().trackSearchAction(query, 1, 0); // SEARCH_TYPING
-            
-            // Feature flag: Use Coroutines or AsyncTask for QuerySearcher
-            if (BuildConfig.USE_SEARCHER_COROUTINE) {
-                runTaskCoroutine(new fr.neamar.kiss.searcher.QuerySearcherCoroutine(this, query, isRefresh));
-            } else {
-                runTask(new QuerySearcher(this, query, isRefresh));
-            }
+            runTaskCoroutine(new fr.neamar.kiss.searcher.QuerySearcherCoroutine(this, query, isRefresh));
         }
         
         // 검색 성능 로깅
@@ -1461,22 +1442,14 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     public void showMatchingTags(String tag) {
-        if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
-            runTaskCoroutine(new TagsSearcherCoroutine(this, tag));
-        } else {
-            runTask(new TagsSearcher(this, tag));
-        }
+        runTaskCoroutine(new TagsSearcherCoroutine(this, tag));
 
         clearButton.setVisibility(View.VISIBLE);
         menuButton.setVisibility(View.INVISIBLE);
     }
 
     public void showUntagged() {
-        if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
-            runTaskCoroutine(new UntaggedSearcherCoroutine(this));
-        } else {
-            runTask(new UntaggedSearcher(this));
-        }
+        runTaskCoroutine(new UntaggedSearcherCoroutine(this));
 
         clearButton.setVisibility(View.VISIBLE);
         menuButton.setVisibility(View.INVISIBLE);
@@ -1484,11 +1457,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     public void showHistory() {
         setUIState(UIState.HISTORY, true);
-        if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
-            runTaskCoroutine(new HistorySearcherCoroutine(this, false));
-        } else {
-            runTask(new HistorySearcher(this, false));
-        }
+        runTaskCoroutine(new HistorySearcherCoroutine(this, false));
 
         clearButton.setVisibility(View.VISIBLE);
         menuButton.setVisibility(View.INVISIBLE);
