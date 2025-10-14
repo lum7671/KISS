@@ -333,6 +333,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * Task launched on text change
      */
     private Searcher searchTask;
+    
+    /**
+     * Coroutine Job for Searcher (AsyncTask → Coroutines migration)
+     */
+    private kotlinx.coroutines.Job searchJob;
 
     /**
      * SystemUiVisibility helper
@@ -1252,7 +1257,13 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             ActionPerformanceTracker.getInstance().endAction("SEARCH_EMPTY");
         } else {
             ActionPerformanceTracker.getInstance().trackSearchAction(query, 1, 0); // SEARCH_TYPING
-            runTask(new QuerySearcher(this, query, isRefresh));
+            
+            // Feature flag: Use Coroutines or AsyncTask for QuerySearcher
+            if (BuildConfig.USE_SEARCHER_COROUTINE) {
+                runTaskCoroutine(new fr.neamar.kiss.searcher.QuerySearcherCoroutine(this, query, isRefresh));
+            } else {
+                runTask(new QuerySearcher(this, query, isRefresh));
+            }
         }
         
         // 검색 성능 로깅
@@ -1268,11 +1279,27 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         searchTask = task;
         searchTask.executeOnExecutor(Searcher.SEARCH_THREAD);
     }
+    
+    /**
+     * Run SearcherCoroutine (Kotlin Coroutines version)
+     * Part of AsyncTask → Coroutines migration
+     */
+    public void runTaskCoroutine(fr.neamar.kiss.searcher.SearcherCoroutine task) {
+        resetTask();
+        searchJob = task.execute();
+    }
 
     public void resetTask() {
+        // Cancel legacy AsyncTask searcher
         if (searchTask != null) {
             searchTask.cancel(true);
             searchTask = null;
+        }
+        
+        // Cancel Coroutines searcher
+        if (searchJob != null) {
+            searchJob.cancel(null);
+            searchJob = null;
         }
     }
 
