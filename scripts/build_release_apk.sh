@@ -25,6 +25,13 @@ if [ -z "$ANDROID_HOME" ]; then
     export ANDROID_HOME="$HOME/Library/Android/sdk"
 fi
 
+# ADB 경로 설정
+ADB="$ANDROID_HOME/platform-tools/adb"
+if [ ! -f "$ADB" ]; then
+    echo -e "${RED}❌ adb를 찾을 수 없습니다: $ADB${NC}"
+    exit 1
+fi
+
 APKSIGNER="$ANDROID_HOME/build-tools/34.0.0/apksigner"
 if [ ! -f "$APKSIGNER" ]; then
     APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name "apksigner" -type f | head -1)
@@ -66,7 +73,7 @@ else
 fi
 
 echo -e "${BLUE}📱 ADB 연결 확인...${NC}"
-if ! adb devices | grep -q "device$"; then
+if ! "$ADB" devices | grep -q "device$"; then
     echo -e "${YELLOW}⚠️  에뮬레이터 또는 디바이스가 연결되지 않았습니다${NC}"
     echo "설치를 건너뛰고 APK만 빌드합니다"
     INSTALL_APK=false
@@ -150,22 +157,22 @@ if [ "$INSTALL_APK" = true ]; then
         echo -e "${BLUE}📦 APK 설치 중...${NC}"
         
         # 기존 앱이 있으면 제거 여부 확인
-        if adb shell pm list packages | grep -q "kr.lum7671.kiss"; then
+        if "$ADB" shell pm list packages | grep -q "kr.lum7671.kiss"; then
             echo -e "${YELLOW}⚠️  기존 KISS 앱이 설치되어 있습니다${NC}"
             read -p "제거하고 새로 설치하시겠습니까? (y/N): " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -e "${YELLOW}⚠️  기존 앱 제거 중...${NC}"
-                adb uninstall kr.lum7671.kiss || true
+                "$ADB" uninstall kr.lum7671.kiss || true
             fi
         fi
         
         # 새 APK 설치
-        adb install "$APK_SIGNED"
+        "$ADB" install "$APK_SIGNED"
         
         echo -e "${BLUE}🏠 런처로 설정...${NC}"
         # 홈 화면으로 이동하여 런처 선택 화면 표시
-        adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
+        "$ADB" shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
         
         echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요.${NC}"
     fi
@@ -219,7 +226,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
 ## 설치 방법
 \`\`\`bash
-adb install $APK_SIGNED
+adb install $(basename "$APK_SIGNED")
 \`\`\`
 
 ## 파일 정보
