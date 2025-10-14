@@ -3,7 +3,65 @@ layout: post
 title: "AsyncTask를 Kotlin Coroutines로 마이그레이션"
 category: advanced
 date: 2025-08-21
+last_update: 2025-10-14
 ---
+
+# 🚨 최신 업데이트 (2025-10-14)
+
+**마이그레이션 상태**: 95% 완료 → **최종 단계 계획 수립 완료**
+
+## 📚 새로운 문서 구조
+
+이 문서는 **히스토리 참고용**입니다. 최신 실행 계획은 아래 문서를 참조하세요:
+
+### 📖 필독 문서 (우선순위순)
+
+1. **[asynctask-migration-executive-summary.md](./asynctask-migration-executive-summary.md)** ⭐⭐⭐
+   - **지금 바로 읽어야 할 문서**
+   - 현황 요약 (95% 완료)
+   - 5-Step 실행 계획
+   - 즉시 시작 가능한 작업
+
+2. **[asynctask-migration-master-plan.md](./asynctask-migration-master-plan.md)** ⭐⭐
+   - 상세한 Step별 가이드
+   - 코드 예제 및 체크리스트
+   - 테스트 전략
+
+3. **[asynctask-migration-final-analysis.md](./asynctask-migration-final-analysis.md)** ⭐
+   - 기술 분석 및 리스크 관리
+   - 과거 실패 원인 분석
+   - 성공 전략
+
+### 🎯 남은 작업 요약
+
+**Searcher 시스템만 남음** (8개 클래스):
+- `Searcher.java` (base) + 7개 하위 클래스
+- 현재: ExecutorService 패턴 사용
+- 목표: Kotlin Coroutines 전환
+
+**전략**: 점진적 5-Step 접근
+1. Step 1: 분석 (코드 수정 없음)
+2. Step 2: Base 클래스 전환
+3. Step 3: QuerySearcher 전환 (가장 중요)
+4. Step 4: 나머지 Searcher 전환
+5. Step 5: Legacy 코드 정리
+
+**예상 기간**: 2-3주
+
+---
+
+## 📋 이 문서의 역할
+
+이 문서는 **과거 작업 히스토리**를 담고 있습니다:
+- 이미 완료된 Provider 시스템 마이그레이션 기록
+- 과거 시도와 완료 내역
+- 참고용 기술 정보
+
+**실제 작업은 위의 새 문서들을 참조하세요!**
+
+---
+
+# AsyncTask를 Kotlin Coroutines로 마이그레이션 (히스토리)
 
 이 문서는 KISS 런처에서 현재 사용 중인 AsyncTask를 Kotlin Coroutines로 체계적으로 마이그레이션하는 가이드입니다.
 
