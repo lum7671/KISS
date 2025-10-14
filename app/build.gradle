@@ -37,9 +37,6 @@ android {
         buildConfigField "String", "OPTIMIZED_BY", '"lum7671"'
         buildConfigField "String", "BUILD_DATE", "\"${new Date().format('yyyy-MM-dd')}\""
         
-        // Feature flags for AsyncTask → Coroutines migration
-        buildConfigField "boolean", "USE_SEARCHER_COROUTINE", "true"
-        
         // 프로파일링을 위한 설정 (Android 15+에서 모든 기능 지원)
         manifestPlaceholders = [
             profileable: "true"
@@ -75,13 +72,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig = signingConfigs.release  // 릴리즈 키로 서명
             buildConfigField "String", "BUILD_TYPE", '"release"'
-            // Step 4: Feature flags for Searcher Coroutines
-            buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"
         }
         debug {
             buildConfigField "String", "BUILD_TYPE", '"debug"'
-            // Step 4: Feature flags for remaining Searcher Coroutines
-            buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"
         }
         profile {
             debuggable true
@@ -89,8 +82,6 @@ android {
             shrinkResources = false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             buildConfigField "String", "BUILD_TYPE", '"profile"'
-            // Step 4: Feature flags for Searcher Coroutines
-            buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"
             manifestPlaceholders.putAll([
                 profileable: "true",
                 enableOnDeviceAbi: "true"

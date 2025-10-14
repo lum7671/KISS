@@ -49,7 +49,6 @@ import fr.neamar.kiss.pojo.TagDummyPojo;
 import fr.neamar.kiss.preference.ExcludePreferenceScreen;
 import fr.neamar.kiss.preference.PreferenceScreenHelper;
 import fr.neamar.kiss.preference.SwitchPreference;
-import fr.neamar.kiss.searcher.QuerySearcher;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.MimeTypeUtils;
 import fr.neamar.kiss.utils.Permission;
@@ -665,8 +664,7 @@ public class SettingsActivity extends PreferenceActivity implements
             } else if (key.equalsIgnoreCase("primary-color")) {
                 UIColors.clearPrimaryColorCache();
             } else if (key.equalsIgnoreCase("number-of-display-elements")) {
-                // Clear cache for all Searcher versions
-                QuerySearcher.clearMaxResultCountCache();
+                // Clear cache for Searcher Coroutines
                 fr.neamar.kiss.searcher.QuerySearcherCoroutine.clearMaxResultCountCache();
                 fr.neamar.kiss.searcher.HistorySearcherCoroutine.clearMaxResultCountCache();
             } else if (key.equalsIgnoreCase("default-search-provider")) {
