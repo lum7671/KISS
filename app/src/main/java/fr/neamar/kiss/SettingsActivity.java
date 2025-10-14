@@ -665,9 +665,10 @@ public class SettingsActivity extends PreferenceActivity implements
             } else if (key.equalsIgnoreCase("primary-color")) {
                 UIColors.clearPrimaryColorCache();
             } else if (key.equalsIgnoreCase("number-of-display-elements")) {
-                // Clear cache for both QuerySearcher versions
+                // Clear cache for all Searcher versions
                 QuerySearcher.clearMaxResultCountCache();
                 fr.neamar.kiss.searcher.QuerySearcherCoroutine.clearMaxResultCountCache();
+                fr.neamar.kiss.searcher.HistorySearcherCoroutine.clearMaxResultCountCache();
             } else if (key.equalsIgnoreCase("default-search-provider")) {
                 getDataHandler().reloadSearchProvider();
             } else if ("pref-fav-tags-list".equals(key)) {

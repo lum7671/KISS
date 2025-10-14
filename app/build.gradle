@@ -78,6 +78,8 @@ android {
         }
         debug {
             buildConfigField "String", "BUILD_TYPE", '"debug"'
+            // Step 4: Feature flags for remaining Searcher Coroutines
+            buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"
         }
         profile {
             debuggable true
