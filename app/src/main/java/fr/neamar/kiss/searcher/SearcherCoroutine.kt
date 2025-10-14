@@ -83,12 +83,18 @@ abstract class SearcherCoroutine(
     /**
      * Add multiple pojos to results
      * Called from background thread by providers
+     * 
+     * Thread-safe: Uses synchronized block to ensure safe concurrent access
+     * Phase 2 Step 1: Explicit thread safety
      */
     open fun addResults(pojos: List<Pojo>): Boolean {
         if (isCancelled()) {
             return false
         }
-        return processedPojos.addAll(pojos)
+        // Synchronize on processedPojos to ensure thread-safe operations
+        synchronized(processedPojos) {
+            return processedPojos.addAll(pojos)
+        }
     }
     
     /**
