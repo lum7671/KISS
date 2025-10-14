@@ -58,7 +58,7 @@
 
 ### 📊 최종 통계
 
-```
+```text
 Before (Steps 0-4):
 - Legacy Java Searchers: 904 lines
 - Coroutine Searchers: 785 lines
