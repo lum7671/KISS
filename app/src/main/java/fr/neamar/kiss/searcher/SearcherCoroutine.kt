@@ -2,15 +2,13 @@ package fr.neamar.kiss.searcher
 
 import android.content.Context
 import android.util.Log
-import com.amplitude.api.Amplitude
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.MainActivity
 import fr.neamar.kiss.pojo.Pojo
 import fr.neamar.kiss.pojo.RelevanceComparator
 import fr.neamar.kiss.result.Result
+import fr.neamar.kiss.utils.SearchPerformanceLogger
 import kotlinx.coroutines.*
-import org.json.JSONException
-import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -209,8 +207,8 @@ abstract class SearcherCoroutine(
         // Reset task reference
         activity.resetTask()
         
-        // Performance logging (same as Searcher.java)
-        logPerformance(activity)
+        // Phase 2 Step 5: Centralized performance logging
+        logPerformance(cancelled = false, error = null)
     }
     
     /**
@@ -223,64 +221,61 @@ abstract class SearcherCoroutine(
     }
     
     /**
-     * Log search performance
-     * Same as Searcher.java
+     * Log search performance using centralized logger
+     * Phase 2 Step 5: Unified logging for all search states
+     * 
+     * Replaces separate logging in onPostExecute(), onCancelled(), onError()
      */
-    private fun logPerformance(activity: MainActivity) {
+    private fun logPerformance(
+        cancelled: Boolean,
+        error: Exception?
+    ) {
+        val activity = activityWeakReference.get() ?: return
         val time = System.currentTimeMillis() - startTime
-        Log.v(TAG, "Time to run query `$query` on ${this::class.simpleName} to completion: ${time}ms")
         
-        try {
-            val eventProperties = JSONObject()
-            eventProperties.put("type", this::class.simpleName)
-            eventProperties.put("length", query?.replace("<null>", "")?.length ?: 0)
-            eventProperties.put("time", time)
-            
-            val dataHandler = KissApplication.getApplication(activity).dataHandler
-            eventProperties.put("allProvidersHaveLoaded", dataHandler.allProvidersHaveLoaded)
-            
-            Amplitude.getInstance().logEvent("Search", eventProperties)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+        SearchPerformanceLogger.log(
+            SearchPerformanceLogger.SearchMetrics(
+                searcherType = this::class.simpleName ?: "Unknown",
+                query = query,
+                timeMs = time,
+                resultCount = processedPojos.size,
+                allProvidersLoaded = KissApplication.getApplication(activity)
+                    .dataHandler.allProvidersHaveLoaded,
+                cancelled = cancelled,
+                error = error
+            )
+        )
     }
     
     /**
      * Called when search is cancelled (not an error)
      * Phase 2 Step 2: Separated from error handling
+     * Phase 2 Step 5: Centralized logging
      */
     protected open fun onCancelled() {
         val activity = activityWeakReference.get() ?: return
         hideActivityLoader(activity)
+        
+        // Phase 2 Step 5: Centralized logging
+        logPerformance(cancelled = true, error = null)
     }
     
     /**
      * Called when search encounters an error (not cancellation)
      * Phase 2 Step 2: Separate error handling from cancellation
+     * Phase 2 Step 5: Centralized logging
      * 
      * Can be overridden by subclasses for custom error handling.
      * Default implementation logs the error and cleans up UI.
      */
     protected open fun onError(error: Exception) {
-        Log.e(TAG, "Search error in ${this::class.simpleName}: ${error.message}", error)
-        
-        // Log to Amplitude for error tracking
-        try {
-            val eventProperties = JSONObject()
-            eventProperties.put("type", this::class.simpleName)
-            eventProperties.put("errorType", error::class.simpleName)
-            eventProperties.put("errorMessage", error.message ?: "Unknown error")
-            eventProperties.put("query", query ?: "")
-            
-            Amplitude.getInstance().logEvent("SearchError", eventProperties)
-        } catch (e: JSONException) {
-            Log.e(TAG, "Failed to log error to Amplitude", e)
-        }
-        
         // Cleanup UI (same as cancellation)
         val activity = activityWeakReference.get()
         if (activity != null) {
             hideActivityLoader(activity)
         }
+        
+        // Phase 2 Step 5: Centralized logging
+        logPerformance(cancelled = false, error = error)
     }
 }
