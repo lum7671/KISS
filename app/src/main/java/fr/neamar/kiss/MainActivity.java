@@ -362,6 +362,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * Called when the activity is first created.
      */
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @SuppressWarnings("deprecation") // PreferenceManager migration planned in Phase 6
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -436,10 +437,14 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         /*
          * Edge-to-edge display support (Android 13+)
          * Using WindowInsetsController instead of deprecated flags
+         * Note: setStatusBarColor/setNavigationBarColor are deprecated but
+         * there's no alternative API for setting transparent colors yet.
          */
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-        getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+        @SuppressWarnings("deprecation")
+        int transparent = android.graphics.Color.TRANSPARENT;
+        getWindow().setStatusBarColor(transparent);
+        getWindow().setNavigationBarColor(transparent);
         
         WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         if (controller != null) {
