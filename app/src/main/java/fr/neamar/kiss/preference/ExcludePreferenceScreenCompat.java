@@ -1,0 +1,126 @@
+package fr.neamar.kiss.preference;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.preference.PreferenceScreen;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import fr.neamar.kiss.IconsHandler;
+import fr.neamar.kiss.KissApplication;
+import fr.neamar.kiss.R;
+import fr.neamar.kiss.pojo.AppPojo;
+import fr.neamar.kiss.pojo.NameComparator;
+import fr.neamar.kiss.utils.CoroutineUtils;
+
+/**
+ * AndroidX-compatible version of ExcludePreferenceScreen.
+ * Factory class for creating PreferenceScreen with app exclusion switches.
+ * 
+ * Note: PreferenceScreen is final, so we use a factory pattern instead of inheritance.
+ */
+public class ExcludePreferenceScreenCompat {
+
+    public static androidx.preference.PreferenceScreen getInstance(
+            @NonNull Context context,
+            @NonNull androidx.preference.PreferenceManager preferenceManager,
+            @StringRes int preferenceTitleResId,
+            @StringRes int preferenceScreenTitleResId,
+            @NonNull OnExcludedListener onExcludedListener,
+            @NonNull IsExcludedCallback isExcludedCallback
+    ) {
+        List<AppPojo> appList = KissApplication.getApplication(context).getDataHandler().getApplications();
+        IconsHandler iconsHandler = KissApplication.getApplication(context).getIconsHandler();
+
+        AppPojo[] apps;
+        if (appList != null) {
+            apps = appList.toArray(new AppPojo[0]);
+        } else {
+            apps = new AppPojo[0];
+        }
+        Arrays.sort(apps, new NameComparator());
+
+        final PreferenceScreen excludedAppsScreen = preferenceManager.createPreferenceScreen(context);
+        excludedAppsScreen.setTitle(preferenceTitleResId);
+
+        // Note: androidx.preference.PreferenceScreen handles toolbar automatically
+        // No need for PreferenceScreenHelper.findToolbar() pattern
+
+        final boolean showSummary = context.getResources().getConfiguration().screenWidthDp > 420;
+
+        for (AppPojo app : apps) {
+            SwitchPreferenceCompat pref = createExcludeAppSwitch(
+                    context,
+                    iconsHandler,
+                    isExcludedCallback,
+                    app,
+                    showSummary,
+                    onExcludedListener
+            );
+
+            excludedAppsScreen.addPreference(pref);
+        }
+
+        return excludedAppsScreen;
+    }
+
+    private static SwitchPreferenceCompat createExcludeAppSwitch(
+            @NonNull Context context,
+            @NonNull IconsHandler iconsHandler,
+            @NonNull IsExcludedCallback isExcludedCallback,
+            final @NonNull AppPojo app,
+            boolean showSummary,
+            @NonNull final OnExcludedListener onExcludedListener
+    ) {
+        final SwitchPreferenceCompat switchPreference = new SwitchPreferenceCompat(context);
+
+        AtomicReference<Drawable> icon = new AtomicReference<>(null);
+        switchPreference.setIcon(R.drawable.ic_launcher_white);
+        CoroutineUtils.runAsync(() -> {
+            final ComponentName componentName = new ComponentName(app.packageName, app.activityName);
+            icon.set(iconsHandler.getDrawableIconForPackage(componentName, app.userHandle));
+        }, () -> {
+            switchPreference.setIcon(icon.get());
+        });
+
+        switchPreference.setTitle(app.getName());
+        if (showSummary) {
+            switchPreference.setSummary(app.getComponentName());
+        }
+        switchPreference.setChecked(isExcludedCallback.isExcluded(app));
+        switchPreference.setOnPreferenceChangeListener(
+                (preference, newValue) -> {
+                    boolean becameExcluded = newValue != null && (boolean) newValue;
+
+                    if (becameExcluded) {
+                        onExcludedListener.onExcluded(app);
+                    } else {
+                        onExcludedListener.onIncluded(app);
+                    }
+
+                    return true;
+                }
+        );
+        return switchPreference;
+    }
+
+    /**
+     * Use {@link #getInstance}
+     */
+    private ExcludePreferenceScreenCompat() {}
+
+    public interface IsExcludedCallback {
+        boolean isExcluded(final @NonNull AppPojo app);
+    }
+
+    public interface OnExcludedListener {
+        void onExcluded(final @NonNull AppPojo app);
+        void onIncluded(final @NonNull AppPojo app);
+    }
+}
