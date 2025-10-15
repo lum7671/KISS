@@ -132,11 +132,17 @@ abstract class SearcherCoroutine(
                 // UI update on main thread
                 onPostExecute()
                 
-            } catch (e: Exception) {
-                // Phase 1: Same error handling as Searcher.java
-                // All exceptions treated as cancellation
-                Log.e(TAG, "Error in searcher", e)
+            } catch (e: CancellationException) {
+                // Phase 2 Step 2: Distinguish cancellation from errors
+                // Normal cancellation - user cancelled the search
+                Log.d(TAG, "Search cancelled: ${this@SearcherCoroutine::class.simpleName}")
                 onCancelled()
+                
+            } catch (e: Exception) {
+                // Phase 2 Step 2: Handle actual errors separately
+                // Real errors - DB issues, null pointers, etc.
+                Log.e(TAG, "Error in ${this@SearcherCoroutine::class.simpleName}", e)
+                onError(e)
             }
         }
         
@@ -240,11 +246,41 @@ abstract class SearcherCoroutine(
     }
     
     /**
-     * Called when search is cancelled or encounters error
-     * Same as Searcher.java onCancelled()
+     * Called when search is cancelled (not an error)
+     * Phase 2 Step 2: Separated from error handling
      */
     protected open fun onCancelled() {
         val activity = activityWeakReference.get() ?: return
         hideActivityLoader(activity)
+    }
+    
+    /**
+     * Called when search encounters an error (not cancellation)
+     * Phase 2 Step 2: Separate error handling from cancellation
+     * 
+     * Can be overridden by subclasses for custom error handling.
+     * Default implementation logs the error and cleans up UI.
+     */
+    protected open fun onError(error: Exception) {
+        Log.e(TAG, "Search error in ${this::class.simpleName}: ${error.message}", error)
+        
+        // Log to Amplitude for error tracking
+        try {
+            val eventProperties = JSONObject()
+            eventProperties.put("type", this::class.simpleName)
+            eventProperties.put("errorType", error::class.simpleName)
+            eventProperties.put("errorMessage", error.message ?: "Unknown error")
+            eventProperties.put("query", query ?: "")
+            
+            Amplitude.getInstance().logEvent("SearchError", eventProperties)
+        } catch (e: JSONException) {
+            Log.e(TAG, "Failed to log error to Amplitude", e)
+        }
+        
+        // Cleanup UI (same as cancellation)
+        val activity = activityWeakReference.get()
+        if (activity != null) {
+            hideActivityLoader(activity)
+        }
     }
 }
