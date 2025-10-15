@@ -28,12 +28,18 @@
   - 머지: `dev` 브랜치
   - 상태: ✅ 완료
 
+- ✅ **Step 4: 중간 DialogPreference** (완료: 2025-10-15)
+  - 소요 시간: 30분
+  - 커밋: `d1f370a48`
+  - 머지: `dev` 브랜치
+  - 상태: ✅ 완료
+
 ### 진행 중인 Step
 
-- 🔄 **Step 4: 중간 DialogPreference** (다음 단계)
-  - 예상 시간: 3-4시간
-  - 대상: 3-4개 클래스
-  - 브랜치: `feature/phase6-step4-medium-dialog`
+- 🔄 **Step 5: 복잡한 DialogPreference** (다음 단계)
+  - 예상 시간: 6-8시간
+  - 대상: 4개 클래스 (Export, Import, AddSearchProvider, ColorPreference)
+  - 브랜치: `feature/phase6-step5-complex-dialog`
   - 상태: ⚪ 대기
 
 ### 대기 중인 Steps
@@ -56,12 +62,12 @@
 | Step 1 | 2-3h | 0.5h | ✅ 완료 |
 | Step 2 | 3-4h | 0.75h | ✅ 완료 |
 | Step 3 | 4-5h | 1h | ✅ 완료 |
-| Step 4 | 3-4h | - | ⚪ 대기 |
+| Step 4 | 3-4h | 0.5h | ✅ 완료 |
 | Step 5 | 6-8h | - | ⚪ 대기 |
 | Step 6 | 4-5h | - | ⚪ 대기 |
 | Step 7 | 6-8h | - | ⚪ 대기 |
 | Step 8 | 2-3h | - | ⚪ 대기 |
-| **총합** | **30-40h** | **2.25h** | **5.6% 완료** |
+| **총합** | **30-40h** | **2.75h** | **6.9% 완료** |
 
 ### Warning 감소
 
@@ -94,9 +100,15 @@ Step 3:
 - 추가 라인: 1005줄
 - 삭제 라인: 0줄
 
+Step 4:
+- 신규 파일: 4개 (2 Preference + 2 DialogFragment)
+- 수정 파일: 1개 (preferences.xml)
+- 추가 라인: 171줄
+- 삭제 라인: 0줄
+
 누적:
-- 신규 파일: 18개
-- 총 추가 라인: 1810줄
+- 신규 파일: 22개
+- 총 추가 라인: 1981줄
 ```
 
 ---
