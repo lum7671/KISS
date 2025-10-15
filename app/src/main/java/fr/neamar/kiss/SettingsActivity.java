@@ -664,9 +664,9 @@ public class SettingsActivity extends PreferenceActivity implements
             } else if (key.equalsIgnoreCase("primary-color")) {
                 UIColors.clearPrimaryColorCache();
             } else if (key.equalsIgnoreCase("number-of-display-elements")) {
-                // Clear cache for Searcher Coroutines
-                fr.neamar.kiss.searcher.QuerySearcherCoroutine.clearMaxResultCountCache();
-                fr.neamar.kiss.searcher.HistorySearcherCoroutine.clearMaxResultCountCache();
+                // Phase 2 Step 4: No longer need to clear cache
+                // Each searcher instance reads preference value directly
+                // Cache is per-instance, not static
             } else if (key.equalsIgnoreCase("default-search-provider")) {
                 getDataHandler().reloadSearchProvider();
             } else if ("pref-fav-tags-list".equals(key)) {

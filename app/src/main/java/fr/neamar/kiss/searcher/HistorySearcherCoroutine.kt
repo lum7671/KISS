@@ -33,23 +33,13 @@ class HistorySearcherCoroutine(
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-    companion object {
-        /**
-         * Static cache for MAX_RESULT_COUNT to avoid repeated SharedPreferences reads
-         * @Volatile ensures visibility across threads
-         */
-        @Volatile
-        private var maxResultCountCache: Int? = null
-
-        /**
-         * Clear the cached MAX_RESULT_COUNT value
-         * Called from SettingsActivity when preference changes
-         */
-        @JvmStatic
-        fun clearMaxResultCountCache() {
-            maxResultCountCache = null
-        }
-    }
+    /**
+     * Phase 2 Step 4: Changed from static to instance variable
+     * - Removed static maxResultCountCache and clearMaxResultCountCache()
+     * - Each searcher instance has its own maxResultCount
+     * - No need for manual cache invalidation
+     */
+    private var maxResultCount: Int? = null
 
     /**
      * getMaxResultCount() override
@@ -57,14 +47,13 @@ class HistorySearcherCoroutine(
      * Reads "number-of-display-elements" preference.
      * Converts to double first to avoid NumberFormatException for values > Integer.MAX_VALUE.
      * 
-     * Uses static cache for performance.
+     * Phase 2 Step 4: Instance-based caching instead of static
      */
     override fun getMaxResultCount(): Int {
-        var cached = maxResultCountCache
-        if (cached == null) {
+        if (maxResultCount == null) {
             // Convert to double first before truncating to int to avoid
             // java.lang.NumberFormatException crashes for values larger than Integer.MAX_VALUE
-            cached = try {
+            maxResultCount = try {
                 prefs.getString(
                     "number-of-display-elements",
                     DEFAULT_MAX_RESULTS.toString()
@@ -72,9 +61,8 @@ class HistorySearcherCoroutine(
             } catch (e: NumberFormatException) {
                 DEFAULT_MAX_RESULTS
             }
-            maxResultCountCache = cached
         }
-        return cached
+        return maxResultCount!!
     }
 
     /**

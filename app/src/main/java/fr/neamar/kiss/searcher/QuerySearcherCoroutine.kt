@@ -24,24 +24,6 @@ class QuerySearcherCoroutine(
     isRefresh: Boolean
 ) : SearcherCoroutine(activity, query, isRefresh) {
     
-    companion object {
-        /**
-         * Static cache for MAX_RESULT_COUNT
-         * Phase 2 improvement: Remove static mutable state
-         */
-        @Volatile
-        private var MAX_RESULT_COUNT = -1
-        
-        /**
-         * Clear the cached max result count
-         * Called when user changes preference
-         */
-        @JvmStatic
-        fun clearMaxResultCountCache() {
-            MAX_RESULT_COUNT = -1
-        }
-    }
-    
     // Store user preferences (same as QuerySearcher.java)
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
     
@@ -49,25 +31,33 @@ class QuerySearcherCoroutine(
     private lateinit var knownIds: HashMap<String, Int>
     
     /**
+     * Phase 2 Step 4: Changed from static to instance variable
+     * - Removed static MAX_RESULT_COUNT and clearMaxResultCountCache()
+     * - Each searcher instance has its own maxResultCount
+     * - No need for manual cache invalidation
+     */
+    private var maxResultCount: Int? = null
+    
+    /**
      * Get maximum result count from preferences
-     * Same as QuerySearcher.java with static caching
+     * Phase 2 Step 4: Instance-based caching instead of static
      */
     override fun getMaxResultCount(): Int {
-        if (MAX_RESULT_COUNT == -1) {
+        if (maxResultCount == null) {
             // Convert to double first before truncating to int to avoid
             // java.lang.NumberFormatException crashes for values larger than Integer.MAX_VALUE
             try {
-                MAX_RESULT_COUNT = prefs.getString(
+                maxResultCount = prefs.getString(
                     "number-of-display-elements",
                     DEFAULT_MAX_RESULTS.toString()
                 )?.toDouble()?.toInt() ?: DEFAULT_MAX_RESULTS
             } catch (e: NumberFormatException) {
                 // If, for any reason, setting is empty, return default value
-                MAX_RESULT_COUNT = DEFAULT_MAX_RESULTS
+                maxResultCount = DEFAULT_MAX_RESULTS
             }
         }
         
-        return MAX_RESULT_COUNT
+        return maxResultCount!!
     }
     
     /**
