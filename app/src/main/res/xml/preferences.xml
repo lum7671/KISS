@@ -590,5 +590,15 @@
             android:title="[TEST] Reset Compat"
             android:summary="히스토리 초기화 (Phase 6 Step 3)"
             android:dialogMessage="@string/reset_warn" />
+        <fr.neamar.kiss.preference.DefaultLauncherPreferenceCompat
+            android:key="test-default-launcher-compat"
+            android:title="[TEST] DefaultLauncher Compat"
+            android:summary="기본 런처 설정 (Phase 6 Step 4)"
+            android:dialogMessage="@string/default_launcher_warn" />
+        <fr.neamar.kiss.preference.NotificationPreferenceCompat
+            android:key="test-notification-compat"
+            android:title="[TEST] Notification Compat"
+            android:summary="알림 접근 권한 (Phase 6 Step 4)"
+            android:dialogMessage="@string/notification_dialog_text" />
     </PreferenceCategory>
 </PreferenceScreen>
