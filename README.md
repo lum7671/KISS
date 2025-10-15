@@ -1,5 +1,15 @@
 # KISS
 
+## 🚀 v4.2.1 - Maintenance Edition (2025-10-15)
+
+### 🔧 유지보수 및 안정성 개선
+
+- **📦 버전 업데이트**: versionCode 421, versionName 4.2.1
+- **🛠️ 코드 정리**: 불필요한 코드 제거 및 최적화
+- **✅ 빌드 안정성**: Release 빌드 검증 완료
+
+---
+
 ## 🚀 v4.2.0 - Searcher Improvements Edition (2025-10-15)
 
 ### 🎯 Phase 2: Searcher 시스템 안정성 및 성능 개선 완료
