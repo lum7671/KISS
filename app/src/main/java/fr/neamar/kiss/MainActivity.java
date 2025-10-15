@@ -965,7 +965,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             startActivity(Intent.createChooser(intent, getString(R.string.menu_wallpaper)));
             return true;
         } else if (itemId == R.id.preferences) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, NewSettingsActivity.class));
             return true;
         } else if (itemId == R.id.private_space) {
             switchPrivateSpaceState();

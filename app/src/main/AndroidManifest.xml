@@ -119,7 +119,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".NewSettingsActivity"
             android:label="@string/activity_setting"
             android:exported="false"
             android:theme="@style/SettingTheme"
@@ -132,6 +132,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- Keep old SettingsActivity for fallback if needed -->
+        <!--
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/activity_setting (Old)"
+            android:exported="false"
+            android:theme="@style/SettingTheme"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        -->
         <activity
             android:name=".PickAppWidgetActivity"
             android:exported="false"
