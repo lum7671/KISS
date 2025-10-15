@@ -34,7 +34,8 @@ public class GoogleCalendarIcon {
         PackageManager pm = context.getPackageManager();
         try {
             ComponentName cn = new ComponentName(GOOGLE_CALENDAR, activityName);
-            Bundle metaData = pm.getActivityInfo(cn, PackageManager.GET_META_DATA | PackageManager.GET_UNINSTALLED_PACKAGES).metaData;
+            // Use MATCH_UNINSTALLED_PACKAGES instead of deprecated GET_UNINSTALLED_PACKAGES
+            Bundle metaData = pm.getActivityInfo(cn, PackageManager.GET_META_DATA | PackageManager.MATCH_UNINSTALLED_PACKAGES).metaData;
             Resources resourcesForApplication = pm.getResourcesForApplication(GOOGLE_CALENDAR);
             int dayResId = getDayResId(metaData, resourcesForApplication);
             if (dayResId != 0) {

@@ -211,7 +211,13 @@ public class NotificationListener extends NotificationListenerService {
             }
         }
 
-        return notification.priority <= Notification.PRIORITY_MIN || isOngoing(notification) || isGroupHeader(notification);
+        // Notification.priority is deprecated but still needed for backwards compatibility
+        // with apps that don't use NotificationChannel
+        @SuppressWarnings("deprecation")
+        int priority = notification.priority;
+        @SuppressWarnings("deprecation")
+        int priorityMin = Notification.PRIORITY_MIN;
+        return priority <= priorityMin || isOngoing(notification) || isGroupHeader(notification);
     }
 
     private boolean isOngoing(Notification notification) {

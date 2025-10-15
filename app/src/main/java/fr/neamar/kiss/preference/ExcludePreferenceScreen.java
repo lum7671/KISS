@@ -24,10 +24,13 @@ import fr.neamar.kiss.utils.CoroutineUtils;
 
 /**
  * Normally this would be a subclass of PreferenceScreen but PreferenceScreen is final.
+ * Note: PreferenceScreen from android.preference is deprecated.
+ * Full migration to androidx.preference will be done in Phase 6.
  */
+@SuppressWarnings("deprecation")
 public class ExcludePreferenceScreen {
 
-	public static PreferenceScreen getInstance(
+	public static android.preference.PreferenceScreen getInstance(
 			@NonNull PreferenceActivity preferenceActivity,
 			@StringRes int preferenceTitleResId,
 			@StringRes int preferenceScreenTitleResId,

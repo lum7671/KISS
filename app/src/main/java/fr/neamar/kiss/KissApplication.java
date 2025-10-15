@@ -152,14 +152,20 @@ public class KissApplication extends Application {
         }
         
         // 메모리 부족 시 즉시 동기화 및 정리
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+        // TRIM_MEMORY_MODERATE is deprecated but no alternative exists
+        @SuppressWarnings("deprecation")
+        int trimMemoryModerate = ComponentCallbacks2.TRIM_MEMORY_MODERATE;
+        if (level >= trimMemoryModerate) {
             fr.neamar.kiss.db.DBHelper.forceSync(this);
             
             // 아이콘 캐시 추가 정리
             fr.neamar.kiss.utils.IconCacheManager.getInstance(this).trimMemory(level);
         }
         
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
+        // TRIM_MEMORY_COMPLETE is deprecated but no alternative exists
+        @SuppressWarnings("deprecation")
+        int trimMemoryComplete = ComponentCallbacks2.TRIM_MEMORY_COMPLETE;
+        if (level >= trimMemoryComplete) {
             // 심각한 메모리 부족 시 디스크 모드로 전환
             fr.neamar.kiss.db.DBHelper.switchToDiskMode(this);
         }

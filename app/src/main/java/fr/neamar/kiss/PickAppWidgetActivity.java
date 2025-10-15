@@ -126,7 +126,10 @@ public class PickAppWidgetActivity extends Activity {
                 // get widget name
                 String label = providerInfo.loadLabel(packageManager);
                 if (label == null) {
-                    label = providerInfo.label;
+                    // providerInfo.label is deprecated but kept as fallback
+                    @SuppressWarnings("deprecation")
+                    String fallbackLabel = providerInfo.label;
+                    label = fallbackLabel;
                 }
 
                 // get widget description

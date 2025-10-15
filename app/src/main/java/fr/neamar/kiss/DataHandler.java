@@ -251,7 +251,8 @@ public class DataHandler extends BroadcastReceiver
                     // Is there a lockscreen still visible to the user?
                     // If yes, we can't start background services yet, so we'll need to wait until we get ACTION_USER_PRESENT
                     KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                    boolean isPhoneLocked = myKM.inKeyguardRestrictedInputMode();
+                    // Use isKeyguardLocked() instead of deprecated inKeyguardRestrictedInputMode()
+                    boolean isPhoneLocked = myKM.isKeyguardLocked();
                     if (!isPhoneLocked) {
                         context.unregisterReceiver(this);
                         final Handler handler = new Handler(Looper.getMainLooper());
