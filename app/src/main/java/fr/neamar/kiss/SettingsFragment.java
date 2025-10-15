@@ -85,6 +85,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         
         // Load preferences from XML
         setPreferencesFromResource(R.xml.preferences, rootKey);
+        
+        // Update ActionBar title based on root key
+        if (rootKey != null && getActivity() != null) {
+            PreferenceScreen screen = getPreferenceScreen();
+            if (screen != null && screen.getTitle() != null) {
+                requireActivity().setTitle(screen.getTitle());
+            }
+        }
 
         // Remove API-level conditional preferences
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
@@ -216,6 +224,56 @@ public class SettingsFragment extends PreferenceFragmentCompat
             prefs.edit().putBoolean("require-layout-update", true).apply();
             requireFullRestart = false;
         }
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(@NonNull Preference preference) {
+        String key = preference.getKey();
+        
+        // Log all preference clicks for debugging
+        Log.d(TAG, "Preference clicked: " + key + ", type: " + preference.getClass().getSimpleName());
+        
+        // Handle PreferenceScreen navigation
+        if (preference instanceof PreferenceScreen) {
+            Log.d(TAG, "PreferenceScreen clicked: " + key);
+            // Navigate to sub-screen by creating new fragment instance
+            PreferenceScreen preferenceScreen = (PreferenceScreen) preference;
+            
+            // Create new fragment for sub-screen
+            SettingsFragment subFragment = new SettingsFragment();
+            Bundle args = new Bundle();
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
+            subFragment.setArguments(args);
+            
+            // Replace current fragment with sub-screen in the proper container
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings_container, subFragment)
+                    .addToBackStack(null)
+                    .commit();
+            
+            return true;
+        }
+        
+        // Handle custom dialog preferences that don't have DialogFragment implementations
+        if (preference instanceof fr.neamar.kiss.preference.ImportSettingsPreferenceCompat) {
+            handleImportSettings();
+            return true;
+        } else if (preference instanceof fr.neamar.kiss.preference.ExportSettingsPreferenceCompat) {
+            handleExportSettings();
+            return true;
+        } else if (preference instanceof fr.neamar.kiss.preference.RestartPreferenceCompat) {
+            handleRestartApp();
+            return true;
+        } else if (preference instanceof fr.neamar.kiss.preference.ColorPreferenceCompat) {
+            handleColorPicker((fr.neamar.kiss.preference.ColorPreferenceCompat) preference);
+            return true;
+        } else if (preference instanceof fr.neamar.kiss.preference.AddSearchProviderPreferenceCompat) {
+            handleAddSearchProvider();
+            return true;
+        }
+        
+        return super.onPreferenceTreeClick(preference);
     }
 
     @Override
@@ -818,5 +876,184 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private DataHandler getDataHandler() {
         return KissApplication.getApplication(requireContext()).getDataHandler();
+    }
+
+    // ========== Custom Dialog Preference Handlers ==========
+    
+    /**
+     * Handle Import Settings preference click
+     */
+    private void handleImportSettings() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.import_settings)
+                .setMessage(R.string.import_settings_dialog)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    importSettingsFromClipboard();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+    
+    /**
+     * Import settings from clipboard JSON
+     */
+    private void importSettingsFromClipboard() {
+        try {
+            android.content.ClipboardManager clipboard = 
+                (android.content.ClipboardManager) requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+            String clipboardText = clipboard.getPrimaryClip().getItemAt(0).coerceToText(requireContext()).toString();
+
+            // Validate JSON
+            org.json.JSONObject jsonObject = new org.json.JSONObject(clipboardText);
+            int minVersion = jsonObject.optInt("__v", -1);
+            if (minVersion < 0) {
+                Toast.makeText(requireContext(), R.string.import_settings_version_missing, Toast.LENGTH_LONG).show();
+                return;
+            } else if (minVersion > fr.neamar.kiss.BuildConfig.VERSION_CODE) {
+                Toast.makeText(requireContext(), R.string.import_settings_upgrade_kiss, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Reset everything to default
+            SharedPreferences oldPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
+            if (oldPrefs.edit().clear().commit()) {
+                androidx.preference.PreferenceManager.setDefaultValues(requireContext(), R.xml.preferences, true);
+            }
+
+            // Set imported values
+            SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
+            SharedPreferences.Editor editor = prefs.edit();
+
+            java.util.Iterator<?> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                if (key.startsWith("__")) {
+                    continue;
+                }
+
+                Object newValue = jsonObject.get(key);
+                Object currentValue = prefs.getAll().get(key);
+                if (newValue instanceof Boolean) {
+                    if (hasMatchingType(key, currentValue, Boolean.class)) {
+                        editor.putBoolean(key, (Boolean) newValue);
+                    }
+                } else if (newValue instanceof String) {
+                    if (hasMatchingType(key, currentValue, String.class)) {
+                        editor.putString(key, (String) newValue);
+                    }
+                } else if (newValue instanceof org.json.JSONArray) {
+                    if (hasMatchingType(key, currentValue, Set.class)) {
+                        org.json.JSONArray newValues = (org.json.JSONArray) newValue;
+                        Set<String> unwrappedValues = new java.util.HashSet<>(newValues.length());
+                        for (int i = 0; i < newValues.length(); i++) {
+                            unwrappedValues.add(newValues.getString(i));
+                        }
+                        editor.putStringSet(key, unwrappedValues);
+                    }
+                } else {
+                    Log.w(TAG, "Unknown type: " + key + ":" + newValue);
+                }
+            }
+            
+            if (!editor.commit()) {
+                Toast.makeText(requireContext(), R.string.import_settings_save_not_possible, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Toast.makeText(requireContext(), R.string.import_settings_done, Toast.LENGTH_SHORT).show();
+            
+            // Recreate activity to apply imported settings
+            requireActivity().recreate();
+            
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), R.string.import_settings_error, Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Import settings failed", e);
+        }
+    }
+    
+    private boolean hasMatchingType(String key, Object currentValue, Class<?> expectedType) {
+        if (currentValue == null) {
+            Log.w(TAG, "Unknown preference: " + key);
+            return false;
+        }
+        return expectedType.isInstance(currentValue);
+    }
+    
+    /**
+     * Handle Export Settings preference click
+     */
+    private void handleExportSettings() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.export_settings)
+                .setMessage("Export current settings and tags to clipboard")
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    exportSettingsToClipboard();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+    
+    /**
+     * Export settings to clipboard as JSON
+     */
+    private void exportSettingsToClipboard() {
+        try {
+            SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
+            Map<String, ?> allPrefs = prefs.getAll();
+            
+            org.json.JSONObject jsonObject = new org.json.JSONObject();
+            jsonObject.put("__v", fr.neamar.kiss.BuildConfig.VERSION_CODE);
+            
+            for (Map.Entry<String, ?> entry : allPrefs.entrySet()) {
+                if (entry.getValue() instanceof Set) {
+                    jsonObject.put(entry.getKey(), new org.json.JSONArray((Set<?>) entry.getValue()));
+                } else {
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                }
+            }
+            
+            android.content.ClipboardManager clipboard = 
+                (android.content.ClipboardManager) requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("KISS Settings", jsonObject.toString());
+            clipboard.setPrimaryClip(clip);
+            
+            Toast.makeText(requireContext(), R.string.export_settings_done, Toast.LENGTH_SHORT).show();
+            
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Export settings failed", e);
+        }
+    }
+    
+    /**
+     * Handle Restart App preference click
+     */
+    private void handleRestartApp() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.restart_name))
+                .setMessage(getString(R.string.restart_warn))
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    System.exit(0);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+    
+    /**
+     * Handle Color Picker preference click
+     */
+    private void handleColorPicker(fr.neamar.kiss.preference.ColorPreferenceCompat preference) {
+        // For now, just show a toast - full color picker implementation would require more work
+        Toast.makeText(requireContext(), "Color picker coming soon", Toast.LENGTH_SHORT).show();
+        // TODO: Implement color picker dialog
+    }
+    
+    /**
+     * Handle Add Search Provider preference click
+     */
+    private void handleAddSearchProvider() {
+        // For now, just show a toast - full implementation would require more work
+        Toast.makeText(requireContext(), "Add search provider coming soon", Toast.LENGTH_SHORT).show();
+        // TODO: Implement search provider dialog
     }
 }

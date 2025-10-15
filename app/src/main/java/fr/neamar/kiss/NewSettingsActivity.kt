@@ -32,7 +32,15 @@ class NewSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        InterfaceTweaks.applySettingsTheme(this, prefs)
+        
+        // Apply AppCompat-compatible theme based on user preference
+        val theme = prefs.getString("theme", "light")
+        when {
+            theme == "amoled-dark" -> setTheme(R.style.NewSettingThemeDark) // Use dark for amoled too
+            theme?.contains("dark") == true -> setTheme(R.style.NewSettingThemeDark)
+            else -> setTheme(R.style.NewSettingTheme)
+        }
+        
         InterfaceTweaks.applySystemBarInsets(window.decorView)
 
         systemUiVisibilityHelper = SystemUiVisibilityHelper(this)
@@ -41,12 +49,25 @@ class NewSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        // Setup ActionBar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        
         // Load SettingsFragment
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.settings_container, SettingsFragment())
                 .commit()
+        }
+        
+        // Handle back stack changes to update ActionBar title
+        supportFragmentManager.addOnBackStackChangedListener {
+            val backStackEntryCount = supportFragmentManager.backStackEntryCount
+            if (backStackEntryCount == 0) {
+                supportActionBar?.setTitle(R.string.activity_setting)
+            }
         }
 
         permissionManager = Permission(this)
@@ -58,10 +79,22 @@ class NewSettingsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.help) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://help.kisslauncher.com"))
-            startActivity(intent)
-            return true
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle ActionBar up button - navigate back in fragment stack
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    // No back stack, finish activity
+                    finish()
+                }
+                return true
+            }
+            R.id.help -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://help.kisslauncher.com"))
+                startActivity(intent)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }

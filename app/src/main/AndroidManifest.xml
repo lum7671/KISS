@@ -122,7 +122,7 @@
             android:name=".NewSettingsActivity"
             android:label="@string/activity_setting"
             android:exported="false"
-            android:theme="@style/SettingTheme"
+            android:theme="@style/NewSettingTheme"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

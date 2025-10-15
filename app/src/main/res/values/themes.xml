@@ -313,4 +313,24 @@
     <style name="OverlayAccentDarkTransparent" parent="OverlayAccentDefault">
         <item name="android:colorAccent">@color/kiss_background_dark_transparent</item>
     </style>
+
+    <!-- AppCompat themes for NewSettingsActivity -->
+    <style name="NewSettingTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/kiss_background</item>
+        <item name="android:textColorSecondary">#7f7f7f</item>
+        <item name="colorPrimary">@color/kiss_background</item>
+        <item name="colorPrimaryDark">@color/kiss_background</item>
+        <item name="colorAccent">@color/kiss_list_background_inverse</item>
+    </style>
+
+    <style name="NewSettingThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/kiss_list_background_inverse</item>
+        <item name="colorPrimary">@color/kiss_list_background_inverse</item>
+        <item name="colorPrimaryDark">@color/kiss_list_background_inverse</item>
+        <item name="colorAccent">@color/kiss_background</item>
+    </style>
 </resources>
