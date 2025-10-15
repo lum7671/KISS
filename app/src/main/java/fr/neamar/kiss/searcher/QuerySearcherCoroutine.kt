@@ -99,16 +99,30 @@ class QuerySearcherCoroutine(
      * Same logic as QuerySearcher.java:
      * 1. Load query history from DB
      * 2. Request results from DataHandler
+     * 
+     * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
         val activity = activityWeakReference.get() ?: return
         
+        // Phase 2 Step 3: Check cancellation before DB query
+        if (isCancelled()) return
+        
         // Have we ever made the same query and selected something?
         val lastIdsForQuery = DBHelper.getPreviousResultsForQuery(activity, query)
+        
+        // Phase 2 Step 3: Check cancellation before HashMap creation
+        if (isCancelled()) return
+        
         knownIds = HashMap()
         for (id in lastIdsForQuery) {
+            // Phase 2 Step 3: Check cancellation in loop (for large result sets)
+            if (isCancelled()) return
             knownIds[id.record] = id.value
         }
+        
+        // Phase 2 Step 3: Check cancellation before Provider request
+        if (isCancelled()) return
         
         // Request results via "addResult"
         // Create adapter to bridge SearcherCoroutine → Searcher interface

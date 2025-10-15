@@ -53,22 +53,37 @@ class ApplicationsSearcherCoroutine(
      * 1. Get excluded favorites from DataHandler
      * 2. Add all apps (without excluded favorites)
      * 3. Add pinned shortcuts (PWA, ...)
+     * 
+     * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
         val activity = activityWeakReference.get() ?: return
 
+        // Phase 2 Step 3: Check cancellation at start
+        if (isCancelled()) return
+
         val dataHandler = KissApplication.getApplication(activity).dataHandler
         val excludedFavoriteIds = dataHandler.excludedFavorites
+
+        // Phase 2 Step 3: Check cancellation before DataHandler query
+        if (isCancelled()) return
 
         // Add apps
         val pojos = dataHandler.applicationsWithoutExcluded
         if (pojos != null) {
+            // Phase 2 Step 3: Check cancellation before processing
+            if (isCancelled()) return
             addResults(getPojosWithoutFavorites(pojos, excludedFavoriteIds))
         }
+
+        // Phase 2 Step 3: Check cancellation before shortcuts
+        if (isCancelled()) return
 
         // Add pinned shortcuts (PWA, ...)
         val shortcuts = dataHandler.pinnedShortcuts
         if (shortcuts != null) {
+            // Phase 2 Step 3: Check cancellation before processing
+            if (isCancelled()) return
             addResults(getPojosWithoutFavorites(shortcuts, excludedFavoriteIds))
         }
     }

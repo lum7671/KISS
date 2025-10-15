@@ -44,11 +44,19 @@ abstract class PojoWithTagSearcherCoroutine(
      * 
      * For TagsSearcher with specific tag query: Use optimized requestRecordsByTag()
      * For other cases (UntaggedSearcher, generic TagsSearcher): Use requestAllRecords()
+     * 
+     * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
         val activity = activityWeakReference.get() ?: return
 
+        // Phase 2 Step 3: Check cancellation at start
+        if (isCancelled()) return
+
         val dataHandler = KissApplication.getApplication(activity).dataHandler
+
+        // Phase 2 Step 3: Check cancellation before adapter creation
+        if (isCancelled()) return
 
         // Create adapter to bridge SearcherCoroutine → Searcher interface
         // Same pattern as QuerySearcherCoroutine
@@ -67,6 +75,9 @@ abstract class PojoWithTagSearcherCoroutine(
             }
         }
 
+        // Phase 2 Step 3: Check cancellation before DataHandler request
+        if (isCancelled()) return
+
         // 태그 검색인 경우 최적화된 메서드 사용
         if (this is TagsSearcherCoroutine && query != null && query != "<tags>") {
             // Optimized: request only records with specific tag
@@ -83,13 +94,21 @@ abstract class PojoWithTagSearcherCoroutine(
      * 1. Filter: only PojoWithTags that pass acceptPojo() check
      * 2. Apply history-based relevance sorting
      * 3. Call super.addResults()
+     * 
+     * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override fun addResults(pojos: List<Pojo>): Boolean {
         val activity = activityWeakReference.get() ?: return false
 
+        // Phase 2 Step 3: Check cancellation at start
+        if (isCancelled()) return false
+
         // Filter: only PojoWithTags + acceptPojo()
         val filteredPojos = ArrayList<Pojo>()
         for (pojo in pojos) {
+            // Phase 2 Step 3: Check cancellation in loop
+            if (isCancelled()) return false
+            
             if (pojo !is PojoWithTags) {
                 continue
             }
@@ -97,6 +116,9 @@ abstract class PojoWithTagSearcherCoroutine(
                 filteredPojos.add(pojo)
             }
         }
+
+        // Phase 2 Step 3: Check cancellation before DataHandler query
+        if (isCancelled()) return false
 
         // Apply history-based relevance
         val dataHandler = KissApplication.getApplication(activity).dataHandler

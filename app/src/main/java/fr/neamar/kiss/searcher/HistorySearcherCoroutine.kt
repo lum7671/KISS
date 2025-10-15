@@ -84,9 +84,14 @@ class HistorySearcherCoroutine(
      * 2. Add shortcuts for excluded apps (API 26+)
      * 3. Get history from DataHandler
      * 4. Add results
+     * 
+     * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
         val activity = activityWeakReference.get() ?: return
+
+        // Phase 2 Step 3: Check cancellation at start
+        if (isCancelled()) return
 
         // Read preferences
         val excludeFavorites = prefs.getBoolean("exclude-favorites-history", false)
@@ -97,9 +102,15 @@ class HistorySearcherCoroutine(
         val excludedFromHistory = dataHandler.excludedFromHistory
         val excludedPojoById = HashSet(excludedFromHistory)
 
+        // Phase 2 Step 3: Check cancellation before expensive shortcut processing
+        if (isCancelled()) return
+
         // Add ids of shortcuts for excluded apps (API 26+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             for (id in excludedFromHistory) {
+                // Phase 2 Step 3: Check cancellation in loop
+                if (isCancelled()) return
+                
                 val pojo = dataHandler.getItemById(id)
                 if (pojo is AppPojo) {
                     val shortcutInfos = ShortcutUtil.getShortcuts(activity, pojo.packageName)
@@ -120,12 +131,20 @@ class HistorySearcherCoroutine(
         // Gather favorites to exclude
         if (excludeFavorites) {
             for (favoritePojo in dataHandler.favorites) {
+                // Phase 2 Step 3: Check cancellation in loop
+                if (isCancelled()) return
                 excludedPojoById.add(favoritePojo.id)
             }
         }
 
+        // Phase 2 Step 3: Check cancellation before DataHandler query
+        if (isCancelled()) return
+
         // Get history from DataHandler
         val pojos = dataHandler.getHistory(activity, getMaxResultCount(), excludedPojoById)
+
+        // Phase 2 Step 3: Check cancellation before adding results
+        if (isCancelled()) return
 
         // Add results
         addResults(pojos)
