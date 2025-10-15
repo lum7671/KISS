@@ -599,6 +599,26 @@
             android:key="test-notification-compat"
             android:title="[TEST] Notification Compat"
             android:summary="알림 접근 권한 (Phase 6 Step 4)"
-            android:dialogMessage="@string/notification_dialog_text" />
+            android:dialogMessage="@string/notification_dialog" />
+        <fr.neamar.kiss.preference.ExportSettingsPreferenceCompat
+            android:key="test-export-settings-compat"
+            android:title="[TEST] ExportSettings Compat"
+            android:summary="설정 내보내기 (Phase 6 Step 5)"
+            android:dialogMessage="@string/clipboard_warning_dialog" />
+        <fr.neamar.kiss.preference.ImportSettingsPreferenceCompat
+            android:key="test-import-settings-compat"
+            android:title="[TEST] ImportSettings Compat"
+            android:summary="설정 가져오기 (Phase 6 Step 5)"
+            android:dialogMessage="@string/import_settings_dialog" />
+        <fr.neamar.kiss.preference.ColorPreferenceCompat
+            android:key="test-color-compat"
+            android:title="[TEST] Color Compat"
+            android:summary="색상 선택 (Phase 6 Step 5)"
+            android:dialogMessage="@string/color_picker_default_title" />
+        <fr.neamar.kiss.preference.AddSearchProviderPreferenceCompat
+            android:key="test-add-search-provider-compat"
+            android:title="[TEST] AddSearchProvider Compat"
+            android:summary="검색 제공자 추가 (Phase 6 Step 5)"
+            android:dialogMessage="@string/custom_search_provider" />
     </PreferenceCategory>
 </PreferenceScreen>
