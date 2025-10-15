@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
@@ -257,8 +259,7 @@ public class ContactsResult extends CallResult<ContactsPojo> {
 
                     // Default icon
                     if (icon == null) {
-                        icon = context.getResources()
-                                .getDrawable(R.drawable.ic_contact);
+                        icon = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_contact, context.getTheme());
                     }
                 }
             }

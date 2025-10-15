@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -188,7 +190,7 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
                         }
                     }
                     if (icon == null) {
-                        icon = context.getResources().getDrawable(android.R.drawable.ic_menu_send);
+                        icon = ResourcesCompat.getDrawable(context.getResources(), android.R.drawable.ic_menu_send, context.getTheme());
                     }
                     if (icon != null) {
                         icon = DrawableUtils.getThemedDrawable(context, icon);

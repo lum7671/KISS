@@ -8,6 +8,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import androidx.core.content.res.ResourcesCompat;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
@@ -36,7 +38,7 @@ public class GoogleCalendarIcon {
             Resources resourcesForApplication = pm.getResourcesForApplication(GOOGLE_CALENDAR);
             int dayResId = getDayResId(metaData, resourcesForApplication);
             if (dayResId != 0) {
-                Drawable drawable = resourcesForApplication.getDrawable(dayResId);
+                Drawable drawable = ResourcesCompat.getDrawable(resourcesForApplication, dayResId, null);
                 return DrawableUtils.getThemedDrawable(context, drawable);
             }
         } catch (PackageManager.NameNotFoundException ignored) {

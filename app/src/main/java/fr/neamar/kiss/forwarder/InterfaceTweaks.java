@@ -113,11 +113,8 @@ public class InterfaceTweaks extends Forwarder {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             return resources.getColor(colorResId, null);
         } else {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            // minSdkVersion 33 (Android 13+) - getColor(resId, theme) available
             return resources.getColor(colorResId, null);
-        } else {
-            return resources.getColor(colorResId);
-        }
         }
     }
 

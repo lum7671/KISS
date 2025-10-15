@@ -28,6 +28,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -176,7 +177,7 @@ public class PickAppWidgetActivity extends Activity {
         }
         if (resources != null) {
             try {
-                preview = resources.getDrawableForDensity(info.previewImage, density);
+                preview = ResourcesCompat.getDrawableForDensity(resources, info.previewImage, density, null);
             } catch (Resources.NotFoundException ignored) {
                 //ignored
             }
@@ -184,7 +185,7 @@ public class PickAppWidgetActivity extends Activity {
                 return preview;
 
             try {
-                preview = resources.getDrawableForDensity(info.icon, density);
+                preview = ResourcesCompat.getDrawableForDensity(resources, info.icon, density, null);
             } catch (Resources.NotFoundException ignored) {
                 //ignored
             }

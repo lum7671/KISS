@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import fr.neamar.kiss.CustomIconDialog;
 import fr.neamar.kiss.IconsHandler;
@@ -445,28 +446,19 @@ public class AppResult extends Result<AppPojo> {
                             // 2. 여전히 null이면 시스템 기본 아이콘
                             if (icon == null) {
                                 // fallback: using system default icon
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                    icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
-                                } else {
-                                    icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
-                                }
+                                icon = ResourcesCompat.getDrawable(context.getResources(), android.R.drawable.sym_def_app_icon, context.getTheme());
                             }
                         }
                     } catch (Exception e) {
                         // error loading icon
                         // 오류 발생 시 기본 아이콘 사용
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
-                        } else {
-                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
-                        }
+                        icon = ResourcesCompat.getDrawable(context.getResources(), android.R.drawable.sym_def_app_icon, context.getTheme());
                     }
                     
                     // 최종 안전장치
                     if (icon == null) {
                         // all icon loading failed, using emergency fallback
-                        // minSdkVersion 33이므로 LOLLIPOP 체크 불필요
-                        icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon, context.getTheme());
+                        icon = ResourcesCompat.getDrawable(context.getResources(), android.R.drawable.sym_def_app_icon, context.getTheme());
                     }
                 }
             }
