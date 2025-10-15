@@ -676,6 +676,13 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          */
         forwarderManager.onCreate();
 
+        // Register OnBackInvokedCallback to replace deprecated onBackPressed()
+        // minSdkVersion is 33 (Android 13+), so OnBackInvokedCallback is always available
+        getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+            android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+            () -> handleBackPress()
+        );
+
         if(!prefs.contains("informed-about-tracking-in-beta")) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Important information");
@@ -737,11 +744,6 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         Amplitude.getInstance().identify(identify);
     }
 
-    @Override
-    public void onBackPressed() {
-        handleBackPress();
-    }
-
     private void handleBackPress() {
         if (mPopup != null) {
             mPopup.dismiss();
@@ -755,9 +757,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             clearSearchText();
         }
 
-        // Calling super.onBackPressed() will quit the launcher, only do this if KISS is not the user's default home.
+        // Finish activity to quit the launcher, only do this if KISS is not the user's default home.
         if (!isKissDefaultLauncher()) {
-            super.onBackPressed();
+            finish();
         }
     }
 
