@@ -40,12 +40,18 @@
   - 머지: `dev` 브랜치
   - 상태: ✅ 완료
 
+- ✅ **Step 6: 특수 케이스** (완료: 2025-10-15)
+  - 소요 시간: 15분
+  - 커밋: `e927c5035`
+  - 머지: `dev` 브랜치
+  - 상태: ✅ 완료
+
 ### 진행 중인 Step
 
-- 🔄 **Step 6: 특수 케이스** (다음 단계)
-  - 예상 시간: 4-5시간
-  - 대상: ExcludePreferenceScreen 등
-  - 브랜치: `feature/phase6-step6-special-cases`
+- 🔄 **Step 7: SettingsActivity Fragment 전환** (다음 단계)
+  - 예상 시간: 6-8시간
+  - 대상: PreferenceActivity → PreferenceFragmentCompat
+  - 브랜치: `feature/phase6-step7-fragment-conversion`
   - 상태: ⚪ 대기
 
 ### 대기 중인 Steps
@@ -70,10 +76,10 @@
 | Step 3 | 4-5h | 1h | ✅ 완료 |
 | Step 4 | 3-4h | 0.5h | ✅ 완료 |
 | Step 5 | 6-8h | 1.5h | ✅ 완료 |
-| Step 6 | 4-5h | - | ⚪ 대기 |
+| Step 6 | 4-5h | 0.25h | ✅ 완료 |
 | Step 7 | 6-8h | - | ⚪ 대기 |
 | Step 8 | 2-3h | - | ⚪ 대기 |
-| **총합** | **30-40h** | **4.25h** | **10.6-14.2% 완료** |
+| **총합** | **30-40h** | **4.5h** | **11.3-15.0% 완료** |
 
 ### Warning 감소
 
@@ -118,9 +124,15 @@ Step 5:
 - 추가 라인: 820줄
 - 삭제 라인: 0줄
 
+Step 6:
+- 신규 파일: 1개 (ExcludePreferenceScreenCompat - Factory class)
+- 수정 파일: 0개
+- 추가 라인: 129줄
+- 삭제 라인: 0줄
+
 누적:
-- 신규 파일: 30개
-- 총 추가 라인: 2801줄
+- 신규 파일: 31개
+- 총 추가 라인: 2930줄
 ```
 
 ---
@@ -280,22 +292,22 @@ git checkout -b feature/phase6-step2-switch-subclasses
 
 ## 🎉 현재 상태
 
-**Phase 6 Step 5 성공적으로 완료!** ✅
+**Phase 6 Step 6 성공적으로 완료!** ✅
 
-- ✅ Step 1-5 모두 완료 (62.5% 진행)
-- ✅ 18개 클래스 마이그레이션 완료
-- ✅ 2,801줄 코드 추가
+- ✅ Step 1-6 모두 완료 (75% 진행)
+- ✅ 19개 클래스 마이그레이션 완료
+- ✅ 2,930줄 코드 추가
 - ✅ 빌드 성공 (0 warnings)
 - ✅ dev에 모두 머지 완료
 
-**진행률**: 5/8 steps 완료 (62.5%)  
-**소요 시간**: 4.25시간 / 30-40시간 예상 (10.6-14.2%)  
-**속도**: 예상 대비 약 5배 빠름
+**진행률**: 6/8 steps 완료 (75%)  
+**소요 시간**: 4.5시간 / 30-40시간 예상 (11.3-15.0%)  
+**속도**: 예상 대비 약 6-7배 빠름
 
-**다음**: Step 6 (특수 케이스) 시작 준비 완료! 🚀
+**다음**: Step 7 (SettingsActivity Fragment 전환) - Phase 6의 **최종 보스**! �
 
 ---
 
 **마지막 업데이트**: 2025년 10월 15일  
 **현재 브랜치**: `dev`  
-**다음 브랜치**: `feature/phase6-step6-special-cases`
+**다음 브랜치**: `feature/phase6-step7-fragment-conversion`
