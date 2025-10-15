@@ -580,5 +580,15 @@
             android:title="[TEST] ShizukuMode Compat"
             android:summary="Shizuku 모드 스위치 (Phase 6 Step 2)"
             android:defaultValue="false" />
+        <fr.neamar.kiss.preference.RestartPreferenceCompat
+            android:key="test-restart-compat"
+            android:title="[TEST] Restart Compat"
+            android:summary="앱 재시작 (Phase 6 Step 3)"
+            android:dialogMessage="@string/restart_warn" />
+        <fr.neamar.kiss.preference.ResetPreferenceCompat
+            android:key="test-reset-compat"
+            android:title="[TEST] Reset Compat"
+            android:summary="히스토리 초기화 (Phase 6 Step 3)"
+            android:dialogMessage="@string/reset_warn" />
     </PreferenceCategory>
 </PreferenceScreen>
