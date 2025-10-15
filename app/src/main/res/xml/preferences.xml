@@ -556,4 +556,14 @@
             android:persistent="false"
             android:selectable="false" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="[TEST] Phase 6 Migration"
+        android:key="phase6_test_category"
+        android:order="9999">
+        <fr.neamar.kiss.preference.SwitchPreferenceCompat
+            android:key="test-switch-compat"
+            android:title="[TEST] Switch Compat"
+            android:summary="AndroidX 기반 새 버전 테스트 (Phase 6 Step 1)"
+            android:defaultValue="false" />
+    </PreferenceCategory>
 </PreferenceScreen>
