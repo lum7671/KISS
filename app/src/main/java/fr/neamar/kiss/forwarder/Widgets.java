@@ -422,22 +422,15 @@ class Widgets extends Forwarder {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private static void requestBindWidget(@NonNull Activity activity, @NonNull Intent data) {
         final int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        final ComponentName provider;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            provider = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, ComponentName.class);
-        } else {
-            provider = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER);
-        }
-        final UserHandle profile;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                profile = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, UserHandle.class);
-            } else {
-                profile = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE);
-            }
-        } else {
-            profile = null;
-        }
+        // minSdkVersion 33 (Android 13+) - use type-safe Parcelable methods
+        final ComponentName provider = data.getParcelableExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_PROVIDER,
+                ComponentName.class
+        );
+        final UserHandle profile = data.getParcelableExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE,
+                UserHandle.class
+        );
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Log.d(TAG, "asking for permission");

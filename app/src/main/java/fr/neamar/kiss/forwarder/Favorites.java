@@ -285,11 +285,8 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
                 view.setVisibility(View.INVISIBLE);
                 isDragging = true;
                 view.cancelLongPress();
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    view.startDragAndDrop(null, shadowBuilder, view, 0);
-                } else {
-                    view.startDrag(null, shadowBuilder, view, 0);
-                }
+                // minSdkVersion 33 (Android 13+) - startDragAndDrop is available
+                view.startDragAndDrop(null, shadowBuilder, view, 0);
                 return true;
             }
         }

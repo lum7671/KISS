@@ -195,7 +195,10 @@ abstract class SearcherCoroutine(
             // Convert to Result list
             val results = ArrayList<Result<*>>(processedPojos.size)
             while (processedPojos.peek() != null) {
-                results.add(Result.fromPojo(activity, processedPojos.poll()))
+                // Null-safe handling: poll() returns nullable Pojo
+                processedPojos.poll()?.let { pojo ->
+                    results.add(Result.fromPojo(activity, pojo))
+                }
             }
             
             // Update adapter

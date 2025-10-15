@@ -679,11 +679,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         if(!prefs.contains("informed-about-tracking-in-beta")) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Important information");
+            // Use Html.FROM_HTML_MODE_LEGACY for backward compatibility
             Spannable text= new SpannableString(Html.fromHtml("Welcome to KISS beta!<br>" +
                     "This version anonymously reports which settings are currently in use.<br>" +
                     "<b>This will allow us to prioritize the most-used settings in our development</b>.<br>" +
                     "For more details: <a href=https://github.com/Neamar/KISS/pull/979>https://github.com/Neamar/KISS/pull/979</a><br>" +
-                    "Thanks for your help in improving KISS!"));
+                    "Thanks for your help in improving KISS!", Html.FROM_HTML_MODE_LEGACY));
             Linkify.addLinks(text, Linkify.WEB_URLS);
 
             alert.setMessage(text);

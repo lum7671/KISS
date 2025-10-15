@@ -54,7 +54,8 @@ public class UserHandle implements Parcelable {
 
     protected UserHandle(Parcel in) {
         serial = in.readLong();
-        handle = in.readParcelable(android.os.UserHandle.class.getClassLoader());
+        // minSdkVersion 33 (Android 13+) - use type-safe readParcelable
+        handle = in.readParcelable(android.os.UserHandle.class.getClassLoader(), android.os.UserHandle.class);
     }
 
     @Override

@@ -153,7 +153,8 @@ public class CustomIconDialog extends DialogFragment {
         Bundle args = getArguments() != null ? getArguments() : new Bundle();
         @Nullable
         ComponentName cn = ComponentName.unflattenFromString(args.getString("className", ""));
-        UserHandle userHandle = args.getParcelable("userHandle");
+        // minSdkVersion 33 (Android 13+) - use type-safe getParcelable
+        UserHandle userHandle = args.getParcelable("userHandle", UserHandle.class);
         String name = args.getString("componentName", "");
         long customIcon = args.getLong("customIcon", 0);
 
