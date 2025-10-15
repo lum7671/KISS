@@ -565,5 +565,20 @@
             android:title="[TEST] Switch Compat"
             android:summary="AndroidX 기반 새 버전 테스트 (Phase 6 Step 1)"
             android:defaultValue="false" />
+        <fr.neamar.kiss.preference.FreezeHistorySwitchCompat
+            android:key="test-freeze-history-compat"
+            android:title="[TEST] FreezeHistory Compat"
+            android:summary="History 동결 스위치 (Phase 6 Step 2)"
+            android:defaultValue="false" />
+        <fr.neamar.kiss.preference.RootModeSwitchCompat
+            android:key="test-root-mode-compat"
+            android:title="[TEST] RootMode Compat"
+            android:summary="Root 모드 스위치 (Phase 6 Step 2)"
+            android:defaultValue="false" />
+        <fr.neamar.kiss.preference.ShizukuModeSwitchCompat
+            android:key="test-shizuku-mode-compat"
+            android:title="[TEST] ShizukuMode Compat"
+            android:summary="Shizuku 모드 스위치 (Phase 6 Step 2)"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>
