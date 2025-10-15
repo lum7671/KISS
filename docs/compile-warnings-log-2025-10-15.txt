@@ -1,0 +1,364 @@
+Calculating task graph as configuration cache cannot be reused because file 'app/build.gradle' has changed.
+> Task :app:preBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugResValues
+> Task :app:desugarDebugFileDependencies
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:writeDebugAppMetadata
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:javaPreCompileDebug
+> Task :app:generateDebugBuildConfig
+> Task :app:mergeDebugShaders
+> Task :app:mergeDebugJniLibFolders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:extractDeepLinksDebug
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateDebugResources
+> Task :app:validateSigningDebug
+> Task :app:mapDebugSourceSetPaths
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:checkDebugAarMetadata
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeLibDexDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugResources
+> Task :app:mergeExtDexDebug
+> Task :app:processDebugResources
+
+> Task :app:compileDebugKotlin
+w: file:///Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/searcher/SearcherCoroutine.kt:198:55 Java type mismatch: inferred type is 'fr.neamar.kiss.pojo.Pojo?', but 'fr.neamar.kiss.pojo.Pojo' was expected.
+
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugJavaResource
+
+> Task :app:compileDebugJavaWithJavac
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:366: warning: [deprecation] PreferenceManager in android.preference has been deprecated
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:366: warning: [deprecation] setDefaultValues(Context,int,boolean) in PreferenceManager has been deprecated
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+                         ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:438: warning: [deprecation] setStatusBarColor(int) in Window has been deprecated
+            getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+                       ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:439: warning: [deprecation] setNavigationBarColor(int) in Window has been deprecated
+            getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+                       ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:441: warning: [deprecation] SYSTEM_UI_FLAG_LAYOUT_STABLE in View has been deprecated
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:442: warning: [deprecation] SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN in View has been deprecated
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:443: warning: [deprecation] SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION in View has been deprecated
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:440: warning: [deprecation] setSystemUiVisibility(int) in View has been deprecated
+            getWindow().getDecorView().setSystemUiVisibility(
+                                      ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:682: warning: [deprecation] fromHtml(String) in Html has been deprecated
+            Spannable text= new SpannableString(Html.fromHtml("Welcome to KISS beta!<br>" +
+                                                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:740: warning: [deprecation] onBackPressed() in Activity has been deprecated
+    public void onBackPressed() {
+                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:759: warning: [deprecation] onBackPressed() in Activity has been deprecated
+            super.onBackPressed();
+                 ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/Widgets.java:429: warning: [deprecation] <T>getParcelableExtra(String) in Intent has been deprecated
+            provider = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER);
+                           ^
+  where T is a type-variable:
+    T extends Parcelable declared in method <T>getParcelableExtra(String)
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/Widgets.java:436: warning: [deprecation] <T>getParcelableExtra(String) in Intent has been deprecated
+                profile = data.getParcelableExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE);
+                              ^
+  where T is a type-variable:
+    T extends Parcelable declared in method <T>getParcelableExtra(String)
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/LiveWallpaper.java:68: warning: [deprecation] getDefaultDisplay() in WindowManager has been deprecated
+                            .getDefaultDisplay()
+                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/LiveWallpaper.java:69: warning: [deprecation] getSize(Point) in Display has been deprecated
+                            .getSize(mWindowSize);
+                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/InterfaceTweaks.java:119: warning: [deprecation] getColor(int) in Resources has been deprecated
+            return resources.getColor(colorResId);
+                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/forwarder/Favorites.java:291: warning: [deprecation] startDrag(ClipData,DragShadowBuilder,Object,int) in View has been deprecated
+                    view.startDrag(null, shadowBuilder, view, 0);
+                        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/ui/GoogleCalendarIcon.java:35: warning: [deprecation] GET_UNINSTALLED_PACKAGES in PackageManager has been deprecated
+            Bundle metaData = pm.getActivityInfo(cn, PackageManager.GET_META_DATA | PackageManager.GET_UNINSTALLED_PACKAGES).metaData;
+                                                                                                  ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/ui/GoogleCalendarIcon.java:39: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                Drawable drawable = resourcesForApplication.getDrawable(dayResId);
+                                                           ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/ui/WidgetView.java:113: warning: [deprecation] updateAppWidgetSize(Bundle,int,int,int,int) in AppWidgetHostView has been deprecated
+        updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/ShortcutsResult.java:191: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                        icon = context.getResources().getDrawable(android.R.drawable.ic_menu_send);
+                                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/ContactsResult.java:261: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                                .getDrawable(R.drawable.ic_contact);
+                                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/SettingsResult.java:51: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+            Drawable response = context.getResources().getDrawable(pojo.icon);
+                                                      ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/SettingsResult.java:52: warning: [deprecation] setColorFilter(int,Mode) in Drawable has been deprecated
+            response.setColorFilter(getThemeFillColor(context), Mode.SRC_IN);
+                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/PhoneResult.java:83: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+        return context.getResources().getDrawable(android.R.drawable.ic_menu_call);
+                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/AppResult.java:451: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                                    icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                                                                 ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/result/AppResult.java:461: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                            icon = context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+                                                         ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/UserHandle.java:57: warning: [deprecation] <T>readParcelable(ClassLoader) in Parcel has been deprecated
+        handle = in.readParcelable(android.os.UserHandle.class.getClassLoader());
+                   ^
+  where T is a type-variable:
+    T extends Parcelable declared in method <T>readParcelable(ClassLoader)
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/CustomIconDialog.java:156: warning: [deprecation] <T>getParcelable(String) in Bundle has been deprecated
+        UserHandle userHandle = args.getParcelable("userHandle");
+                                    ^
+  where T is a type-variable:
+    T extends Parcelable declared in method <T>getParcelable(String)
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/icons/IconPackXML.java:519: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                    return resources.getDrawable(drawableId);
+                                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/notification/NotificationListener.java:214: warning: [deprecation] priority in Notification has been deprecated
+        return notification.priority <= Notification.PRIORITY_MIN || isOngoing(notification) || isGroupHeader(notification);
+                           ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/notification/NotificationListener.java:214: warning: [deprecation] PRIORITY_MIN in Notification has been deprecated
+        return notification.priority <= Notification.PRIORITY_MIN || isOngoing(notification) || isGroupHeader(notification);
+                                                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java:128: warning: [deprecation] label in AppWidgetProviderInfo has been deprecated
+                    label = providerInfo.label;
+                                        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java:179: warning: [deprecation] getDrawableForDensity(int,int) in Resources has been deprecated
+                preview = resources.getDrawableForDensity(info.previewImage, density);
+                                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/PickAppWidgetActivity.java:187: warning: [deprecation] getDrawableForDensity(int,int) in Resources has been deprecated
+                preview = resources.getDrawableForDensity(info.icon, density);
+                                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java:31: warning: [deprecation] Im in CommonDataKinds has been deprecated
+            ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE,
+                                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java:31: warning: [deprecation] CONTENT_ITEM_TYPE in Im has been deprecated
+            ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE,
+                                               ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java:37: warning: [deprecation] SipAddress in CommonDataKinds has been deprecated
+            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
+                                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/MimeTypeUtils.java:37: warning: [deprecation] CONTENT_ITEM_TYPE in SipAddress has been deprecated
+            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
+                                                       ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/IconCacheManager.java:242: warning: [deprecation] TRIM_MEMORY_RUNNING_CRITICAL in ComponentCallbacks2 has been deprecated
+            case android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
+                                                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/utils/IconCacheManager.java:247: warning: [deprecation] TRIM_MEMORY_RUNNING_LOW in ComponentCallbacks2 has been deprecated
+            case android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
+                                                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/KissApplication.java:155: warning: [deprecation] TRIM_MEMORY_MODERATE in ComponentCallbacks2 has been deprecated
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+                                        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/KissApplication.java:162: warning: [deprecation] TRIM_MEMORY_COMPLETE in ComponentCallbacks2 has been deprecated
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
+                                        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/DataHandler.java:254: warning: [deprecation] inKeyguardRestrictedInputMode() in KeyguardManager has been deprecated
+                    boolean isPhoneLocked = myKM.inKeyguardRestrictedInputMode();
+                                                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:14: warning: [deprecation] DialogPreference in android.preference has been deprecated
+public class ResetExcludedAppShortcutsPreference extends DialogPreference {
+                                                         ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:17: warning: [deprecation] DialogPreference(Context,AttributeSet) in DialogPreference has been deprecated
+        super(context, null);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:21: warning: [deprecation] DialogPreference(Context,AttributeSet) in DialogPreference has been deprecated
+        super(context, attrs);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:25: warning: [deprecation] onClick(DialogInterface,int) in DialogPreference has been deprecated
+    public void onClick(DialogInterface dialog, int which) {
+                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:26: warning: [deprecation] onClick(DialogInterface,int) in DialogPreference has been deprecated
+        super.onClick(dialog, which);
+             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:28: warning: [deprecation] PreferenceManager in android.preference has been deprecated
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:28: warning: [deprecation] getContext() in Preference has been deprecated
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+                                                          ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:28: warning: [deprecation] getDefaultSharedPreferences(Context) in PreferenceManager has been deprecated
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+                             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:30: warning: [deprecation] getContext() in Preference has been deprecated
+            DataHandler dataHandler = KissApplication.getApplication(getContext()).getDataHandler();
+                                                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetExcludedAppShortcutsPreference.java:35: warning: [deprecation] getContext() in Preference has been deprecated
+            Toast.makeText(getContext(), R.string.excluded_app_list_erased, Toast.LENGTH_LONG).show();
+                           ^
+/Users/1001028/git/KISS/app/src/main/java/com/android/colorpicker/ColorPickerSwatch.java:55: warning: [deprecation] getDrawable(int) in Resources has been deprecated
+                {getContext().getResources().getDrawable(R.drawable.color_picker_swatch)};
+                                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:24: warning: [deprecation] DialogPreference in android.preference has been deprecated
+public class ColorPreference extends DialogPreference implements OnColorSelectedListener {
+                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:32: warning: [deprecation] DialogPreference(Context,AttributeSet) in DialogPreference has been deprecated
+        super(context, attrs);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:34: warning: [deprecation] setDialogLayoutResource(int) in DialogPreference has been deprecated
+        this.setDialogLayoutResource(R.layout.pref_color);
+            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:46: warning: [deprecation] callChangeListener(Object) in Preference has been deprecated
+            if (!this.callChangeListener(color)) {
+                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:57: warning: [deprecation] getDialog() in DialogPreference has been deprecated
+        this.getDialog().dismiss();
+            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:62: warning: [deprecation] persistString(String) in Preference has been deprecated
+        this.persistString(UIColors.colorToString(this.selectedColor));
+            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:66: warning: [deprecation] getContext() in Preference has been deprecated
+        Context context = getContext();
+                          ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:76: warning: [deprecation] onCreateDialogView() in DialogPreference has been deprecated
+    protected View onCreateDialogView() {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:78: warning: [deprecation] onCreateDialogView() in DialogPreference has been deprecated
+        final View view = super.onCreateDialogView();
+                               ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:95: warning: [deprecation] getContext() in Preference has been deprecated
+                int swatchSize = ColorPreference.this.getContext().getResources().getDimensionPixelSize(R.dimen.color_swatch_small);
+                                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:96: warning: [deprecation] getContext() in Preference has been deprecated
+                int swatchMargin = ColorPreference.this.getContext().getResources().getDimensionPixelSize(R.dimen.color_swatch_margins_small);
+                                                       ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:137: warning: [deprecation] onBindDialogView(View) in DialogPreference has been deprecated
+    protected void onBindDialogView(View view) {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:138: warning: [deprecation] onBindDialogView(View) in DialogPreference has been deprecated
+        super.onBindDialogView(view);
+             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:142: warning: [deprecation] getPersistedString(String) in Preference has been deprecated
+                this.getPersistedString(UIColors.colorToString(this.selectedColor))
+                    ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:167: warning: [deprecation] onGetDefaultValue(TypedArray,int) in Preference has been deprecated
+    protected Object onGetDefaultValue(TypedArray a, int index) {
+                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:172: warning: [deprecation] onSetInitialValue(boolean,Object) in Preference has been deprecated
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ColorPreference.java:174: warning: [deprecation] getPersistedString(String) in Preference has been deprecated
+            setColor(Color.parseColor(getPersistedString(UIColors.colorToString(UIColors.COLOR_DEFAULT))));
+                                      ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:12: warning: [deprecation] DialogPreference in android.preference has been deprecated
+public class ResetPreference extends DialogPreference {
+                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:15: warning: [deprecation] DialogPreference(Context,AttributeSet) in DialogPreference has been deprecated
+        super(context, attrs);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:19: warning: [deprecation] onClick(DialogInterface,int) in DialogPreference has been deprecated
+    public void onClick(DialogInterface dialog, int which) {
+                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:20: warning: [deprecation] onClick(DialogInterface,int) in DialogPreference has been deprecated
+        super.onClick(dialog, which);
+             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:22: warning: [deprecation] getContext() in Preference has been deprecated
+            KissApplication.getApplication(getContext()).getDataHandler().clearHistory();
+                                           ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:24: warning: [deprecation] getContext() in Preference has been deprecated
+            this.setSummary(getContext().getString(R.string.history_erased));
+                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:24: warning: [deprecation] setSummary(CharSequence) in Preference has been deprecated
+            this.setSummary(getContext().getString(R.string.history_erased));
+                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/ResetPreference.java:26: warning: [deprecation] getContext() in Preference has been deprecated
+            Toast.makeText(getContext(), R.string.history_erased, Toast.LENGTH_LONG).show();
+                           ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.java:11: warning: [deprecation] SwitchPreference in android.preference has been deprecated
+public class SwitchPreference extends android.preference.SwitchPreference {
+                                                        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.java:22: warning: [deprecation] SwitchPreference(Context,AttributeSet,int) in SwitchPreference has been deprecated
+        super(context, attrs, defStyle);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.java:26: warning: [deprecation] onBindView(View) in SwitchPreference has been deprecated
+    protected void onBindView(View view) {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.java:27: warning: [deprecation] onBindView(View) in SwitchPreference has been deprecated
+        super.onBindView(view);
+             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:33: warning: [deprecation] DialogPreference in android.preference has been deprecated
+public class AddSearchProviderPreference extends DialogPreference {
+                                                 ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:36: warning: [deprecation] getContext() in Preference has been deprecated
+    private final LinearLayout layout = new LinearLayout(this.getContext());
+                                                             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:37: warning: [deprecation] getContext() in Preference has been deprecated
+    private final EditText providerName = new EditText(this.getContext());
+                                                           ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:38: warning: [deprecation] getContext() in Preference has been deprecated
+    private final EditText providerUri = new EditText(this.getContext());
+                                                          ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:44: warning: [deprecation] DialogPreference(Context,AttributeSet) in DialogPreference has been deprecated
+        super(context, attrs);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:45: warning: [deprecation] setPersistent(boolean) in Preference has been deprecated
+        setPersistent(false);
+        ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:47: warning: [deprecation] PreferenceManager in android.preference has been deprecated
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:47: warning: [deprecation] getDefaultSharedPreferences(Context) in PreferenceManager has been deprecated
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                                 ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:52: warning: [deprecation] onCreateDialogView() in DialogPreference has been deprecated
+    protected View onCreateDialogView() {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:78: warning: [deprecation] getContext() in Preference has been deprecated
+            TypedArray ta = getContext().obtainStyledAttributes(R.style.AppThemeLight, attrs);
+                            ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:89: warning: [deprecation] showDialog(Bundle) in DialogPreference has been deprecated
+    protected void showDialog(Bundle state) {
+                   ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:90: warning: [deprecation] showDialog(Bundle) in DialogPreference has been deprecated
+        super.showDialog(state);
+             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:92: warning: [deprecation] getDialog() in DialogPreference has been deprecated
+        final AlertDialog dlg = (AlertDialog) getDialog();
+                                              ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:115: warning: [deprecation] getContext() in Preference has been deprecated
+        Set<String> availableSearchProviders = prefs.getStringSet("available-search-providers", SearchProvider.getDefaultSearchProviders(this.getContext()));
+                                                                                                                                             ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:136: warning: [deprecation] getContext() in Preference has been deprecated
+        return URIUtils.isValidUri(providerUri.getText().toString(), getContext());
+                                                                     ^
+/Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference/AddSearchProviderPreference.java:148: warning: [deprecation] getContext() in Preference has been deprecated
+            Toast.makeText(this.getContext(), R.string.search_provider_error_char, Toast.LENGTH_SHORT).show();
+                               ^
+Note: Some input files additionally use or override a deprecated API.
+100 warnings
+
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+
+[Incubating] Problems report is available at: file:///Users/1001028/git/KISS/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 5s
+33 actionable tasks: 33 executed
+Configuration cache entry stored.
