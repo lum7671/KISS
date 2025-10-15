@@ -63,6 +63,8 @@ import android.graphics.Rect;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.amplitude.api.Amplitude;
 import com.amplitude.api.Identify;
@@ -432,16 +434,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         }
 
         /*
-         * Android 15+ Edge-to-edge display support
+         * Edge-to-edge display support (Android 13+)
+         * Using WindowInsetsController instead of deprecated flags
          */
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-            getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
-            getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            );
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+        
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
 
         /*

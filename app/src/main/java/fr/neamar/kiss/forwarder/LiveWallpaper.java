@@ -4,10 +4,12 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.WindowMetrics;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
@@ -64,9 +66,10 @@ class LiveWallpaper extends Forwarder {
                     mVelocityTracker.addMovement(event);
 
                     mLastTouchPos = event.getRawX();
-                    mainActivity.getWindowManager()
-                            .getDefaultDisplay()
-                            .getSize(mWindowSize);
+                    // Use WindowMetrics instead of deprecated getDefaultDisplay()
+                    WindowMetrics windowMetrics = mainActivity.getWindowManager().getCurrentWindowMetrics();
+                    Rect bounds = windowMetrics.getBounds();
+                    mWindowSize.set(bounds.width(), bounds.height());
                 }
                 //send touch event to the LWP
                 if (isPreferenceLWPTouch())
