@@ -63,8 +63,6 @@ import android.graphics.Rect;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.amplitude.api.Amplitude;
 import com.amplitude.api.Identify;
@@ -435,20 +433,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         }
 
         /*
-         * Edge-to-edge display support (Android 13+)
-         * Using WindowInsetsController instead of deprecated flags
-         * Note: setStatusBarColor/setNavigationBarColor are deprecated but
-         * there's no alternative API for setting transparent colors yet.
+         * Android 15+ Edge-to-edge display support
          */
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        @SuppressWarnings("deprecation")
-        int transparent = android.graphics.Color.TRANSPARENT;
-        getWindow().setStatusBarColor(transparent);
-        getWindow().setNavigationBarColor(transparent);
-        
-        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-        if (controller != null) {
-            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+            getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            );
         }
 
         /*
@@ -754,17 +748,21 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     private void handleBackPress() {
         if (mPopup != null) {
             mPopup.dismiss();
-        } else if (isViewingAllApps()) {
-            displayKissBar(false);
-        } else {
-            // If no kissmenu, empty the search bar
-            // (this will trigger a new event if the search bar was already empty)
-            // (which means pressing back in minimalistic mode with history displayed
-            // will hide history again)
-            clearSearchText();
+            return;
         }
+        
+        if (isViewingAllApps()) {
+            displayKissBar(false);
+            return;
+        }
+        
+        // If no kissmenu, empty the search bar
+        // (this will trigger a new event if the search bar was already empty)
+        // (which means pressing back in minimalistic mode with history displayed
+        // will hide history again)
+        clearSearchText();
 
-        // Finish activity to quit the launcher, only do this if KISS is not the user's default home.
+        // Only quit the launcher if KISS is not the user's default home
         if (!isKissDefaultLauncher()) {
             finish();
         }
