@@ -336,7 +336,8 @@ public class ExperienceTweaks extends Forwarder {
                 if (isMinimalisticModeEnabledForFavorites()) {
                     mainActivity.favoritesBar.setVisibility(View.GONE);
                 }
-            } else {
+            } else if (!mainActivity.suppressHistoryOnClear) {
+                // Only show history if not suppressed by back button
                 mainActivity.runTaskCoroutine(new fr.neamar.kiss.searcher.HistorySearcherCoroutine(mainActivity, isRefresh));
             }
         }

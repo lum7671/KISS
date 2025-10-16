@@ -183,6 +183,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     private long lastPauseTime = 0;
     private long lastLaunchTime = 0;
     
+    // Back 버튼으로 검색창을 지울 때 HistorySearcher 실행을 막기 위한 플래그
+    public boolean suppressHistoryOnClear = false;
+    
     /**
      * 액티비티 재구성이 필요한지 스마트하게 판단
      */
@@ -751,19 +754,38 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             return;
         }
         
+        // If viewing all apps list, close it and return to home
         if (isViewingAllApps()) {
+            // Set flag to suppress HistorySearcher when closing all apps view
+            suppressHistoryOnClear = true;
             displayKissBar(false);
+            suppressHistoryOnClear = false;
+            // Show clean home screen instead of recent apps
+            runTaskCoroutine(new NullSearcherCoroutine(this));
             return;
         }
         
-        // If no kissmenu, empty the search bar
-        // (this will trigger a new event if the search bar was already empty)
-        // (which means pressing back in minimalistic mode with history displayed
-        // will hide history again)
-        clearSearchText();
-
-        // Only quit the launcher if KISS is not the user's default home
-        if (!isKissDefaultLauncher()) {
+        // Check if search bar has text
+        String currentQuery = searchEditText.getText().toString().trim();
+        if (!currentQuery.isEmpty()) {
+            // Clear search text and show empty home screen
+            // Set flag to suppress HistorySearcher when clearing from back button
+            suppressHistoryOnClear = true;
+            clearSearchText();
+            suppressHistoryOnClear = false;
+            // Show empty home screen instead of recent apps
+            runTaskCoroutine(new NullSearcherCoroutine(this));
+            return;
+        }
+        
+        // Already at home screen with empty search
+        // Stay on home screen (don't show recent apps)
+        // Only quit if KISS is not the default launcher
+        if (isKissDefaultLauncher()) {
+            // Make sure we're showing the clean home screen, not recent apps
+            runTaskCoroutine(new NullSearcherCoroutine(this));
+        } else {
+            // Not default launcher - let the system handle back (will show app picker or exit)
             finish();
         }
     }
@@ -1600,21 +1622,18 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         if (isViewingAllApps()) {
             switch (userIntent) {
                 case QUICK_RETURN:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Quick return detected - maintaining app list");
-                    }
+                    // Quick return - maintain current app list view
                     break;
                 case HOME_RETURN:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Home return detected - closing app list");
-                    }
-                    displayKissBar(false, true, true);
-                    break;
                 case UNKNOWN:
                 default:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Unknown intent - maintaining current state");
-                    }
+                    // Close app list and return to home screen
+                    // This handles both HOME_RETURN and UNKNOWN intents (e.g., back button when not default launcher)
+                    suppressHistoryOnClear = true;
+                    displayKissBar(false, true, true);
+                    suppressHistoryOnClear = false;
+                    // Show clean home screen instead of recent apps
+                    runTaskCoroutine(new NullSearcherCoroutine(this));
                     break;
             }
         }
