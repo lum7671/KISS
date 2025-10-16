@@ -51,7 +51,6 @@
     <string name="providers_summary">തിരച്ചിൽ ഫലങ്ങളെയും അതിന്റെ ദാതാക്കളെയും ക്രമീകരിക്കുക …</string>
     <string name="user_interface_summary">ഛായയും ചായവും</string>
     <string name="history_settings_summary">മുൻസമ്പർക്കങ്ങളും അവഗണിക്കേണ്ട ആപ്പ് നിരയും മായ്ക്കുക…</string>
-    <string name="rate_the_app">ആപ്പൊന്ന് റേറ്റ് ചെയ്താലോ</string>
     <string name="menu_widget_remove">വിഡ്ജറ്റ് കളയുക</string>
     <string name="menu_widget_add">വിഡ്ജറ്റ് ചേർക്കുക</string>
     <string name="swap_kiss_button_with_menu">കിസ്സ് ബട്ടൺ വലതുവശത്താക്കുക</string>
@@ -106,7 +105,6 @@
     <string name="menu_phone_create">കോൺടാക്ട് നിർമിക്കുക…</string>
     <string name="theme_name">ഛായ</string>
     <string name="menu_contact_copy_phone">ഫോൺ നമ്പർ പകർത്തുക</string>
-    <string name="toast_hibernate_error">%s നിദ്രയിലല്ല.</string>
     <string name="toast_hibernate_completed">%s നിദ്രയിൽ വെച്ചിരിക്കുകയാണ്, ഉണർത്താൻ വീണ്ടും വിളിക്കുക.</string>
     <string name="menu_shortcut_remove">കുറുക്കുവഴി കളയുക</string>
     <string name="menu_app_hibernate">നിദ്രയിലിടുക</string>

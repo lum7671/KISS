@@ -94,7 +94,6 @@
     <string name="menu_app_hibernate">최대 절전</string>
     <string name="menu_shortcut_remove">바로가기 삭제</string>
     <string name="toast_hibernate_completed">%s 가 최대 절전 됨, 깨어나기 위해서는 다시 시작.</string>
-    <string name="toast_hibernate_error">%s 는 최대 절전 안 됨.</string>
     <string name="menu_contact_copy_phone">전화 번호 복사</string>
     <string name="theme_name">테마</string>
     <string name="menu_phone_create">연락처 추가…</string>

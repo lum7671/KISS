@@ -18,7 +18,6 @@ import fr.neamar.kiss.utils.AsyncCallback
 import kotlinx.coroutines.*
 import java.lang.ref.WeakReference
 
-@RequiresApi(Build.VERSION_CODES.O)
 class SaveAllOreoShortcuts private constructor(
     context: Context
 ) {

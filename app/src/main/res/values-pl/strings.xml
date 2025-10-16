@@ -51,7 +51,6 @@
     <string name="menu_app_uninstall">Odinstaluj</string>
     <string name="menu_app_hibernate">Hibernuj</string>
     <string name="toast_hibernate_completed">Zahibernowano %s, uruchom ponownie by wybudzić.</string>
-    <string name="toast_hibernate_error">%s niezahibernowany.</string>
     <string name="menu_contact_copy_phone">Kopiuj numer telefonu</string>
     <string name="theme_name">Motyw</string>
     <string name="root_mode_desc">Jeśli to możliwe, użyj go do hibernacji aplikacji</string>
@@ -166,7 +165,6 @@
     <string name="swap_kiss_button_with_menu">Logo KISS po prawej stronie</string>
     <string name="menu_widget_add">Dodaj widżet</string>
     <string name="menu_widget_remove">Usuń widżet</string>
-    <string name="rate_the_app">Oceń aplikację</string>
     <string name="history_settings_summary">Wyczyść historię, wyklucz aplikacje, …</string>
     <string name="user_interface_summary">Motywy, przezroczystość i kolory</string>
     <string name="providers_summary">Dostosuj wyniki wyszukiwania, dodaj niestandardowe wyszukiwarki, …</string>

@@ -26,7 +26,6 @@
     <string name="main_kiss">Näita rakenduste loendit</string>
     <string name="main_kiss_back">Näita ajalugu</string>
     <string name="reset_name">Nulli ajalugu</string>
-    <string name="rate_the_app">Hinda rakendust</string>
     <string name="ui_item_search">Otsi „%2$s“ märksõna %1$s\'st</string>
     <string name="ui_empty_2_sub">Saadaval koheselt</string>
     <string name="contact_pack_mask">Kohenda kontaktide ikooni kuju</string>
@@ -102,7 +101,6 @@
     <string name="menu_phone_create">Lisa kontakt…</string>
     <string name="theme_name">Teema</string>
     <string name="menu_contact_copy_phone">Kopeeri telefoninumber</string>
-    <string name="toast_hibernate_error">%s pole uinunud.</string>
     <string name="menu_app_uninstall">Eemalda rakendus seadmest</string>
     <string name="menu_app_hibernate">Jäta unne</string>
     <string name="menu_app_details">Rakenduse teave</string>

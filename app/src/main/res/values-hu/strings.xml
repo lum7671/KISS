@@ -53,7 +53,6 @@
     <string name="root_mode_error">Nem sikerült root jogot szerezni.</string>
     <string name="menu_app_hibernate">Hibernálás</string>
     <string name="toast_hibernate_completed">%s hibernálva lett, újbóli megnyitás a felébresztéshez.</string>
-    <string name="toast_hibernate_error">%s hibernálása sikertelen volt.</string>
     <string name="menu_contact_copy_phone">Telefonszám másolása</string>
     <string name="shortcuts_name">Gyorsparancsok</string>
     <string name="reset_excluded_apps_name">KISS-ből kizárt alkalmazások visszaállítása</string>
@@ -197,7 +196,6 @@
     <string name="pref_hide_navbar">Navigációs sáv elrejtése</string>
     <string name="search_provider_error_url">Használjon érvényes URL-t</string>
     <string name="search_provider_reset_done_desc">A keresésszolgáltatók vissza lettek állítva</string>
-    <string name="rate_the_app">Alkalmazás értékelése</string>
     <string name="transparent_favorites_bar">Átlátszó kedvenc-sáv</string>
     <string name="transparent_search_bar">Átlátszó keresősáv</string>
     <string name="menu_widget_remove">Widget eltávolítása</string>

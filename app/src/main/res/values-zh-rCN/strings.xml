@@ -73,7 +73,6 @@
     <string name="menu_app_uninstall">卸载</string>
     <string name="menu_app_hibernate">休眠</string>
     <string name="toast_hibernate_completed">%s 已休眠，重启它即可唤醒。</string>
-    <string name="toast_hibernate_error">%s 未能休眠。</string>
     <string name="menu_contact_copy_phone">复制手机号码</string>
     <string name="theme_name">主题</string>
     <string name="menu_phone_create">创建联系人…</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">透明收藏栏</string>
     <string name="menu_widget_add">添加小工具</string>
     <string name="menu_widget_remove">移除小工具</string>
-    <string name="rate_the_app">评价本应用</string>
     <string name="lwp_touch">发送触摸事件到壁纸</string>
     <string name="lwp_drag">为壁纸模拟拖动事件</string>
     <string name="lwp_drag_desc">发送多点触摸事件</string>

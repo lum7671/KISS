@@ -155,7 +155,6 @@
     <string name="menu_shortcut_remove">Remove shortcut</string>
     <string name="menu_shortcut_pin">Pin shortcut</string>
     <string name="toast_hibernate_completed">%s hibernated, relaunch to awake.</string>
-    <string name="toast_hibernate_error">%s not hibernated.</string>
     <string name="menu_contact_copy_phone">Copy phone number</string>
     <string name="theme_name">Theme</string>
     <string name="menu_phone_create">Create contact…</string>
@@ -209,7 +208,6 @@
     <!-- Widget strings, preference ID should not be translated -->
     <string name="menu_widget_add">Add widget</string>
     <string name="menu_widget_remove">Remove widget</string>
-    <string name="rate_the_app">Rate the app</string>
     <string name="history_settings_summary">Reset your history, exclude apps, …</string>
     <string name="user_interface_summary">Themes, transparency and colors</string>
     <string name="providers_summary">Adjust search results, add custom search engines, …</string>

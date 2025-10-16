@@ -68,7 +68,6 @@
     <string name="menu_app_uninstall">Desinstalar</string>
     <string name="menu_app_hibernate">Hibernar</string>
     <string name="toast_hibernate_completed">%s está en hibernación. Iníciela nuevamente para reactivarla.</string>
-    <string name="toast_hibernate_error">%s no hibernada.</string>
     <string name="menu_contact_copy_phone">Copiar número de teléfono</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Crear contacto…</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">Barra de favoritos transparente</string>
     <string name="menu_widget_add">Agregar widget</string>
     <string name="menu_widget_remove">Borrar widget</string>
-    <string name="rate_the_app">Valora la aplicación</string>
     <string name="search_providers_delete">Eliminar motores de búsqueda</string>
     <string name="custom_search_provider">Añadir motor de búsqueda</string>
     <string name="search_provider_reset">Restablecer motores de búsqueda</string>

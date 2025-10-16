@@ -52,7 +52,6 @@
     <string name="menu_app_uninstall">アンインストール</string>
     <string name="menu_app_hibernate">休止状態</string>
     <string name="toast_hibernate_completed">%s を休止状態にしました。再開するには再起動してください。</string>
-    <string name="toast_hibernate_error">%s は休止状態になりませんでした。</string>
     <string name="menu_contact_copy_phone">電話番号をコピー</string>
     <string name="theme_name">テーマ</string>
     <string name="portrait_title">強制的に縦向き</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">透明なお気に入りバー</string>
     <string name="menu_widget_add">ウィジェットを追加</string>
     <string name="menu_widget_remove">ウィジェットを削除</string>
-    <string name="rate_the_app">アプリを評価</string>
     <string name="search_providers_delete">Web検索プロバイダーの削除</string>
     <string name="custom_search_provider">Web検索プロバイダーを追加</string>
     <string name="search_provider_reset">Web検索プロバイダーをリセット</string>

@@ -74,7 +74,6 @@
     <string name="menu_app_uninstall">Copot</string>
     <string name="menu_app_hibernate">Hibernasi</string>
     <string name="toast_hibernate_completed">%s dalam hibernasi, jalankan ulang untuk membangunkan.</string>
-    <string name="toast_hibernate_error">%s tidak dalam hibernasi.</string>
     <string name="menu_contact_copy_phone">Salin nomor telepon</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Buat kontak…</string>
@@ -209,7 +208,6 @@
     <string name="pref_fav_tags_select">Tag yang akan ditampilkan di bilah favorit</string>
     <string name="pref_fav_tags_drawable_desc">Matikan untuk menggunakan lebih sedikit memori untuk banyak tag favorit</string>
     <string name="pref_fav_tags_drawable">Buat ikon untuk tag favorit</string>
-    <string name="rate_the_app">Beri nilai aplikasi</string>
     <string name="menu_app_store">Lihat di play store</string>
     <string name="large_favorites_bar">Gunakan favorit ukuran besar</string>
     <string name="menu_size_down">Kecilkan</string>

@@ -122,7 +122,6 @@
     <string name="menu_exclude_history">historiasta</string>
     <string name="menu_app_details">Sovelluksen tiedot</string>
     <string name="toast_hibernate_completed">%s horrostettiin, käynnistä se uudelleen herättääksesi siitä.</string>
-    <string name="toast_hibernate_error">%s ei horrostettu.</string>
     <string name="theme_name">Teema</string>
     <string name="enable_phone">Näytä saapuneet puhelut historiassa</string>
     <string name="enable_app">Näytä äskettäin asennetut sovellukset historiassa</string>
@@ -165,7 +164,6 @@
     <string name="rounded_bars">Pyöristetyt palkkien kulmat</string>
     <string name="menu_widget_add">Lisää pienoissovellus</string>
     <string name="menu_widget_remove">Poista pienoissovellus</string>
-    <string name="rate_the_app">Arvostele sovellus</string>
     <string name="history_settings_summary">Resetoi historiasi, poissulje sovelluksia…</string>
     <string name="user_interface_summary">Teemat, läpinäkyvyys ja värit</string>
     <string name="providers_summary">Määritä hakutuloksia, lisää omia hakukoneitasi, …</string>

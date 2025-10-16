@@ -54,7 +54,6 @@
     <string name="root_mode_error">Super istifadǝçi xüsusiyyǝtleri alınamadı.</string>
     <string name="menu_app_hibernate">Yuxu rejimi</string>
     <string name="toast_hibernate_completed">%s yuxu rejimine alındı, oyandırmaq üçün yenidən açın.</string>
-    <string name="toast_hibernate_error">%s yuxu rejimine alınamadı.</string>
     <string name="portrait_title">Dikey rejimi zorla</string>
     <string name="menu_phone_create">Kontakt yarat</string>
     <string name="history_hide_desc">Keçmişi və daxil ekranını gizlət</string>

@@ -55,7 +55,6 @@
     <string name="menu_app_uninstall">Desinstalar</string>
     <string name="menu_app_hibernate">Hibernar</string>
     <string name="toast_hibernate_completed">%s hibernado correctamente, execútao para espertalo.</string>
-    <string name="toast_hibernate_error">%s non se hibernou.</string>
     <string name="menu_contact_copy_phone">Copiar número telefónico</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Crear contacto…</string>
@@ -162,7 +161,6 @@
     <string name="swap_kiss_button_with_menu">Botón KISS na dereita</string>
     <string name="hide_search_bar_hint">Retirar o texto de axuda da barra de busca</string>
     <string name="menu_widget_add">Engadir widget</string>
-    <string name="rate_the_app">Valora a app</string>
     <string name="providers_summary">Axustar resultados da busca, motores de busca, …</string>
     <string name="title_ux">Experiencia de usuaria</string>
     <string name="user_experience_summary">Interface minimalista, teclado, …</string>

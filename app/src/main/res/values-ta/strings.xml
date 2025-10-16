@@ -59,7 +59,6 @@
     <string name="settings_airplane">விமான முறை</string>
     <string name="settings_device_info">சாதன செய்தி</string>
     <string name="settings_display">காட்சி</string>
-    <string name="toast_hibernate_error">%s உறைக்கப்படவில்லை.</string>
     <string name="menu_contact_copy_phone">தொலைபேசி எண்ணை நகலெடுக்கவும்</string>
     <string name="theme_name">கருப்பொருள்</string>
     <string name="restart_name">முத்தத்தை மறுதொடக்கம் செய்யுங்கள்</string>
@@ -267,7 +266,6 @@
     <string name="tagged_result_sort_mode_name">குறிக்கப்பட்ட முடிவு வரிசை முறை</string>
     <string name="tagged_result_sort_mode_default">இயல்புநிலை, வரலாற்று பயன்முறை போன்றது</string>
     <string name="settings_connectivity">இணைப்பு</string>
-    <string name="rate_the_app">பயன்பாட்டை மதிப்பிடுங்கள்</string>
     <string name="user_interface_summary">தீம்கள், வெளிப்படைத்தன்மை மற்றும் வண்ணங்கள்</string>
     <string name="title_ux">பயனர் பட்டறிவு</string>
     <string name="custom_icon_application_adaptive_fill">பயன்பாட்டு தகவமைப்பு நிரப்பு</string>

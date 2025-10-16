@@ -102,7 +102,6 @@
     <string name="pref_tags_menu">Aldoni etkiedoj en menuo</string>
     <string name="ctx_menu">Menuo de KISS</string>
     <string name="colors">Koloroj</string>
-    <string name="rate_the_app">Taksi la aplikaĵon</string>
     <string name="menu_widget_remove">Forigi fenestraĵon</string>
     <string name="menu_widget_add">Aldoni fenestraĵon</string>
     <string name="color_swatch_description_selected" tools:ignore="PluralsCandidate">Koloro %1$d elektita</string>

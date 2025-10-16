@@ -48,7 +48,6 @@ public class ImprovedQuickContactBadge extends ShapedContactBadge {
         init(); //Set our initialization
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ImprovedQuickContactBadge(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(); //Set our initialization

@@ -151,7 +151,6 @@
     <string name="search_provider_default">Công cụ mặc định ứng với phím nhập</string>
     <string name="root_mode_desc">Khi thích hợp, áp dụng chức năng này cho các ứng dụng vào chế độ ngủ đông</string>
     <string name="excluded_app_list_added">Ứng dụng đã bị loại trừ khỏi KISS. Vào KISS cài đặt để thiết lập lại</string>
-    <string name="toast_hibernate_error">%s không ở trong chế độ ngủ đông.</string>
     <string name="toast_hibernate_completed">%s trong chế độ ngủ đông, khởi chạy lại để đánh thức ứng dụng.</string>
     <string name="custom_icon_application_adaptive_fill">tô nền thích ứng cho ứng dụng</string>
     <string name="history_settings_summary">Thiết lập lại lịch sử, ứng dụng đã loại trừ,…</string>
@@ -201,7 +200,6 @@
     <string name="user_experience_summary">Giao diện tối giản, cài đặt bàn phím,…</string>
     <string name="title_ux">Trải nghiệm người dùng</string>
     <string name="providers_summary">Điều chỉnh kết quả tìm kiếm, thêm công cụ tìm kiếm tùy chỉnh,…</string>
-    <string name="rate_the_app">Đánh giá ứng dụng</string>
     <string name="swap_kiss_button_with_menu">Đặt nút KISS bên phải</string>
     <string name="rounded_list">Bo tròn các góc của bản kê</string>
     <string name="large_search_bar">Tăng kích thước thanh tìm kiếm</string>

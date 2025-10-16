@@ -111,7 +111,6 @@
     <string name="menu_app_hibernate">Sätt i viloläge</string>
     <string name="menu_shortcut_remove">Ta bort genväg</string>
     <string name="toast_hibernate_completed">%s satt i viloläge, starta på nytt för att väcka.</string>
-    <string name="toast_hibernate_error">%s inte i viloläge.</string>
     <string name="menu_contact_copy_phone">Kopiera telefonnummer</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Skapa kontakt…</string>
@@ -152,7 +151,6 @@
     <string name="rounded_bars">Rundade fälthörn</string>
     <string name="menu_widget_add">Lägg till gränssnittskomponent</string>
     <string name="menu_widget_remove">Ta bort gränssnittskomponent</string>
-    <string name="rate_the_app">Betygsätt appen</string>
     <string name="history_settings_summary">Nollställ din historik, dina exkluderade appar, …</string>
     <string name="user_interface_summary">Teman, transparens och färg</string>
     <string name="providers_summary">Justera sökresultaten, lägg till anpassade sökmotorer, …</string>

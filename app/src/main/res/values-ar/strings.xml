@@ -69,7 +69,6 @@
     <string name="menu_app_uninstall">إلغاء التثبيت</string>
     <string name="menu_app_hibernate">نام</string>
     <string name="toast_hibernate_completed">أُسبت %s، أعد إطلاقه لتشغيله.</string>
-    <string name="toast_hibernate_error">لم يُسبت %s.</string>
     <string name="menu_contact_copy_phone">نسخ رقم الهاتف</string>
     <string name="theme_name">سمة</string>
     <string name="menu_phone_create">إنشاء جهة اتصال…</string>
@@ -154,7 +153,6 @@
     <string name="user_experience_summary">واجهة مستخدم بسيطة، إعدادات لوحة المفاتيح، …</string>
     <string name="title_ux">تجربة المستخدم</string>
     <string name="user_interface_summary">السمات، والشفافية والألوان</string>
-    <string name="rate_the_app">تقييم التطبيق</string>
     <string name="hide_search_bar_hint">إزالة التلميح من شريط البحث</string>
     <string name="swap_kiss_button_with_menu">زر KISS على اليمين</string>
     <string name="rounded_bars">زوايا الشريط مدورة</string>

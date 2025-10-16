@@ -73,7 +73,6 @@
     <string name="menu_app_uninstall">Dezinstalare</string>
     <string name="menu_app_hibernate">Hibernare</string>
     <string name="toast_hibernate_completed">%s hibernată, repornește-o pentru a o trezi.</string>
-    <string name="toast_hibernate_error">%s nu a fost hibernată.</string>
     <string name="menu_contact_copy_phone">Copiază număr de telefon</string>
     <string name="theme_name">Temă</string>
     <string name="menu_phone_create">Creare contact…</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">Bară de favorite transparentă</string>
     <string name="menu_widget_add">Adaugă widget</string>
     <string name="menu_widget_remove">Elimină widget</string>
-    <string name="rate_the_app">Evaluați aplicația</string>
     <string name="search_providers_delete">Șterge furnizorii de căutări pe internet</string>
     <string name="custom_search_provider">Adaugă furnizor de căutare pe internet</string>
     <string name="search_provider_reset">Resetează furnizorii de căutări pe internet</string>

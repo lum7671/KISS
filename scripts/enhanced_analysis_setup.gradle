@@ -1,0 +1,109 @@
+// ========================================
+// 고급 정적 분석 도구 추가 설정
+// ========================================
+// 사용법: app/build.gradle에 추가
+//   apply from: '../scripts/enhanced_analysis_setup.gradle'
+
+// 1. 미사용 코드 제거 (R8 분석 결과 확인)
+android {
+    buildTypes {
+        release {
+            // 이미 설정되어 있지만, 분석 결과 확인을 위해
+            minifyEnabled true
+            shrinkResources true
+        }
+    }
+}
+
+// 2. Strict Mode 경고 활성화
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        '-Xlint:all',           // 모든 경고 활성화
+        '-Xlint:deprecation',   // deprecated API 사용 경고
+        '-Xlint:unchecked',     // 타입 안정성 경고
+    ]
+}
+
+// 3. Detekt 추가 규칙
+tasks.register('detektAll') {
+    description = 'Kotlin 전체 코드베이스 분석 (엄격 모드)'
+    group = 'verification'
+    
+    doLast {
+        println """
+        ====================================
+        Detekt 분석 리포트 위치:
+        ====================================
+        HTML: app/build/reports/detekt/detekt.html
+        XML:  app/build/reports/detekt/detekt.xml
+        TXT:  app/build/reports/detekt/detekt.txt
+        
+        주요 확인 사항:
+        - UnusedPrivateMember: 미사용 private 멤버
+        - UnusedImports: 미사용 import
+        - ComplexMethod: 복잡도 높은 메서드
+        """
+    }
+    
+    finalizedBy 'detekt'
+}
+
+// 4. 의존성 분석 상세 리포트
+tasks.register('analyzeDependencies') {
+    description = '의존성 사용 현황 상세 분석'
+    group = 'verification'
+    
+    doLast {
+        println """
+        ====================================
+        의존성 분석 명령어:
+        ====================================
+        
+        1. 사용하지 않는 의존성:
+           ./gradlew buildHealth
+        
+        2. 의존성 트리 확인:
+           ./gradlew app:dependencies
+        
+        3. 특정 의존성 사용처 검색:
+           ./gradlew app:dependencies --configuration releaseRuntimeClasspath
+        
+        4. 업데이트 가능한 의존성:
+           ./gradlew dependencyUpdates
+        """
+    }
+}
+
+// 5. 린트 분석 강화
+android {
+    lint {
+        checkAllWarnings = true
+        warningsAsErrors = false  // 경고를 에러로 처리 (선택)
+        abortOnError = false
+        
+        // 특정 규칙 활성화
+        enable += [
+            'UnusedResources',      // 미사용 리소스
+            'UnusedIds',            // 미사용 ID
+            'IconMissingDensityFolder',
+            'IconDuplicates',
+        ]
+        
+        // 결과를 파일로 저장
+        htmlReport = true
+        xmlReport = true
+        textReport = true
+    }
+}
+
+println """
+========================================
+고급 정적 분석 도구 설정 완료
+========================================
+
+사용 가능한 명령어:
+  ./gradlew detektAll          # Kotlin 전체 분석
+  ./gradlew analyzeDependencies # 의존성 분석 가이드
+  ./gradlew lint               # Android Lint
+  ./gradlew buildHealth        # 의존성 사용 현황
+"""

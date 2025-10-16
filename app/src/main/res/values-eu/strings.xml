@@ -48,7 +48,6 @@
     <string name="providers_summary">Doitu bilaketa-emaitzak, gehitu pertsonalizatutako bilatzaileak, …</string>
     <string name="user_interface_summary">Gaiak, gardentasuna eta koloreak</string>
     <string name="history_settings_summary">Berrezarri historia, baztertutako aplikazioak, …</string>
-    <string name="rate_the_app">Baloratu aplikazioa</string>
     <string name="menu_widget_remove">Kendu widget-a</string>
     <string name="menu_widget_add">Gehitu widget-a</string>
     <string name="swap_kiss_button_with_menu">KISS botoia eskuinean</string>
@@ -95,7 +94,6 @@
     <string name="menu_phone_create">Sortu kontaktua…</string>
     <string name="theme_name">Gaia</string>
     <string name="menu_contact_copy_phone">Kopiatu telefono zenbakia</string>
-    <string name="toast_hibernate_error">%s ez da hibernatu.</string>
     <string name="toast_hibernate_completed">%s hibernatu da, berrabiarazi aktibatzeko.</string>
     <string name="menu_shortcut_remove">Kendu lasterbidea</string>
     <string name="menu_app_hibernate">Hibernatu</string>

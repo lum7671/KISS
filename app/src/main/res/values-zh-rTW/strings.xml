@@ -108,7 +108,6 @@
     <string name="menu_app_hibernate">休眠</string>
     <string name="menu_shortcut_remove">移除捷徑</string>
     <string name="toast_hibernate_completed">%s 已休眠，重啟它即可喚醒。</string>
-    <string name="toast_hibernate_error">%s 無法進入休眠。</string>
     <string name="menu_contact_copy_phone">複製手機號碼</string>
     <string name="theme_name">主題</string>
     <string name="menu_phone_create">新增聯絡人…</string>
@@ -152,7 +151,6 @@
     <!-- Widget strings, preference id should not be translated -->
     <string name="menu_widget_add">添加主畫面小工具</string>
     <string name="menu_widget_remove">移除小工具</string>
-    <string name="rate_the_app">給 KISS 評分</string>
     <string name="history_settings_summary">重設您的歷史紀錄、隱藏應用程式…</string>
     <string name="user_interface_summary">主題、透明度和顏色</string>
     <string name="providers_summary">調整搜尋結果，新增自訂搜尋引擎…</string>

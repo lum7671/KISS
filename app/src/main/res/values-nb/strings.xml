@@ -49,7 +49,6 @@
     <string name="menu_app_uninstall">Avinstaller</string>
     <string name="menu_app_hibernate">Dvalemodus</string>
     <string name="toast_hibernate_completed">%s gikk i dvalemodus, vekk programmet ved å starte det på ny.</string>
-    <string name="toast_hibernate_error">Klarte ikke sende %s i dvalemodus.</string>
     <string name="menu_contact_copy_phone">Kopier telefonnummer</string>
     <string name="theme_name">Drakt</string>
     <string name="menu_phone_create">Opprett kontakt…</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">Gjennomsiktig favorittfelt</string>
     <string name="menu_widget_add">Legg til miniprogram</string>
     <string name="menu_widget_remove">Fjern miniprogram</string>
-    <string name="rate_the_app">Vurder programmet</string>
     <string name="search_providers_delete">Slett vev-søketilbydere</string>
     <string name="custom_search_provider">Legg til vev-søketilbyder</string>
     <string name="search_provider_reset">Tilbakestill vev-søketilbydere</string>

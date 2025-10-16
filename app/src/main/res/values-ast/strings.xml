@@ -34,7 +34,6 @@
     <string name="menu_app_uninstall">Desinstalar</string>
     <string name="menu_app_hibernate">Ivernar</string>
     <string name="toast_hibernate_completed">%s ivernóse con ésitu, rellancialu pa despertalu.</string>
-    <string name="toast_hibernate_error">%s nun s\'ivernó con ésitu.</string>
     <string name="menu_contact_copy_phone">Copiar el númberu telefónicu</string>
     <string name="theme_name">Estilu</string>
     <string name="menu_phone_create">Crear contautu</string>

@@ -229,7 +229,6 @@ public class UIColors {
     }
 
     @ColorRes
-    @RequiresApi(Build.VERSION_CODES.S)
     private static int getNotificationBarColorRes(Context context) {
         if (isDarkMode(context)) {
             return android.R.color.system_neutral1_700;
@@ -280,7 +279,6 @@ public class UIColors {
     }
 
     @ColorRes
-    @RequiresApi(Build.VERSION_CODES.S)
     private static int getNotificationDotColorRes(Context context) {
         if (isDarkMode(context)) {
             return android.R.color.system_accent3_200;
@@ -313,7 +311,6 @@ public class UIColors {
      * @return color from preferences, use color given by {@code getColor} when saved value is {@link UIColors#COLOR_SYSTEM}
      */
     @ColorInt
-    @RequiresApi(api = Build.VERSION_CODES.S)
     private static int getColor(@NonNull Context context, @NonNull String preferenceKey, @ColorRes int systemColorId) {
         int color = getColorWithoutFallback(context, preferenceKey);
         if (color == COLOR_SYSTEM) {
@@ -341,7 +338,6 @@ public class UIColors {
      * @return icon colors from system
      */
     @ColorInt
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static int[] getIconColors(Context context) {
         Resources res = context.getResources();
         int[] colors = new int[2];

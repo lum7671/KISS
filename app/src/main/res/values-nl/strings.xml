@@ -54,7 +54,6 @@
     <string name="root_mode_desc">Gebruik het om apps te pauzeren (indien beschikbaar)</string>
     <string name="menu_app_hibernate">Pauzeren</string>
     <string name="toast_hibernate_completed">%s is gepauzeerd; activeer om te herstarten.</string>
-    <string name="toast_hibernate_error">%s kan niet gepauzeerd worden.</string>
     <string name="ui_item_visit">Bezoek “%1$s”</string>
     <string name="shortcuts_name">Snelkoppelingen</string>
     <string name="reset_excluded_apps_name">Geen apps meer uitsluiten van KISS</string>
@@ -127,7 +126,6 @@
     <string name="menu_widget_remove">Widget verwijderen</string>
     <string name="transparent_search_bar">Doorzichtige zoekbalk</string>
     <string name="transparent_favorites_bar">Doorzichtige favorietenbalk</string>
-    <string name="rate_the_app">App waarderen</string>
     <string name="search_providers_delete">Zoekmachines verwijderen</string>
     <string name="custom_search_provider">Zoekmachine toevoegen</string>
     <string name="search_provider_reset">Zoekmachines herstellen</string>

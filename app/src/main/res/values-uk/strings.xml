@@ -23,7 +23,6 @@
     <string name="color_swatch_description">Колір %1$d</string>
     <string name="menu_widget_add">Додати віджет</string>
     <string name="menu_widget_remove">Вилучити віджет</string>
-    <string name="rate_the_app">Оцініть застосунок</string>
     <string name="title_history">Налаштування дієпису</string>
     <string name="menu_settings">Налаштування пристрою…</string>
     <string name="ui_empty_1">Почніть шукати що-небудь</string>
@@ -119,7 +118,6 @@
     <string name="menu_app_hibernate">Приспати</string>
     <string name="menu_shortcut_remove">Видалити ярлик</string>
     <string name="toast_hibernate_completed">%s перебуває в режимі очікування, перезапустити, щоб прокинутися.</string>
-    <string name="toast_hibernate_error">%s не приспано.</string>
     <string name="menu_contact_copy_phone">Копіювати номер телефону</string>
     <string name="theme_name">Тема</string>
     <string name="toast_favorites_added">%s було додано до вподобань</string>

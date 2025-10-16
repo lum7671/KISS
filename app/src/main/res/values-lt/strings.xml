@@ -91,7 +91,6 @@
     <string name="menu_app_hibernate">Užmigdyti</string>
     <string name="menu_shortcut_remove">pašalinti nuorodą</string>
     <string name="toast_hibernate_completed">%s užmigdyta, paleiskite iš naujo, kad pažadintumėte.</string>
-    <string name="toast_hibernate_error">%s nėra užmigdyta.</string>
     <string name="menu_contact_copy_phone">Kopijuoti telefono numerį</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Sukurti kontaktą…</string>
@@ -129,7 +128,6 @@
     <string name="main_color">Pirminė spalva</string>
     <string name="menu_widget_add">Pridėti valdiklį</string>
     <string name="menu_widget_remove">Pašalinti valdiklį</string>
-    <string name="rate_the_app">Įvertinti programėlę</string>
     <string name="custom_search_provider">Pridėti žiniatinklio paieškos teikėją</string>
     <string name="search_providers_delete">Ištrinti žiniatinklio paieškos teikėjus</string>
     <string name="wp_animate_sides_desc">Po slinkimo ekrano paveikslėlis prilips prie kairės arba dešinės ekrano pusės</string>

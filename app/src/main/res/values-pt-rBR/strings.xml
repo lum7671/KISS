@@ -53,7 +53,6 @@
     <string name="menu_app_uninstall">Desinstalar</string>
     <string name="menu_app_hibernate">Hibernar</string>
     <string name="menu_app_details">Informações do aplicativo</string>
-    <string name="toast_hibernate_error">%s não foi hibernado.</string>
     <string name="menu_contact_copy_phone">Copiar o número de telefone</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Criar contato…</string>
@@ -151,7 +150,6 @@
     <string name="rounded_list">Cantos da lista arredondados</string>
     <string name="rounded_bars">Cantos da barra arredondados</string>
     <string name="menu_widget_remove">Remover widget</string>
-    <string name="rate_the_app">Avaliar o aplicativo</string>
     <string name="history_settings_summary">Limpar seu histórico, excluir aplicativos…</string>
     <string name="user_interface_summary">Temas, transparência e cores</string>
     <string name="providers_summary">Ajustar resultados da pesquisa, adicionar mecanismos de pesquisa personalizados, …</string>

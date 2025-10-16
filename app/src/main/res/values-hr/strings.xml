@@ -52,7 +52,6 @@
     <string name="menu_app_uninstall">Deinstaliraj</string>
     <string name="menu_app_hibernate">Mirovanje</string>
     <string name="toast_hibernate_completed">%s je u stanju mirovanja. Za buđenje aplikacije, ponovo je pokreni.</string>
-    <string name="toast_hibernate_error">%s nije u stanju mirovanja.</string>
     <string name="menu_contact_copy_phone">Kopiraj telefonski broj</string>
     <string name="theme_name">Tema</string>
     <string name="misc">Ostalo</string>
@@ -130,7 +129,6 @@
     <string name="search_provider_toggle">Poveznice za internetske tražilice</string>
     <string name="gesture_keyboard">Prikaži tipkovnicu</string>
     <string name="notification_bar_color">Boja trake obavijesti</string>
-    <string name="rate_the_app">Ocijeni aplikaciju</string>
     <string name="search_providers_delete">Izbriši internetske tražilice</string>
     <string name="excluded_app_history_added">Aplikacija izuzeta iz povijesti. Ponovo je postavi u KISS postavkama</string>
     <string name="search_provider_added">Internetska tražilica je dodana.</string>

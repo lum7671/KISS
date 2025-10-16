@@ -101,7 +101,6 @@
     <string name="menu_shortcut_remove">Radera genväg</string>
 
     <string name="toast_hibernate_completed">%s sattes i viloläge, starta om appen för att väcka den.</string>
-    <string name="toast_hibernate_error">%s kunde inte sättas i viloläge.</string>
     <string name="menu_contact_copy_phone">Kopiera telefonnummer</string>
     <string name="theme_name">Gränssnittstema</string>
     <string name="menu_phone_create">Skapa kontakt</string>

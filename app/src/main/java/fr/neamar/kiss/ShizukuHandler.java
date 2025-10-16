@@ -329,7 +329,6 @@ public class ShizukuHandler {
     /**
      * ActivityManager를 통한 앱 강제 종료
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean forceStopPackage(String packageName) {
         // 간단한 공식 패턴: 1) 바인더 획득 2) IActivityManager 인터페이스 획득(가능하면 Stub.asInterface, 없으면 Stub$Proxy 생성자) 3) forceStopPackage 호출
         try {

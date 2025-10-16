@@ -59,13 +59,12 @@ public class ShortcutUtil {
      * but we use shortcut APIs only available in Android 8.
      */
     public static boolean canDeviceShowShortcuts() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+        return true; // minSdk 33, always true
     }
 
     /**
      * Save all oreo shortcuts to DB
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static void addAllShortcuts(Context context) {
         SaveAllOreoShortcuts.execute(context);
     }
@@ -73,7 +72,6 @@ public class ShortcutUtil {
     /**
      * Save single shortcut to DB via pin request
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static void addShortcut(Context context, Intent intent) {
         SaveSingleOreoShortcut.execute(context, intent);
     }
@@ -88,7 +86,6 @@ public class ShortcutUtil {
     /**
      * @return all shortcuts from all applications available on the device
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static List<ShortcutInfo> getAllShortcuts(Context context) {
         return getShortcuts(context, null);
     }
@@ -96,7 +93,6 @@ public class ShortcutUtil {
     /**
      * @return all shortcuts for given package name
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static List<ShortcutInfo> getShortcuts(Context context, String packageName) {
         List<ShortcutInfo> shortcutInfoList = new ArrayList<>();
 
@@ -127,7 +123,6 @@ public class ShortcutUtil {
     /**
      * @return return a specific shortcut for given package name and id
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static ShortcutInfo getShortCut(Context context, String packageName, String shortcutId) {
         final LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
         final UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
@@ -161,7 +156,6 @@ public class ShortcutUtil {
     /**
      * Create ShortcutPojo from ShortcutInfo
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     public static ShortcutRecord createShortcutRecord(Context context, ShortcutInfo shortcutInfo, boolean includePackageName) {
         if (shortcutInfo.hasKeyFieldsOnly()) {
             // If ShortcutInfo holds only key fields shortcut including data must be fetched
@@ -202,7 +196,6 @@ public class ShortcutUtil {
      * @param shortcutInfo
      * @return component name related to {@link ShortcutInfo}.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     @Nullable
     public static String getComponentName(@NonNull Context context, @Nullable ShortcutInfo shortcutInfo) {
         if (shortcutInfo != null && shortcutInfo.getActivity() != null) {
@@ -213,7 +206,6 @@ public class ShortcutUtil {
         return null;
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public static boolean isShortcutVisible(@NonNull Context context, @NonNull ShortcutInfo shortcutInfo, @NonNull Set<String> excludedApps, @NonNull Set<String> excludedShortcutApps) {
         if (!shortcutInfo.isEnabled()) {
             return false;
@@ -240,7 +232,6 @@ public class ShortcutUtil {
         return !isExcluded;
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public static boolean pinShortcut(@NonNull Context context, @NonNull String packageName, @NonNull String shortcutId) {
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
         if (launcherApps.hasShortcutHostPermission()) {
@@ -266,7 +257,6 @@ public class ShortcutUtil {
         return false;
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public static boolean unpinShortcut(@NonNull Context context, @NonNull String packageName, @NonNull String shortcutId) {
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
         if (launcherApps.hasShortcutHostPermission()) {

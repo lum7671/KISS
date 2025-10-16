@@ -247,7 +247,6 @@ public class ShortcutsResult extends Result<ShortcutPojo> {
         Toast.makeText(context, R.string.application_not_found, Toast.LENGTH_LONG).show();
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private ShortcutInfo getShortCut(Context context) {
         return ShortcutUtil.getShortCut(context, pojo.packageName, pojo.getOreoId());
     }

@@ -108,7 +108,6 @@
     <string name="menu_app_hibernate">Iberna</string>
     <string name="menu_shortcut_remove">Rimuovi scorciatoia</string>
     <string name="toast_hibernate_completed">\"%s\" ibernata, avviala per risvegliarla.</string>
-    <string name="toast_hibernate_error">\"%s\" non ibernata.</string>
     <string name="menu_contact_copy_phone">Copia numero di telefono</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Crea contatto…</string>
@@ -156,7 +155,6 @@
     <!-- Widget strings, preference id should not be translated -->
     <string name="menu_widget_add">Aggiungi widget</string>
     <string name="menu_widget_remove">Rimuovi widget</string>
-    <string name="rate_the_app">Valuta l\'app</string>
     <string name="history_settings_summary">Elimina cronologia, escludi applicazioni, …</string>
     <string name="user_interface_summary">Temi, trasparenza e colori</string>
     <string name="providers_summary">Modifica risultati, aggiungi motori di ricerca web, …</string>

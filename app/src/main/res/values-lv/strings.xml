@@ -220,7 +220,6 @@
     <string name="color_swatch_description_selected" tools:ignore="PluralsCandidate">Atlasīta krāsa %1$d</string>
     <string name="hide_search_bar_hint">Noņemt norādi no meklēšanas joslas</string>
     <string name="menu_widget_remove">Noņemt logrīku</string>
-    <string name="rate_the_app">Novērtēt lietotni</string>
     <string name="providers_summary">Pielāgot meklēšanas iznākumu, pievienot pielāgotus meklēšanas dziņus, …</string>
     <string name="history_favorites_summary">Atiestatīt izlasi, noņemt izlases joslu, …</string>
     <string name="enable_favorites_bar_summary_off">Attēlot izlasi tikai pēc nospiešanas uz KISS ikonas</string>
@@ -310,7 +309,6 @@
     <string name="settings_tethering">Piesaistīšana</string>
     <string name="settings_display">Attēlot</string>
     <string name="toast_hibernate_completed">%s ir dziļajā miegā. Atkārtoti jāpalaiž, lai pamodinātu.</string>
-    <string name="toast_hibernate_error">%s nav dziļajā miegā.</string>
     <string name="menu_app_hibernate">Dziļi iemidzināt</string>
     <string name="pref_hide_navbar_desc">Paslēpt pārvietošanās joslu un ieslēgt tīrskatu</string>
     <string name="pref_hide_statusbar_desc">Paslēpt paziņojumu joslu un ieslēgt tīrskatu</string>

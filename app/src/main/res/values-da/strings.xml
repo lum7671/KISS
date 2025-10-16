@@ -148,7 +148,6 @@
     <string name="menu_shortcut_pin">Fastgør genvej</string>
     <string name="toast_hibernate_completed">%s er lagt i dvale, start den igen for at vække den.</string>
     <string name="menu_phone_create">Opret kontakt…</string>
-    <string name="toast_hibernate_error">%s ikke lagt i dvale.</string>
     <string name="menu_contact_copy_phone">Kopier telefonnummer</string>
     <string name="theme_name">Tema</string>
     <string name="toast_favorites_added">%s blev tilføjet til foretrukne</string>
@@ -201,7 +200,6 @@
     <string name="user_interface_summary">Temaer, gennemsigtighed og farver</string>
     <string name="user_experience_summary">Minimalistisk BGF, tastaturindstillinger, …</string>
     <string name="history_favorites_summary">Nulstil dine foretrukne, fjern bjælken med foretrukne, …</string>
-    <string name="rate_the_app">Bedøm appen</string>
     <string name="history_settings_summary">Nulstil historikken, ekskluder apps, …</string>
     <string name="providers_summary">Juster søgeresultater, tilføj brugerderfinerede søgemaskiner, …</string>
     <string name="title_wallpaper">Interaktioner med bevægelige baggrunde</string>

@@ -91,7 +91,6 @@
     <string name="menu_app_hibernate">Hibernar</string>
     <string name="menu_shortcut_remove">Remover atalho</string>
     <string name="toast_hibernate_completed">%s hibernada, execute-a novamente para acordar.</string>
-    <string name="toast_hibernate_error">%s não foi hibernada.</string>
     <string name="menu_contact_copy_phone">Copiar número de telefone</string>
     <string name="theme_name">Tema</string>
     <string name="menu_phone_create">Criar contacto…</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">Barra de favoritos transparente</string>
     <string name="menu_widget_add">Adicionar widget</string>
     <string name="menu_widget_remove">Remover widget</string>
-    <string name="rate_the_app">Avaliar aplicação</string>
     <string name="lwp_touch">Enviar ações de toque ao papel de parede</string>
     <string name="lwp_drag">Emular ação de arrasto para o papel de parede</string>
     <string name="lwp_drag_desc">Enviar múltiplas ações de toque</string>

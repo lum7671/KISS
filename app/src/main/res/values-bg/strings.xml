@@ -68,7 +68,6 @@
     <string name="menu_app_hibernate">Спиране</string>
     <string name="menu_shortcut_remove">Премахване на пряк път</string>
     <string name="toast_hibernate_completed">%s спря, рестартирайте за да активирате.</string>
-    <string name="toast_hibernate_error">%s не е спряно.</string>
     <string name="menu_contact_copy_phone">Копиране на телефонен номер</string>
     <string name="menu_phone_create">Създаване на контакт…</string>
     <string name="toast_favorites_added">%s е добавен към любими</string>
@@ -188,7 +187,6 @@
     <string name="providers_summary">Коригирайте резултатите от търсенето, добавете персонализирани търсачки, …</string>
     <string name="user_interface_summary">Теми, прозрачност и цветове</string>
     <string name="history_settings_summary">Нулиране на историята, изключване на приложения, …</string>
-    <string name="rate_the_app">Оценете приложението</string>
     <string name="menu_widget_remove">Премахване на приспособление</string>
     <string name="menu_widget_add">Добавяне на приспособление</string>
     <string name="hide_search_bar_hint">Премахни подсказващия текст от лентата за търсене</string>

@@ -54,7 +54,6 @@
     <string name="root_mode_error">Невозможно получить привилегии root.</string>
     <string name="menu_app_hibernate">Остановить</string>
     <string name="toast_hibernate_completed">%s в спящем режиме, перезапустите, чтобы включить.</string>
-    <string name="toast_hibernate_error">%s не находится в спящем режиме.</string>
     <string name="portrait_title">Портретный режим</string>
     <string name="menu_phone_create">Создайте контакт…</string>
     <string name="history_hide_desc">Скрыть историю и приветствие, включить виджеты</string>
@@ -150,7 +149,6 @@
     <string name="transparent_favorites_bar">Прозрачное избранное</string>
     <string name="menu_widget_add">Виджет</string>
     <string name="menu_widget_remove">Убрать виджет</string>
-    <string name="rate_the_app">Отзыв</string>
     <string name="history_settings_summary">Сброс истории, исключение приложений, …</string>
     <string name="user_interface_summary">Темы, цвета и прозрачность</string>
     <string name="providers_summary">Провайдеры и службы поиска, …</string>

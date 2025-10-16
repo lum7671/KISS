@@ -42,7 +42,6 @@ public class LauncherAppsCallback extends LauncherApps.Callback {
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onShortcutsChanged(String packageName, List<ShortcutInfo> shortcuts, UserHandle user) {
     }
 

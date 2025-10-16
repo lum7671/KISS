@@ -101,7 +101,6 @@
     <string name="hide_search_bar_hint">Remove hint text from search bar</string>
     <string name="rounded_bars">Rounded bar corners</string>
     <string name="menu_widget_remove">Remove widget</string>
-    <string name="rate_the_app">Rate the app</string>
     <string name="title_ux">User experience</string>
     <string name="title_favorites">Favourites settings</string>
     <string name="pref_tags_menu_dismiss">Close tags menu after selection</string>
@@ -200,7 +199,6 @@
     <string name="enable_favorites_bar">Show favourites above search bar</string>
     <string name="pref_hide_circle_desc">Buttons will still work, but they\'ll be invisible.</string>
     <string name="menu_app_uninstall">Uninstall</string>
-    <string name="toast_hibernate_error">%s not hibernated.</string>
     <string name="restart_desc">Fix theme issues and new contacts not displaying</string>
     <string name="items_title" tools:ignore="PluralsCandidate">%d items</string>
     <string name="custom_icon_application_adaptive_fill">application adaptive fill</string>

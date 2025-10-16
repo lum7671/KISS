@@ -16,7 +16,6 @@ import fr.neamar.kiss.utils.AsyncCallback
 import kotlinx.coroutines.*
 import java.lang.ref.WeakReference
 
-@RequiresApi(Build.VERSION_CODES.O)
 class SaveSingleOreoShortcut private constructor(
     context: Context,
     private val intent: Intent

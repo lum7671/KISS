@@ -47,7 +47,6 @@
     <string name="history_erased">Το ιστορικό διαγράφηκε.</string>
     <string name="removed_item">Αφαιρέθηκε</string>
     <string name="menu_remove">Αφαίρεση από το ιστορικό</string>
-    <string name="toast_hibernate_error">Το %s δεν αδρανοποιήθηκε.</string>
     <string name="menu_contact_copy_phone">Αντιγραφή αριθμού</string>
     <string name="ui_empty_2">Δείτε πάντα το ιστορικό σας</string>
     <string name="shortcuts_name">Συντομεύσεις</string>
@@ -141,7 +140,6 @@
     <string name="large_search_bar">Μεγαλύτερο πεδίο αναζήτησης</string>
     <string name="menu_widget_add">Προσθήκη μικροεφαρμογής</string>
     <string name="menu_widget_remove">Αφαίρεση widget</string>
-    <string name="rate_the_app">Αξιολογήστε την εφαρμογή</string>
     <string name="lwp_touch">Στείλτε τα γεγονότα αφής στην ταπετσαρία</string>
     <string name="lwp_drag">Προσομοιώστε τα γεγονότα αφής στην ταπετσαρία</string>
     <string name="lwp_drag_desc">Στείλτε πολλαπλά γεγονότα αφής</string>

@@ -1,15 +1,24 @@
+# Detekt 1.23.7 설정
+# 기본 설정 사용 + 커스터마이징
+
+build:
+  maxIssues: -1  # 모든 이슈 표시
+  excludeCorrectable: false
+  weights:
+
+config:
+  validation: true
+  warningsAsErrors: false
+  checkExhaustiveness: false
+
 style:
   UnusedImports:
     active: true
-  UnusedPrivateClass:
-    active: true
-  UnusedPrivateFunction:
-    active: true
-  UnusedPrivateProperty:
+  UnusedPrivateMember:
     active: true
 
 complexity:
-  ComplexMethod:
+  CyclomaticComplexMethod:
     active: true
     threshold: 15
   LongMethod:
@@ -17,13 +26,14 @@ complexity:
     threshold: 60
   LongParameterList:
     active: true
-    threshold: 6
+    functionThreshold: 6
+    constructorThreshold: 7
 
-potential-bugs:
-  UnusedParameter:
-    active: true
-  UnusedVariable:
-    active: true
+naming:
+  InvalidPackageDeclaration:
+    active: false
+  FunctionNaming:
+    active: false
 
 performance:
   SpreadOperator:

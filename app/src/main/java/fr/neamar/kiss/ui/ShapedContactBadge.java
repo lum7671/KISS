@@ -27,7 +27,6 @@ public class ShapedContactBadge extends QuickContactBadge {
         super(context, attrs, defStyle);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ShapedContactBadge(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

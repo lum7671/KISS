@@ -419,7 +419,6 @@ class Widgets extends Forwarder {
         serializeState();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private static void requestBindWidget(@NonNull Activity activity, @NonNull Intent data) {
         final int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         // minSdkVersion 33 (Android 13+) - use type-safe Parcelable methods

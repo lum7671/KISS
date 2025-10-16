@@ -54,7 +54,6 @@
     <string name="root_mode_error">Kök hakları sağlanamadı.</string>
     <string name="menu_app_hibernate">Hazırda beklet</string>
     <string name="toast_hibernate_completed">%s hazırda bekletildi, uyandırmak için yeniden başlatın.</string>
-    <string name="toast_hibernate_error">%s hazırda bekletilemedi.</string>
     <string name="portrait_title">Dikey kipi zorla</string>
     <string name="menu_phone_create">Kişi oluştur…</string>
     <string name="history_hide_desc">Geçmiş ve giriş ekranını gizle, widget\'ları aç</string>
@@ -129,7 +128,6 @@
     <string name="transparent_favorites_bar">Saydam sık kullanılanlar çubuğu</string>
     <string name="menu_widget_add">Widget ekle</string>
     <string name="menu_widget_remove">Widget\'ı kaldır</string>
-    <string name="rate_the_app">Uygulamayı değerlendir</string>
     <string name="search_providers_delete">Arama sağlayıcıları sil</string>
     <string name="custom_search_provider">Web arama sağlayıcı ekle</string>
     <string name="search_provider_reset">Web arama sağlayıcıları sıfırla</string>

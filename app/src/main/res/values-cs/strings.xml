@@ -141,7 +141,6 @@
     <string name="user_experience_summary">Minimalistické UI, nastavení klávesnice, …</string>
     <string name="user_interface_summary">Témata, průhlednost a barvy</string>
     <string name="history_settings_summary">Resetovat historii, vyloučené aplikace, …</string>
-    <string name="rate_the_app">Ohodnotit aplikaci</string>
     <string name="menu_widget_remove">Odebrat widget</string>
     <string name="menu_widget_add">Přidat widget</string>
     <string name="swap_kiss_button_with_menu">KISS tlačítko napravo</string>
@@ -169,7 +168,6 @@
     <string name="enable_favorites_bar">Zobrazit oblíbené nad vyhledávacím polem</string>
     <string name="toast_favorites_added">%s přidán/a do oblíbených</string>
     <string name="theme_name">Téma</string>
-    <string name="toast_hibernate_error">%s nebyla hybernována.</string>
     <string name="toast_hibernate_completed">%s hibernována, spusťte znovu pro probuzení.</string>
     <string name="menu_app_store">Zobrazit v obchodu</string>
     <string name="excluded_app_history_added">Aplikace vyloučena z historie. Resetujte v nastavení KISS</string>

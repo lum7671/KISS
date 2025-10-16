@@ -81,7 +81,6 @@ public class UserHandle implements Parcelable {
         }
     };
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public android.os.UserHandle getRealHandle() {
         if (this.handle != null) {
             return (android.os.UserHandle) this.handle;
