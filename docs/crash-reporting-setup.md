@@ -3,12 +3,14 @@
 ## ✅ **ACRA 크래시 리포팅 구현 완료**
 
 ### 🎯 **주요 기능**
+
 - **자동 크래시 감지**: 앱 크래시 발생 시 자동으로 감지
 - **이메일 전송**: `antz@duck.com`으로 상세한 크래시 리포트 전송
 - **사용자 동의**: 사용자에게 전송 여부를 묻는 대화상자 표시
 - **개인정보 보호**: 개인정보 없이 기술적 정보만 수집
 
 ### 📦 **추가된 라이브러리**
+
 ```gradle
 implementation 'ch.acra:acra-mail:5.11.4'              // 이메일 전송
 implementation 'ch.acra:acra-dialog:5.11.4'            // 사용자 대화상자
@@ -16,13 +18,16 @@ implementation 'ch.acra:acra-notification:5.11.4'      // 알림 표시
 ```
 
 ### 🔐 **추가된 권한**
+
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
 ### 📧 **크래시 리포트 내용**
+
 이메일로 전송되는 정보:
+
 - **앱 버전**: v4.0.8 (Build 408)
 - **디바이스 정보**: 갤럭시 노트20 울트라
 - **Android 버전**: 시스템에서 자동 수집
@@ -31,7 +36,9 @@ implementation 'ch.acra:acra-notification:5.11.4'      // 알림 표시
 - **빌드 정보**: Java 17 LTS 기반 빌드
 
 ### 💬 **사용자 경험**
+
 크래시 발생 시:
+
 1. **즉시 감지**: ACRA가 자동으로 크래시 감지
 2. **대화상자 표시**: 사용자에게 전송 여부 확인
 3. **선택적 전송**: 사용자가 "전송" 선택 시에만 전송
@@ -40,6 +47,7 @@ implementation 'ch.acra:acra-notification:5.11.4'      // 알림 표시
 ## 🧪 **테스트 방법**
 
 ### 1. 강제 크래시 테스트
+
 ```java
 // MainActivity에서 테스트용 크래시 유발
 if (BuildConfig.DEBUG) {
@@ -48,12 +56,14 @@ if (BuildConfig.DEBUG) {
 ```
 
 ### 2. 설정에서 테스트 버튼 추가 (선택사항)
+
 - **개발자 옵션** → **크래시 테스트** 메뉴 추가 가능
 - 실제 크래시 상황을 시뮬레이션
 
 ## 🚀 **다음 단계**
 
 ### 1. 즉시 테스트
+
 ```bash
 # 새 APK 빌드
 ./gradlew assembleDebug
@@ -63,11 +73,13 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ### 2. 실제 디바이스 테스트
+
 - 갤럭시 노트20 울트라에 설치
 - 크래시 발생 상황 재현
 - 이메일 전송 확인
 
 ### 3. 프로덕션 배포
+
 - Release 빌드에서도 ACRA 활성화
 - 사용자들의 크래시 리포트 수집
 

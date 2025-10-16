@@ -391,6 +391,7 @@ public void showHistory() {
 #### 3.2 주요 UI 변경 지점에 상태 업데이트 추가
 
 검색 시작 시:
+
 ```java
 // updateSearchRecords() 메서드 시작 부분에 추가
 if (!query.isEmpty()) {
@@ -403,23 +404,27 @@ if (!query.isEmpty()) {
 ### Phase 1 Week 1 구현 목록
 
 #### Day 1-2: 기본 구조 구현
+
 - [ ] UIState enum 정의
 - [ ] UserIntent enum 정의
 - [ ] 상태 추적 변수 추가
 - [ ] 기본 상태 관리 메서드 구현
 
 #### Day 3-4: 핵심 로직 구현
+
 - [ ] onResume() 스마트 처리 구현
 - [ ] handleFavoriteChangeOnResume() 구현
 - [ ] handleDataUpdateOnResume() 구현
 - [ ] handleAppListOnResume() 구현
 
 #### Day 5: Intent 처리 개선
+
 - [ ] onNewIntent() 조건부 처리 구현
 - [ ] analyzeUserIntent() 구현
 - [ ] handleAppListOnNewIntent() 구현
 
 #### Weekend: 테스트 및 통합
+
 - [ ] 각 시나리오별 테스트
 - [ ] 로깅 확인 및 디버깅
 - [ ] 성능 영향 측정
@@ -429,6 +434,7 @@ if (!query.isEmpty()) {
 ### 1. 개발 중 테스트
 
 각 메서드 구현 후 다음 로그를 확인:
+
 ```bash
 adb logcat | grep -E "(MainActivity|UIState|user|Deferring)"
 ```

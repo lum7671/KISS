@@ -1,10 +1,10 @@
 # KISS documentation
 
-This folder contains the documentation website used to generate http://help.kisslauncher.com.
+This folder contains the documentation website used to generate <http://help.kisslauncher.com>.
 
 ## Credits
 
-This website was generated from https://github.com/CloudCannon/base-jekyll-template,
+This website was generated from <https://github.com/CloudCannon/base-jekyll-template>,
 who were kind enough to open-source a documentation platform.
 
 ## Develop

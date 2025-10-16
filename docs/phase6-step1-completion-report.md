@@ -18,6 +18,7 @@ implementation 'androidx.preference:preference-ktx:1.2.1' // Kotlin extensions f
 ```
 
 **변경 사항**:
+
 - 기존에 `androidx.preference:preference:1.2.1`이 있었음
 - Kotlin 지원을 위해 `preference-ktx:1.2.1` 추가
 - AndroidX Preference 라이브러리 완전 지원 준비
@@ -29,12 +30,14 @@ implementation 'androidx.preference:preference-ktx:1.2.1' // Kotlin extensions f
 **라인 수**: 53줄
 
 **주요 기능**:
+
 - `androidx.preference.SwitchPreferenceCompat` 상속
 - 요약 텍스트 최대 10줄 제한 (기존 동작 유지)
 - 4개 생성자 지원 (완전한 호환성)
 - 자세한 주석 (마이그레이션 배경, 참고 자료)
 
 **코드 특징**:
+
 ```java
 @Override
 public void onBindViewHolder(PreferenceViewHolder holder) {
@@ -50,6 +53,7 @@ public void onBindViewHolder(PreferenceViewHolder holder) {
 ```
 
 **기존 SwitchPreference.java와 비교**:
+
 - ✅ 동일한 기능 (요약 10줄 제한)
 - ✅ 동일한 생성자 시그니처
 - ✅ AndroidX 기반 (android.preference → androidx.preference)
@@ -60,6 +64,7 @@ public void onBindViewHolder(PreferenceViewHolder holder) {
 **파일**: `app/src/main/res/xml/preferences.xml`
 
 **변경 사항**:
+
 ```xml
 <PreferenceCategory
     android:title="[TEST] Phase 6 Migration"
@@ -75,7 +80,8 @@ public void onBindViewHolder(PreferenceViewHolder holder) {
 
 **위치**: 맨 아래 About 카테고리 다음
 
-**목적**: 
+**목적**:
+
 - SwitchPreferenceCompat 동작 테스트
 - 기존 SwitchPreference와 비교 테스트
 - UI 렌더링 확인
@@ -184,17 +190,21 @@ app/src/main/res/xml/preferences.xml                        +8 lines
 ## 🚀 다음 단계: Step 2
 
 ### 목표
+
 - FreezeHistorySwitch, RootModeSwitch, ShizukuModeSwitch를 Compat 버전으로 마이그레이션
 
 ### 준비 사항
+
 - [x] SwitchPreferenceCompat 베이스 클래스 준비 완료
 - [x] 빌드 환경 설정 완료
 - [ ] Step 1 테스트 완료 (실제 기기)
 
 ### 예상 시간
+
 - 3-4시간
 
 ### 브랜치
+
 - `feature/phase6-step2-switch-subclasses`
 
 ---
@@ -217,6 +227,7 @@ app/src/main/res/xml/preferences.xml                        +8 lines
 - ✅ 다음 Step 진행 준비 완료
 
 **교훈**:
+
 1. androidx.preference 라이브러리는 android.preference와 충돌하지 않음
 2. 베이스 클래스 생성이 예상보다 간단함
 3. Bottom-Up 전략이 효과적임

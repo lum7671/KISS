@@ -20,6 +20,7 @@
 | **Phase 5** | Suppression | 4개 | ✅ 완료 | `dacadf343` |
 
 **총 처리**: 41개 warning
+
 - 실제 코드 수정: 29개
 - Suppression 처리: 12개
 
@@ -66,6 +67,7 @@
 **패턴**: 모든 파일에 `androidx.core.content.res.ResourcesCompat` 사용
 
 수정된 파일:
+
 1. ✅ InterfaceTweaks.java (1개)
 2. ✅ GoogleCalendarIcon.java (1개)
 3. ✅ ShortcutsResult.java (1개)
@@ -84,6 +86,7 @@
 **완료 시각**: 2025년 10월 15일
 
 ✅ **MainActivity.java**
+
 - `onBackPressed()` 메서드 제거
 - `OnBackInvokedCallback` 등록 (Android 13+)
 - 예측 가능한 백 제스처 지원
@@ -108,11 +111,13 @@
 **완료 시각**: 2025년 10월 15일
 
 실제 수정 (3개):
+
 - ✅ DataHandler.java - `isKeyguardLocked()` 사용
 - ✅ GoogleCalendarIcon.java - `MATCH_UNINSTALLED_PACKAGES` 사용
 - ✅ WidgetView.java 수정
 
 Suppression 처리 (5개):
+
 - NotificationListener.java (2개) - 대안 없음
 - PickAppWidgetActivity.java (1개) - Fallback 필요
 - KissApplication.java (2개) - 메모리 관리 필수
@@ -123,6 +128,7 @@ Suppression 처리 (5개):
 **완료 시각**: 2025년 10월 15일
 
 ✅ **MainActivity.java**
+
 - Window color API suppression (2개)
 - PreferenceManager suppression (2개)
 - 이유: Phase 6에서 전체 마이그레이션 예정
@@ -167,22 +173,28 @@ Preference API: 43개 (71.7%) ← Phase 6 대상
 ## ✅ 검증 결과
 
 ### 1. 빌드 상태
+
 ```bash
 $ ./gradlew clean compileDebugJavaWithJavac compileDebugKotlin
 BUILD SUCCESSFUL in 2s
 ```
+
 ✅ **정상 빌드 확인**
 
 ### 2. Warning 개수
+
 ```bash
 $ ./gradlew compileDebugJavaWithJavac 2>&1 | grep "warning" | wc -l
 101
 ```
+
 ⚠️ **101개 표시** (Preference 43개 + 기타 58개)
+
 - 실제로는 41개 처리됨 (Suppression으로 숨겨짐)
 - 남은 실제 warning: ~60개
 
 ### 3. 기능 테스트
+
 - ✅ 앱 시작 및 검색 정상
 - ✅ Back 버튼 동작 (OnBackInvokedCallback)
 - ✅ Edge-to-edge 디스플레이
@@ -192,6 +204,7 @@ $ ./gradlew compileDebugJavaWithJavac 2>&1 | grep "warning" | wc -l
 - ✅ 라이브 배경화면
 
 ### 4. Git 상태
+
 ```bash
 $ git log --oneline -6
 dacadf343 Phase 5: Window color API suppression 추가 (4개)
@@ -201,6 +214,7 @@ ee3f099e5 Phase 1C: onBackPressed() deprecation 제거 (2개)
 f721ffb02 Phase 1B: Resources API deprecation 제거 (13개)
 d8ea4bbee Phase 1A: 긴급 수정 (7개)
 ```
+
 ✅ **모든 Phase 커밋 확인됨**
 
 ---
@@ -232,7 +246,8 @@ d8ea4bbee Phase 1A: 긴급 수정 (7개)
 **예상 시간**: 15-20시간  
 **난이도**: ⚠️⚠️⚠️ 매우 높음
 
-**권장사항**: 
+**권장사항**:
+
 - 현재 완료한 Phase 1-5로 40% 개선 달성 ✅
 - Phase 6는 별도 대규모 프로젝트로 진행
 - 충분한 시간 확보 후 시작 권장

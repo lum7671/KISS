@@ -17,12 +17,14 @@
 **라인**: 198
 
 **문제**:
+
 ```kotlin
 // Before: null-unsafe
 results.add(Result.fromPojo(activity, processedPojos.poll()))
 ```
 
 **해결**:
+
 ```kotlin
 // After: null-safe with let{}
 processedPojos.poll()?.let { pojo ->
@@ -41,6 +43,7 @@ processedPojos.poll()?.let { pojo ->
 **문제**: Android 13+ 타입 안전성 없는 getParcelableExtra() 사용
 
 **Before**:
+
 ```java
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     provider = data.getParcelableExtra(key, ComponentName.class);
@@ -50,6 +53,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 ```
 
 **After** (minSdkVersion 33 활용):
+
 ```java
 // minSdkVersion 33 - use type-safe methods directly
 final ComponentName provider = data.getParcelableExtra(
@@ -58,7 +62,8 @@ final ComponentName provider = data.getParcelableExtra(
 );
 ```
 
-**효과**: 
+**효과**:
+
 - 불필요한 SDK 버전 분기 제거
 - 타입 안전성 확보
 - 코드 라인 감소 (18줄 → 11줄)
@@ -66,11 +71,13 @@ final ComponentName provider = data.getParcelableExtra(
 #### 2.2 UserHandle.java (1개)
 
 **Before**:
+
 ```java
 handle = in.readParcelable(android.os.UserHandle.class.getClassLoader());
 ```
 
 **After**:
+
 ```java
 handle = in.readParcelable(
     android.os.UserHandle.class.getClassLoader(),
@@ -81,11 +88,13 @@ handle = in.readParcelable(
 #### 2.3 CustomIconDialog.java (1개)
 
 **Before**:
+
 ```java
 UserHandle userHandle = args.getParcelable("userHandle");
 ```
 
 **After**:
+
 ```java
 UserHandle userHandle = args.getParcelable("userHandle", UserHandle.class);
 ```
@@ -98,11 +107,13 @@ UserHandle userHandle = args.getParcelable("userHandle", UserHandle.class);
 **라인**: 682
 
 **Before**:
+
 ```java
 Html.fromHtml("Welcome to <b>KISS</b> beta!<br>...")
 ```
 
 **After**:
+
 ```java
 Html.fromHtml("Welcome to <b>KISS</b> beta!<br>...", Html.FROM_HTML_MODE_LEGACY)
 ```
@@ -117,6 +128,7 @@ Html.fromHtml("Welcome to <b>KISS</b> beta!<br>...", Html.FROM_HTML_MODE_LEGACY)
 **라인**: 291
 
 **Before**:
+
 ```java
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
     view.startDragAndDrop(null, shadowBuilder, view, 0);
@@ -126,12 +138,14 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 ```
 
 **After** (minSdkVersion 33 활용):
+
 ```java
 // minSdkVersion 33 - startDragAndDrop is available
 view.startDragAndDrop(null, shadowBuilder, view, 0);
 ```
 
-**효과**: 
+**효과**:
+
 - 코드 간소화 (5줄 → 2줄)
 - 불필요한 SDK 분기 제거
 
@@ -218,6 +232,7 @@ view.startDragAndDrop(null, shadowBuilder, view, 0);
 **예상 시간**: 1시간
 
 **작업 내용**:
+
 - `Resources.getDrawable()` → `ContextCompat.getDrawable()` (13개 파일)
 - 단순 API 변경, 리스크 낮음
 

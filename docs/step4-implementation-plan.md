@@ -9,6 +9,7 @@
 ## 🎯 목표
 
 남은 5개 Searcher 클래스를 Coroutines로 마이그레이션:
+
 1. **NullSearcher** (가장 간단 - 시작하기 좋음)
 2. **HistorySearcher** (QuerySearcher와 유사)
 3. **ApplicationsSearcher** (custom PriorityQueue)
@@ -20,13 +21,16 @@
 ## 📊 복잡도 분석
 
 ### 1. NullSearcher ⭐ (가장 간단)
+
 **LOC**: 22 lines  
 **Complexity**: Very Low  
-**Special Features**: 
+**Special Features**:
+
 - Empty doInBackground() (아무것도 안 함)
 - Override displayActivityLoader() (loader 표시 안 함)
 
 **Migration Strategy**:
+
 ```kotlin
 class NullSearcherCoroutine(activity: MainActivity) 
     : SearcherCoroutine(activity, "<null>", false) {
@@ -46,11 +50,13 @@ class NullSearcherCoroutine(activity: MainActivity)
 ---
 
 ### 2. HistorySearcher ⭐⭐ (Medium)
+
 **LOC**: 105 lines  
 **Complexity**: Medium  
 **Similar to**: QuerySearcher (DB queries, relevance adjustments)
 
 **Special Features**:
+
 - SharedPreferences 사용 (getMaxResultCount)
 - DataHandler.getHistory() 호출
 - Exclude favorites/history logic
@@ -58,6 +64,7 @@ class NullSearcherCoroutine(activity: MainActivity)
 - Shortcut handling (API 26+)
 
 **Key Code**:
+
 ```java
 @Override
 protected void doInBackground() {
@@ -88,6 +95,7 @@ public boolean addResults(List<? extends Pojo> pojos) {
 ```
 
 **Migration Strategy**:
+
 - Static cache for getMaxResultCount() (@Volatile)
 - 1:1 logic preservation (no optimization)
 - ShortcutUtil API 26+ handling preserved
@@ -97,15 +105,18 @@ public boolean addResults(List<? extends Pojo> pojos) {
 ---
 
 ### 3. ApplicationsSearcher ⭐⭐ (Medium)
+
 **LOC**: 87 lines  
 **Complexity**: Medium  
 **Special Features**:
+
 - **Custom PriorityQueue**: ReversedNameComparator (A→Z sorting)
 - getMaxResultCount() = Integer.MAX_VALUE
 - Filter favorites logic
 - **onPostExecute() override**: adapter.buildSections()
 
 **Key Code**:
+
 ```java
 @Override
 PriorityQueue<Pojo> getPojoProcessor(Context context) {
@@ -125,6 +136,7 @@ private <T extends Pojo> List<T> getPojosWithoutFavorites(List<T> pojos, Set<Str
 ```
 
 **Migration Strategy**:
+
 - Override getPojoProcessor() (from SearcherCoroutine base)
 - Preserve ReversedNameComparator usage
 - Override onPostExecuteInternal() for buildSections()
@@ -135,15 +147,18 @@ private <T extends Pojo> List<T> getPojosWithoutFavorites(List<T> pojos, Set<Str
 ---
 
 ### 4. PojoWithTagSearcher ⭐⭐ (Abstract Base)
+
 **LOC**: 83 lines  
 **Complexity**: Medium  
 **Special Features**:
+
 - Abstract base class for TagsSearcher, UntaggedSearcher
 - Filter logic in addResults()
 - HistoryMode-based sorting
 - Optimized tag search (requestRecordsByTag)
 
 **Key Code**:
+
 ```java
 @Override
 protected void doInBackground() {
@@ -175,6 +190,7 @@ protected abstract boolean acceptPojo(PojoWithTags pojoWithTags);
 ```
 
 **Migration Strategy**:
+
 - Create PojoWithTagSearcherCoroutine (abstract base)
 - acceptPojo() abstract method
 - Override addResults() with filtering + sorting logic
@@ -185,11 +201,13 @@ protected abstract boolean acceptPojo(PojoWithTags pojoWithTags);
 ---
 
 ### 5. TagsSearcher ⭐ (Simple)
+
 **LOC**: 19 lines  
 **Complexity**: Very Low  
 **Inherits**: PojoWithTagSearcher
 
 **Key Code**:
+
 ```java
 @Override
 protected boolean acceptPojo(PojoWithTags pojoWithTags) {
@@ -198,6 +216,7 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ```
 
 **Migration Strategy**:
+
 - Extend PojoWithTagSearcherCoroutine
 - Override acceptPojo() only
 
@@ -206,11 +225,13 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ---
 
 ### 6. UntaggedSearcher ⭐ (Simple)
+
 **LOC**: 18 lines  
 **Complexity**: Very Low  
 **Inherits**: PojoWithTagSearcher
 
 **Key Code**:
+
 ```java
 @Override
 protected boolean acceptPojo(PojoWithTags pojoWithTags) {
@@ -219,6 +240,7 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ```
 
 **Migration Strategy**:
+
 - Extend PojoWithTagSearcherCoroutine
 - Override acceptPojo() only
 
@@ -229,29 +251,32 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ## 📋 Implementation Order
 
 ### Phase 1: Simple Classes (30 minutes)
+
 1. **NullSearcher** → NullSearcherCoroutine (10 min)
    - Test: Minimalistic mode, press home twice
-   
+
 2. **TagsSearcher** → TagsSearcherCoroutine (10 min)
    - Requires: PojoWithTagSearcherCoroutine
    - Test: Tag search menu
-   
+
 3. **UntaggedSearcher** → UntaggedSearcherCoroutine (10 min)
    - Requires: PojoWithTagSearcherCoroutine
    - Test: Untagged apps view
 
 ### Phase 2: Base Class (45-60 minutes)
+
 4. **PojoWithTagSearcher** → PojoWithTagSearcherCoroutine (60 min)
    - Abstract base for TagsSearcher, UntaggedSearcher
    - Filtering logic + HistoryMode sorting
    - Test: Both TagsSearcher and UntaggedSearcher
 
 ### Phase 3: Complex Classes (60-90 minutes)
+
 5. **HistorySearcher** → HistorySearcherCoroutine (45 min)
    - Similar to QuerySearcher
    - DB queries, exclude logic, shortcut handling
    - Test: Empty search (history view)
-   
+
 6. **ApplicationsSearcher** → ApplicationsSearcherCoroutine (45 min)
    - Custom PriorityQueue (ReversedNameComparator)
    - buildSections() in onPostExecute
@@ -262,6 +287,7 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ## 🔧 Technical Approach
 
 ### Feature Flag Pattern (from Step 3)
+
 ```kotlin
 // app/build.gradle
 buildConfigField "boolean", "USE_HISTORY_SEARCHER_COROUTINE", "true"
@@ -272,11 +298,13 @@ buildConfigField "boolean", "USE_UNTAGGED_SEARCHER_COROUTINE", "true"
 ```
 
 Or use single flag:
+
 ```kotlin
 buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"
 ```
 
 ### MainActivity Integration
+
 ```java
 // HistorySearcher
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -301,6 +329,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 ```
 
 ### Memory Management
+
 - WeakReference<MainActivity> (from SearcherCoroutine base)
 - Job cancellation in MainActivity.resetTask()
 - Static caches with @Volatile for thread-safety
@@ -312,11 +341,13 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 ### Test Cases per Searcher
 
 #### NullSearcher
+
 - [ ] Minimalistic mode: Press home twice (no loader)
 - [ ] No results displayed
 - [ ] No crashes
 
 #### HistorySearcher
+
 - [ ] Empty search → Shows history
 - [ ] Exclude favorites option works
 - [ ] Exclude history items option works
@@ -325,6 +356,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 - [ ] MAX_RESULT_COUNT preference respected
 
 #### ApplicationsSearcher
+
 - [ ] App drawer view (all apps listed)
 - [ ] A→Z sorting (reversed for ListView)
 - [ ] Fast scroll sections built
@@ -332,6 +364,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 - [ ] Pinned shortcuts included
 
 #### PojoWithTagSearcher / TagsSearcher / UntaggedSearcher
+
 - [ ] Tag search: Only tagged items shown
 - [ ] Untagged search: Only untagged items shown
 - [ ] HistoryMode-based sorting works
@@ -339,6 +372,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 - [ ] Relevance from history applied
 
 ### Performance Targets
+
 - **All Searchers**: < 100ms response time
 - **NullSearcher**: < 1ms (instant)
 - **HistorySearcher**: < 20ms (similar to QuerySearcher)
@@ -346,6 +380,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 - **Tag Searchers**: < 30ms
 
 ### Stability Checks
+
 - [ ] No crashes during testing
 - [ ] No memory leaks (WeakReference)
 - [ ] Proper cancellation on consecutive searches
@@ -356,6 +391,7 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 ## 📦 Deliverables
 
 ### Code Files
+
 1. `NullSearcherCoroutine.kt` (~25 lines)
 2. `HistorySearcherCoroutine.kt` (~120 lines)
 3. `ApplicationsSearcherCoroutine.kt` (~100 lines)
@@ -364,11 +400,13 @@ if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
 6. `UntaggedSearcherCoroutine.kt` (~20 lines)
 
 ### Integration
+
 - `MainActivity.java` updates (5-6 locations)
 - `app/build.gradle` feature flags
 - `SettingsActivity.java` cache clear (if needed)
 
 ### Documentation
+
 - `step4-implementation.md` (design decisions)
 - `step4-testing-report.md` (test results)
 - `step4-summary.md` (completion summary)

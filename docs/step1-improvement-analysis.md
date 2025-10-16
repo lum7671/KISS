@@ -37,18 +37,21 @@ AsyncTask → Coroutines 마이그레이션이 성공적으로 완료되었습�
 ## 🎯 전략: "One Thing at a Time" (성공!)
 
 ### ✅ Phase 1: AsyncTask → Coroutines 마이그레이션 (완료)
+
 - ✅ **목표**: 기능 동등성 유지
 - ✅ **검증**: 기존과 동일하게 동작
 - ✅ **범위**: Searcher 8개 클래스 전환
 - ✅ **결과**: 프로덕션 배포 완료
 
 ### 📋 Phase 2: 코드 개선 (다음 단계)
+
 - 🎯 **목표**: 성능 및 안정성 향상
 - � **검증**: 더 나은 코드 품질
 - 📋 **범위**: 5가지 개선 사항
 - ⏱️ **예상 소요**: 3일
 
 **Why Separate?**
+
 1. ✅ 검증 단순화 ("동일 동작" vs "개선 효과")
 2. ✅ 리스크 분산 (한 번에 한 가지만)
 3. ✅ 명확한 진행 상황 추적
@@ -69,6 +72,7 @@ AsyncTask → Coroutines 마이그레이션이 성공적으로 완료되었습�
 ### 1. 🟡 PriorityQueue Thread Safety 이슈 (Medium Priority)
 
 #### 현재 코드
+
 ```java
 public abstract class Searcher implements Runnable {
     private final PriorityQueue<Pojo> processedPojos;
@@ -82,6 +86,7 @@ public abstract class Searcher implements Runnable {
 ```
 
 #### 문제점
+
 - `PriorityQueue`는 thread-safe하지 않음
 - `addResults()`는 Provider들이 **비동기적으로** 호출 가능
 - 현재는 Single thread executor로 우연히 안전하지만, 명시적 보호 없음
@@ -89,6 +94,7 @@ public abstract class Searcher implements Runnable {
 #### 개선 방안
 
 **Option A: Synchronized 추가 (즉시 적용 가능)**
+
 ```java
 public synchronized boolean addResults(List<? extends Pojo> pojos) {
     if (isCancelled())
@@ -98,11 +104,13 @@ public synchronized boolean addResults(List<? extends Pojo> pojos) {
 ```
 
 **Option B: ConcurrentLinkedQueue 사용 (Coroutines 전환 시)**
+
 ```kotlin
 private val processedPojos = ConcurrentLinkedQueue<Pojo>()
 ```
 
 #### 권장 사항
+
 - ✅ **Coroutines 전환 시 함께 개선** (지금은 변경하지 않음)
 - Single thread executor가 현재는 안전성 보장
 - Coroutines에서 적절한 동기화 메커니즘 사용
@@ -112,6 +120,7 @@ private val processedPojos = ConcurrentLinkedQueue<Pojo>()
 ### 2. 🟢 QuerySearcher의 static 캐시 (Low Priority)
 
 #### 현재 코드
+
 ```java
 public class QuerySearcher extends Searcher {
     private static int MAX_RESULT_COUNT = -1;  // ⚠️ Mutable static
@@ -131,6 +140,7 @@ public class QuerySearcher extends Searcher {
 ```
 
 #### 문제점
+
 - Mutable static state (테스트 어려움)
 - SharedPreferences 변경 시 명시적 clear 필요
 - 멀티 인스턴스 환경에서 혼란 가능성
@@ -138,6 +148,7 @@ public class QuerySearcher extends Searcher {
 #### 개선 방안
 
 **Option A: Instance 변수로 변경**
+
 ```kotlin
 class QuerySearcherCoroutine(...) {
     private var maxResultCount: Int? = null
@@ -152,6 +163,7 @@ class QuerySearcherCoroutine(...) {
 ```
 
 **Option B: SharedPreferences Listener 사용**
+
 ```kotlin
 init {
     prefs.registerOnSharedPreferenceChangeListener { _, key ->
@@ -163,6 +175,7 @@ init {
 ```
 
 #### 권장 사항
+
 - ✅ **Coroutines 전환 시 Option A 적용**
 - 더 깨끗한 코드, 테스트 용이
 - 현재는 동작하므로 변경 불필요
@@ -172,6 +185,7 @@ init {
 ### 3. 🟡 Exception Handling 개선 (Medium Priority)
 
 #### 현재 코드
+
 ```java
 @Override
 public final void run() {
@@ -188,6 +202,7 @@ public final void run() {
 ```
 
 #### 문제점
+
 - 모든 Exception을 "취소"로 처리
 - 실제 에러와 취소를 구분 못함
 - 사용자에게 에러 피드백 없음
@@ -195,6 +210,7 @@ public final void run() {
 #### 개선 방안
 
 **Option A: 에러 타입별 처리**
+
 ```kotlin
 try {
     doInBackground()
@@ -207,6 +223,7 @@ try {
 ```
 
 **Option B: 에러 콜백 추가**
+
 ```kotlin
 protected open fun onError(error: Exception) {
     Log.e(TAG, "Error in searcher", error)
@@ -224,6 +241,7 @@ protected open fun onError(error: Exception) {
 ```
 
 #### 권장 사항
+
 - ✅ **Coroutines 전환 시 Option A + B 적용**
 - 더 나은 디버깅
 - 사용자 경험 향상
@@ -234,6 +252,7 @@ protected open fun onError(error: Exception) {
 ### 4. 🟢 성능 로깅 중복 (Low Priority)
 
 #### 현재 코드
+
 ```java
 protected void onPostExecute() {
     // ... 결과 처리 ...
@@ -249,6 +268,7 @@ protected void onPostExecute() {
 ```
 
 #### 개선 방안
+
 ```kotlin
 protected open fun onPostExecute() {
     // ... 결과 처리 ...
@@ -267,6 +287,7 @@ protected open fun onPostExecute() {
 ```
 
 #### 권장 사항
+
 - 🔵 **선택 사항** (Nice to have)
 - 로깅 일관성 향상
 - 낮은 우선순위
@@ -276,6 +297,7 @@ protected open fun onPostExecute() {
 ### 5. 🔴 취소 체크 타이밍 개선 (High Priority - Coroutines 전환 시)
 
 #### 현재 코드
+
 ```java
 public boolean addResults(List<? extends Pojo> pojos) {
     if (isCancelled())  // ✅ 체크 있음
@@ -300,6 +322,7 @@ protected void doInBackground() {
 ```
 
 #### 개선 방안 (Coroutines)
+
 ```kotlin
 protected suspend fun doInBackground() {
     val activity = getActivity() ?: return
@@ -329,6 +352,7 @@ protected suspend fun doInBackground() {
 ```
 
 #### 권장 사항
+
 - ✅ **Coroutines 전환 시 반드시 적용**
 - 빠른 취소 반응
 - 불필요한 작업 방지
@@ -371,12 +395,14 @@ protected suspend fun doInBackground() {
 ### Phase 1: 마이그레이션만 집중 ⭐⭐⭐
 
 **현재 Searcher 시스템 → SearcherCoroutine 전환 시**:
+
 - ✅ **기능 동등성 유지** (가장 중요)
 - ✅ 최소한의 변경만
 - ✅ 기존 패턴 그대로 유지
 - ❌ 개선 사항 반영 **안 함**
 
 **이유**:
+
 1. **검증 단순화**: "기존과 동일하게 동작하는가?"만 확인
 2. **리스크 최소화**: 한 번에 한 가지만 변경
 3. **Rollback 용이**: 문제 발생 시 원인 명확
@@ -384,6 +410,7 @@ protected suspend fun doInBackground() {
 ### Phase 2: 마이그레이션 완료 후 개선 ⭐⭐
 
 #### Phase 1: 기본 Coroutines 전환 (마이그레이션)
+
 ```kotlin
 abstract class SearcherCoroutine(...) {
     // ✅ 기존 패턴 유지 (PriorityQueue 그대로)
@@ -408,6 +435,7 @@ abstract class SearcherCoroutine(...) {
 ```
 
 #### Phase 2: 개선 작업 (마이그레이션 완료 후)
+
 ```kotlin
 abstract class SearcherCoroutine(...) {
     // 🆕 개선 1: Thread-safe 결과 수집
@@ -580,6 +608,7 @@ abstract class SearcherCoroutine(
 **✅ Phase 1 완료**: AsyncTask → Coroutines 마이그레이션 성공!
 
 **📋 Phase 2 계획**: [phase2-searcher-improvements.md](./phase2-searcher-improvements.md)
+
 - 상세한 실행 계획
 - 코드 예제
 - 우선순위 및 일정

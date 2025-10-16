@@ -47,6 +47,7 @@ public abstract class Searcher implements Runnable {
 ```
 
 **변환 대상 클래스들**:
+
 1. `Searcher.java` - 기반 클래스
 2. `QuerySearcher.java` ⭐ - **메인 검색 (가장 중요)**
 3. `HistorySearcher.java` - 히스토리 검색
@@ -63,11 +64,13 @@ public abstract class Searcher implements Runnable {
 ### Why 5 Steps?
 
 **과거 실패 원인**:
+
 - 한번에 모든 것 변경 시도 → 실패
 - 테스트 부족 → 예상치 못한 버그
 - Rollback 계획 없음 → 복구 어려움
 
 **새로운 전략**:
+
 - 점진적 변환 (한번에 하나씩)
 - 각 단계마다 충분한 테스트
 - Feature Flag로 안전한 배포
@@ -81,19 +84,22 @@ public abstract class Searcher implements Runnable {
 **목표**: Searcher 시스템 완전 이해
 
 **작업**:
+
 - [ ] Searcher 호출 경로 분석
 - [ ] MainActivity 상호작용 패턴 분석
 - [ ] 각 Searcher 특성 분석
 - [ ] 성능 요구사항 확인
 
 **산출물**:
+
 - 상세 분석 문서
 - 아키텍처 다이어그램
 - 리스크 목록
 
 **소요 시간**: 0.5-1일
 
-**완료 조건**: 
+**완료 조건**:
+
 - 분석 문서 작성 완료
 - 변환 시 고려사항 목록화
 - 다음 단계 설계 승인
@@ -105,6 +111,7 @@ public abstract class Searcher implements Runnable {
 **목표**: `Searcher.java` → `SearcherCoroutine.kt` 변환
 
 **작업**:
+
 - [ ] SearcherCoroutine.kt 생성
 - [ ] Single thread dispatcher 구현
 - [ ] Job 기반 취소 구현
@@ -142,6 +149,7 @@ abstract class SearcherCoroutine(
 **소요 시간**: 1-2일
 
 **완료 조건**:
+
 - SearcherCoroutine.kt 컴파일 성공
 - 단위 테스트 통과
 - 메모리 누수 없음
@@ -153,11 +161,13 @@ abstract class SearcherCoroutine(
 **목표**: 메인 검색 기능 Coroutines 전환
 
 **Why Most Important?**
+
 - 가장 많이 사용되는 기능
 - 사용자가 직접 느끼는 성능
 - 복잡한 로직 (히스토리, 관련성 점수)
 
 **작업**:
+
 - [ ] QuerySearcherCoroutine.kt 생성
 - [ ] 히스토리 매칭 로직 변환
 - [ ] MainActivity 연동
@@ -180,6 +190,7 @@ if (useCoroutineSearcher) {
 ```
 
 **테스트 계획**:
+
 - [ ] 기본 검색 동작
 - [ ] 히스토리 기반 점수
 - [ ] 빠른 타이핑 취소
@@ -189,6 +200,7 @@ if (useCoroutineSearcher) {
 **소요 시간**: 2-3일 (테스트 포함)
 
 **완료 조건**:
+
 - 기존과 동일한 검색 결과
 - 성능 저하 없음 (±5% 이내)
 - 1주일 안정화 기간
@@ -220,6 +232,7 @@ if (useCoroutineSearcher) {
    - PojoWithTagSearcher 상속
 
 **각 Searcher 체크리스트**:
+
 - [ ] Kotlin 파일 생성
 - [ ] SearcherCoroutine 상속
 - [ ] doInBackground() 변환
@@ -229,6 +242,7 @@ if (useCoroutineSearcher) {
 **소요 시간**: 3-5일
 
 **완료 조건**:
+
 - 모든 Searcher 개별 테스트 통과
 - 통합 테스트 통과
 - 메모리 누수 없음
@@ -264,6 +278,7 @@ if (useCoroutineSearcher) {
 **소요 시간**: 1-2일
 
 **완료 조건**:
+
 - AsyncTask 코드 완전 제거
 - 전체 통합 테스트 통과
 - 문서 업데이트 완료
@@ -335,6 +350,7 @@ git checkout -b step1-searcher-analysis
 ### 2. 분석 문서 작성 시작
 
 분석할 내용:
+
 - [ ] `Searcher.java` 전체 코드 리뷰
 - [ ] `MainActivity.java`에서 Searcher 호출 부분
 - [ ] 각 Searcher 하위 클래스 특성
@@ -391,6 +407,7 @@ git checkout -b step1-searcher-analysis
 ### Q: 왜 이전에 실패했나요?
 
 A: 세 가지 주요 원인:
+
 1. 한번에 모든 것 변경 시도
 2. 충분한 테스트 없이 진행
 3. Rollback 계획 부재
@@ -398,6 +415,7 @@ A: 세 가지 주요 원인:
 ### Q: 이번엔 왜 성공할 수 있나요?
 
 A: 새로운 전략:
+
 1. 점진적 접근 (5-Step)
 2. 각 Step마다 충분한 테스트
 3. Feature Flag로 안전한 배포
@@ -406,6 +424,7 @@ A: 새로운 전략:
 ### Q: 가장 어려운 부분은?
 
 A: **Step 3 (QuerySearcher)**
+
 - 가장 복잡한 로직
 - 사용자가 직접 느끼는 기능
 - 충분한 테스트 기간 필요 (1주)
@@ -413,6 +432,7 @@ A: **Step 3 (QuerySearcher)**
 ### Q: Step 3 실패하면?
 
 A: Feature Flag로 즉시 복구 가능
+
 ```kotlin
 // 설정 변경만으로 이전 코드로 복귀
 USE_COROUTINE_SEARCHER = false

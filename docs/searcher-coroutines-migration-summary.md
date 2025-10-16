@@ -11,6 +11,7 @@
 ## 📊 Phase 1: 마이그레이션 (완료 ✅)
 
 ### 목표
+
 - AsyncTask → Coroutines 전환
 - 기능 동등성 100% 유지
 - 메모리 안전성 보장
@@ -91,6 +92,7 @@ fun execute(): Job {
 **문제**: 긴 작업(DB 조회, HashMap 생성) 중 취소 체크 없음
 
 **개선**:
+
 ```kotlin
 override suspend fun doInBackground() {
     // DB 조회 전
@@ -114,6 +116,7 @@ override suspend fun doInBackground() {
 **문제**: PriorityQueue는 thread-safe하지 않음
 
 **개선** (Option A - 간단):
+
 ```kotlin
 open fun addResults(pojos: List<Pojo>): Boolean {
     if (isCancelled()) return false
@@ -124,6 +127,7 @@ open fun addResults(pojos: List<Pojo>): Boolean {
 ```
 
 **개선** (Option B - 더 나은 설계):
+
 ```kotlin
 private val processedPojos = ConcurrentLinkedQueue<Pojo>()
 // Lock-free, thread-safe by design
@@ -136,6 +140,7 @@ private val processedPojos = ConcurrentLinkedQueue<Pojo>()
 **문제**: 모든 Exception을 "취소"로 처리
 
 **개선**:
+
 ```kotlin
 try {
     onPreExecute()
@@ -157,6 +162,7 @@ try {
 **문제**: QuerySearcher의 MAX_RESULT_COUNT static cache
 
 **개선**:
+
 ```kotlin
 // Static → Instance 변수로 변경
 private var maxResultCount: Int? = null
@@ -176,6 +182,7 @@ override fun getMaxResultCount(): Int {
 **문제**: Android Log와 Amplitude 로깅이 분산
 
 **개선**:
+
 ```kotlin
 // SearchPerformanceLogger.kt
 object SearchPerformanceLogger {
@@ -202,12 +209,14 @@ object SearchPerformanceLogger {
 ### Phase 2.1: Critical Improvements (2일)
 
 **Day 1: Cancellation Checks 🔴**
+
 - QuerySearcherCoroutine (2시간)
 - HistorySearcherCoroutine (1시간)
 - ApplicationsSearcherCoroutine (2시간)
 - PojoWithTagSearcherCoroutine (1시간)
 
 **Day 2: Thread Safety + Error Handling 🟡**
+
 - Thread Safety: Synchronized 추가 (2시간)
 - Error Handling: 타입별 처리 (2시간)
 - Testing & Verification (2시간)
@@ -215,9 +224,11 @@ object SearchPerformanceLogger {
 ### Phase 2.2: Code Quality (1일) - 선택 사항
 
 **Morning: Static Cache Removal 🟢**
+
 - QuerySearcherCoroutine 리팩토링 (3시간)
 
 **Afternoon: Logging Consolidation 🟢**
+
 - SearchPerformanceLogger.kt 생성 (2시간)
 - Integration & Testing (1시간)
 
@@ -226,6 +237,7 @@ object SearchPerformanceLogger {
 ## 🎯 성공 기준
 
 ### Phase 1 (✅ 완료)
+
 - ✅ 모든 Searcher 전환 완료
 - ✅ Feature flag 제거
 - ✅ 프로덕션 배포 완료
@@ -233,6 +245,7 @@ object SearchPerformanceLogger {
 - ✅ 메모리 누수 없음
 
 ### Phase 2 (목표)
+
 - ✅ 모든 High Priority 항목 완료
 - ✅ Thread Safety 보장
 - ✅ Error와 Cancellation 구분
@@ -246,6 +259,7 @@ object SearchPerformanceLogger {
 ## 📚 관련 문서
 
 ### Phase 1 (마이그레이션)
+
 1. [step1-analysis-report.md](./step1-analysis-report.md) - 초기 분석
 2. [step2-searcher-base-implementation.md](./step2-searcher-base-implementation.md) - Base 클래스
 3. [step3-query-searcher-implementation.md](./step3-query-searcher-implementation.md) - QuerySearcher 구현
@@ -256,10 +270,12 @@ object SearchPerformanceLogger {
 8. [step5-legacy-cleanup-summary.md](./step5-legacy-cleanup-summary.md) - 정리 완료
 
 ### Phase 2 (개선)
+
 9. [step1-improvement-analysis.md](./step1-improvement-analysis.md) - 초기 개선 사항 발견 (아카이브)
 10. **[phase2-searcher-improvements.md](./phase2-searcher-improvements.md)** - 상세 실행 계획 ⭐
 
 ### 프로젝트 전체
+
 - [asynctask-migration-master-plan.md](./asynctask-migration-master-plan.md) - 전체 마스터 플랜
 - [asynctask-to-coroutines-migration.md](./asynctask-to-coroutines-migration.md) - 기술 가이드
 - [.github/copilot-instructions.md](../.github/copilot-instructions.md) - AI 코딩 가이드
@@ -271,16 +287,19 @@ object SearchPerformanceLogger {
 ### 1. "One Thing at a Time" 전략 성공 ✅
 
 **Phase 1**: 마이그레이션만 집중
+
 - 기능 동등성 유지
 - 최소 변경
 - 리스크 최소화
 
 **Phase 2**: 개선 사항 별도 진행
+
 - 더 나은 코드 품질
 - 명확한 목표
 - 검증 용이
 
 **장점**:
+
 - 검증 단순화
 - 리스크 분산
 - 언제든 롤백 가능
@@ -289,21 +308,27 @@ object SearchPerformanceLogger {
 ### 2. Coroutines 패턴 확립 ✅
 
 **Single Thread Dispatcher**:
+
 ```kotlin
 private val searchDispatcher = Dispatchers.IO.limitedParallelism(1)
 ```
+
 → ExecutorService.newSingleThreadExecutor() 완벽 대체
 
 **WeakReference 패턴**:
+
 ```kotlin
 protected val activityWeakReference = WeakReference(activity)
 ```
+
 → 메모리 안전성 보장
 
 **Job-based Cancellation**:
+
 ```kotlin
 currentJob?.cancel()
 ```
+
 → 협조적 취소 메커니즘
 
 ### 3. Legacy 호환성 유지 ✅
@@ -342,6 +367,7 @@ Step 5: Logging Consolidation (0.5일) 🟢
 **전략**: 브랜치별 독립 작업 + 검증 + 머지
 
 ### 장기
+
 - Provider 시스템 개선
 - DataHandler 최적화
 - 전체 성능 프로파일링

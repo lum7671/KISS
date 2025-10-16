@@ -9,6 +9,7 @@
 ## 📋 작업 요약
 
 ### 목표
+
 7개의 간단한 DialogPreference를 AndroidX 버전으로 마이그레이션하고 DialogFragment 패턴 확립
 
 ### 완료된 작업
@@ -70,11 +71,13 @@
 #### 3. PreferenceManager Deprecation 수정
 
 **Before**:
+
 ```java
 import android.preference.PreferenceManager;
 ```
 
 **After**:
+
 ```java
 import androidx.preference.PreferenceManager;
 ```
@@ -96,12 +99,14 @@ import androidx.preference.PreferenceManager;
 ### 코드 리뷰
 
 #### Preference 클래스 (7개)
+
 - ✅ 각각 4개 생성자 구현 (AndroidX 호환)
 - ✅ 간단한 구조 (평균 28줄)
 - ✅ androidx.preference.DialogPreference 상속
 - ✅ 풍부한 JavaDoc 주석
 
 #### DialogFragment 클래스 (7개)
+
 - ✅ 각각 `newInstance()` 팩토리 메서드 구현
 - ✅ `onDialogClosed()` 메서드에서 원본 로직 100% 재현
 - ✅ `requireContext()` 사용 (null-safe)
@@ -144,6 +149,7 @@ import androidx.preference.PreferenceManager;
 ### 1. DialogFragment 패턴 확립
 
 **Before** (Legacy):
+
 ```java
 public class RestartPreference extends DialogPreference {
     @Override
@@ -157,6 +163,7 @@ public class RestartPreference extends DialogPreference {
 ```
 
 **After** (AndroidX):
+
 ```java
 // Preference 클래스
 public class RestartPreferenceCompat extends androidx.preference.DialogPreference {
@@ -177,6 +184,7 @@ public class RestartPreferenceDialogFragmentCompat extends PreferenceDialogFragm
 ```
 
 **장점**:
+
 - 관심사 분리 (Preference vs Dialog 로직)
 - Fragment 라이프사이클 관리
 - AndroidX Preference 표준 패턴
@@ -184,12 +192,14 @@ public class RestartPreferenceDialogFragmentCompat extends PreferenceDialogFragm
 ### 2. PreferenceManager Deprecation 해결
 
 **Before**:
+
 ```java
 import android.preference.PreferenceManager;
 PreferenceManager.getDefaultSharedPreferences(context)
 ```
 
 **After**:
+
 ```java
 import androidx.preference.PreferenceManager;
 PreferenceManager.getDefaultSharedPreferences(context)
@@ -200,11 +210,13 @@ PreferenceManager.getDefaultSharedPreferences(context)
 ### 3. requireContext() 사용
 
 **Before**:
+
 ```java
 getContext() // Nullable, NPE 가능
 ```
 
 **After**:
+
 ```java
 requireContext() // NonNull, NPE 방지
 ```
@@ -214,6 +226,7 @@ requireContext() // NonNull, NPE 방지
 ### 4. 풍부한 주석
 
 각 클래스에 다음 정보 포함:
+
 - 클래스 목적 및 기능 설명
 - 마이그레이션 정보 (Phase 6 Step 3)
 - 기존 프레임워크 → AndroidX 변경사항
@@ -224,11 +237,13 @@ requireContext() // NonNull, NPE 방지
 ## ✅ 체크리스트
 
 ### 코드 작성
+
 - [x] 7개 Preference Compat 클래스 생성
 - [x] 7개 DialogFragment 클래스 생성
 - [x] preferences.xml 테스트 항목 추가 (2개)
 
 ### 코드 품질
+
 - [x] 모든 Preference 클래스에 4개 생성자 구현
 - [x] 모든 DialogFragment 클래스에 newInstance() 메서드 구현
 - [x] onDialogClosed() 로직 100% 동일
@@ -237,12 +252,14 @@ requireContext() // NonNull, NPE 방지
 - [x] JavaDoc 주석 추가
 
 ### 빌드 & 테스트
+
 - [x] 컴파일 성공
 - [x] Warning 0개
 - [x] 기존 코드 영향 없음
 - [ ] 실제 기기 테스트 (선택)
 
 ### 문서화
+
 - [x] Step 3 완료 보고서 작성
 - [x] 코드 주석 충분
 - [x] 변경사항 기록
@@ -257,6 +274,7 @@ requireContext() // NonNull, NPE 방지
 **실제**: 1시간  
 
 **이유**:
+
 - Step 1, 2에서 확립된 패턴
 - 간단한 DialogPreference (평균 20-30줄 원본)
 - 명확한 마이그레이션 가이드
@@ -265,6 +283,7 @@ requireContext() // NonNull, NPE 방지
 ### 2. DialogFragment 패턴의 장점
 
 **발견**:
+
 - 관심사 분리: Preference는 UI 정의, DialogFragment는 로직
 - Fragment 라이프사이클: 화면 회전 등에서 안전
 - 테스트 용이성: DialogFragment만 독립 테스트 가능
@@ -286,6 +305,7 @@ requireContext() // NonNull, NPE 방지
 ### 5. 코드 복잡도
 
 간단한 DialogPreference 특징:
+
 - 원본 20-30줄
 - DialogFragment 40-55줄
 - 로직이 단순 (Toast, SharedPreferences, reload 호출)
@@ -302,12 +322,14 @@ requireContext() // NonNull, NPE 방지
 **목표**: 중간 복잡도 DialogPreference 마이그레이션 (3-4시간)
 
 **대상 클래스** (재검토 필요):
+
 - DefaultLauncherPreference
 - NotificationPreference
 - ExportSettingsPreference (간단할 수도)
 - ImportSettingsPreference (복잡할 수도)
 
 **예상 시간**: 3-4시간
+
 - 각 클래스 1-1.5시간
 - 테스트 30분
 - 문서 작성 30분
@@ -362,6 +384,7 @@ Build successful with 0 warnings
 **DialogFragment 패턴 확립**: 이번 Step 3에서 확립된 DialogFragment 패턴은 앞으로 모든 DialogPreference 마이그레이션의 표준이 됩니다. Step 4, 5에서도 동일한 패턴을 따를 것입니다.
 
 **패턴 요약**:
+
 1. Preference 클래스: androidx.preference.DialogPreference 상속, 4개 생성자
 2. DialogFragment 클래스: PreferenceDialogFragmentCompat 상속, newInstance() + onDialogClosed()
 3. Import: androidx.preference.PreferenceManager 사용

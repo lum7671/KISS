@@ -9,6 +9,7 @@
 ## 📋 작업 요약
 
 ### 목표
+
 3개의 SwitchPreference 하위 클래스를 AndroidX 버전으로 마이그레이션
 
 ### 완료된 작업
@@ -37,6 +38,7 @@
 #### 2. 테스트 항목 추가
 
 `app/src/main/res/xml/preferences.xml`에 3개 테스트 항목 추가:
+
 - `test-freeze-history-compat`
 - `test-root-mode-compat`
 - `test-shizuku-mode-compat`
@@ -53,6 +55,7 @@
 ```
 
 #### 초기 Warning 발견 및 수정
+
 - **문제**: `ShizukuModeSwitchCompat.java:67` - Handler() 생성자 deprecation
 - **원인**: API 30+에서 `new Handler()` deprecated
 - **해결**: `new Handler(getContext().getMainLooper())` 사용
@@ -61,18 +64,21 @@
 ### 코드 리뷰
 
 #### FreezeHistorySwitchCompat
+
 - ✅ 51줄 원본 → 58줄 Compat (7줄 증가)
 - ✅ 4개 생성자 (AndroidX 호환)
 - ✅ `onClick()` 로직 100% 동일
 - ✅ 다이얼로그 경고 메시지 유지
 
 #### RootModeSwitchCompat
+
 - ✅ 48줄 원본 → 62줄 Compat (14줄 증가)
 - ✅ Root 가용성 체크 로직 유지
 - ✅ `resetRootHandler()` 호출 유지
 - ✅ NPE 예외 처리 유지
 
 #### ShizukuModeSwitchCompat
+
 - ✅ 89줄 원본 → 105줄 Compat (16줄 증가)
 - ✅ 복잡한 권한 요청 플로우 유지
 - ✅ Handler deprecation warning 수정
@@ -116,11 +122,13 @@
 ### 1. Handler Deprecation 해결
 
 **Before**:
+
 ```java
 new Handler().postDelayed(new Runnable() { ... }, 1000);
 ```
 
 **After**:
+
 ```java
 new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 1000);
 ```
@@ -130,6 +138,7 @@ new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 10
 ### 2. 4개 생성자 패턴
 
 모든 Compat 클래스에 4개 생성자 구현:
+
 ```java
 (Context)
 (Context, AttributeSet)
@@ -142,6 +151,7 @@ new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 10
 ### 3. 풍부한 주석
 
 각 클래스에 다음 정보 포함:
+
 - 클래스 목적
 - 주요 기능 설명
 - 마이그레이션 정보 (Phase 6 Step 2)
@@ -152,24 +162,28 @@ new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 10
 ## ✅ 체크리스트
 
 ### 코드 작성
+
 - [x] FreezeHistorySwitchCompat.java 생성
 - [x] RootModeSwitchCompat.java 생성
 - [x] ShizukuModeSwitchCompat.java 생성
 - [x] preferences.xml 테스트 항목 추가
 
 ### 코드 품질
+
 - [x] 모든 생성자 구현 (4개)
 - [x] onClick() 로직 100% 동일
 - [x] Handler deprecation 수정
 - [x] JavaDoc 주석 추가
 
 ### 빌드 & 테스트
+
 - [x] 컴파일 성공
 - [x] Warning 0개
 - [x] 기존 코드 영향 없음
 - [ ] 실제 기기 테스트 (선택)
 
 ### 문서화
+
 - [x] Step 2 완료 보고서 작성
 - [x] 코드 주석 충분
 - [x] 변경사항 기록
@@ -184,6 +198,7 @@ new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 10
 **실제**: 45분  
 
 **이유**:
+
 - Step 1에서 확립된 패턴
 - 명확한 마이그레이션 가이드
 - 기존 코드가 이미 단순하고 명확
@@ -197,6 +212,7 @@ new Handler(getContext().getMainLooper()).postDelayed(new Runnable() { ... }, 10
 ### 3. 4개 생성자의 중요성
 
 AndroidX Preference는 4개 생성자 지원:
+
 - 일반적으로 3개만 사용
 - 그러나 4번째 (defStyleRes)가 없으면 일부 시나리오에서 문제 발생 가능
 - **권장**: 모든 Compat 클래스에 4개 생성자 구현
@@ -218,6 +234,7 @@ AndroidX Preference는 4개 생성자 지원:
 **목표**: 간단한 DialogPreference 7개 마이그레이션 (4-5시간)
 
 **대상 클래스**:
+
 1. RestartPreference
 2. DefaultLauncherPreference
 3. NotificationSoundPreference
@@ -227,11 +244,13 @@ AndroidX Preference는 4개 생성자 지원:
 7. ExportSettingsPreference
 
 **준비 상황**:
+
 - ✅ Base 클래스 패턴 확립
 - ✅ 빌드 환경 설정 완료
 - ✅ 테스트 항목 추가 방법 확인
 
 **예상 시간**: 4-5시간
+
 - 각 클래스 30-40분
 - 테스트 1시간
 - 문서 작성 30분

@@ -21,6 +21,7 @@
 **발견 단계**: Step 5 (ColorPreference 마이그레이션)
 
 **현재 코드**:
+
 ```java
 view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
     private boolean ignoreNextUpdate = false;
@@ -38,11 +39,13 @@ view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener(
 ```
 
 **문제점**:
+
 - Listener가 제거되지 않음 (add만 하고 remove 없음)
 - Dialog가 닫혀도 ViewTreeObserver에 listener 남아있을 가능성
 - 메모리 누수 가능성 (Fragment lifecycle과 연동 안됨)
 
 **개선 방안**:
+
 ```java
 // Option 1: Listener를 멤버 변수로 저장 후 onDestroyView에서 제거
 private OnGlobalLayoutListener layoutListener;
@@ -85,6 +88,7 @@ view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener(
 **발견 단계**: Step 5 (AddSearchProvider 마이그레이션)
 
 **현재 코드**:
+
 ```java
 String theme = prefs.getString("theme", "light");
 if (!theme.contains("dark")) {
@@ -96,11 +100,13 @@ if (!theme.contains("dark")) {
 ```
 
 **문제점**:
+
 - `R.style.AppThemeLight` 하드코딩
 - 테마 확장 시 (예: 새로운 테마 추가) 수정 필요
 - String comparison으로 테마 판단 (theme.contains("dark"))
 
 **개선 방안**:
+
 ```java
 // Option 1: 현재 테마에서 textColor 직접 가져오기
 TypedValue typedValue = new TypedValue();
@@ -125,17 +131,20 @@ providerUri.setTextColor(textColor);
 **발견 단계**: Step 5 (Export/Import 마이그레이션)
 
 **현재 코드**:
+
 ```java
 // Min version required to read those settings
 out.put("__v", 183);
 ```
 
 **문제점**:
+
 - Magic number `183` 의미 불명확
 - BuildConfig.VERSION_CODE와 관계 불분명
 - 버전 정책이 코드에 하드코딩
 
 **개선 방안**:
+
 ```java
 // Constants 클래스에 정의
 public class SettingsConstants {
@@ -162,6 +171,7 @@ out.put("__v", SettingsConstants.MIN_SETTINGS_VERSION);
 **발견 단계**: Step 1-5 (전체 마이그레이션 과정)
 
 **현재 코드** (18개 클래스에서 반복):
+
 ```java
 public XxxPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
@@ -182,11 +192,13 @@ public XxxPreferenceCompat(Context context) {
 ```
 
 **문제점**:
+
 - Boilerplate 코드 반복 (18개 클래스 × 4 constructors = 72개)
 - 일관성은 좋으나 유지보수 부담
 - 추상 베이스 클래스로 통합 가능
 
 **개선 방안**:
+
 ```java
 // Option 1: Abstract base class 생성
 public abstract class BaseDialogPreferenceCompat extends DialogPreference {
@@ -222,6 +234,7 @@ public class ExportSettingsPreferenceCompat extends BaseDialogPreferenceCompat {
 **발견 단계**: Step 5
 
 **현재 코드**:
+
 ```java
 private boolean validate() {
     if (!validateEmpty()) { return false; }
@@ -238,11 +251,13 @@ private boolean validate() {
 ```
 
 **문제점**:
+
 - 검증 로직이 길고 복잡 (50줄)
 - Early return 남발로 가독성 저하
 - Toast 메시지 반복 패턴
 
 **개선 방안**:
+
 ```java
 // Option 1: Validation chain pattern
 private boolean validate() {
@@ -282,18 +297,21 @@ private boolean validate() {
 **상태**: ✅ **수정 완료**
 
 **문제**:
+
 ```xml
 <!-- 잘못된 코드 -->
 android:dialogMessage="@string/notification_dialog_text"
 ```
 
 **수정**:
+
 ```xml
 <!-- 올바른 코드 -->
 android:dialogMessage="@string/notification_dialog"
 ```
 
 **교훈**:
+
 - 원본 Preference 파일의 속성을 정확히 복사해야 함
 - 빌드 에러로 즉시 발견 가능하므로 큰 문제는 아님
 
@@ -302,20 +320,23 @@ android:dialogMessage="@string/notification_dialog"
 ## 📊 개선 우선순위 요약
 
 ### 🔴 HIGH (즉시 수정)
+
 - ✅ NotificationPreference string 리소스 (수정 완료)
 
 ### 🟡 MEDIUM (Phase 6 완료 후)
+
 1. **ColorPreference OnGlobalLayoutListener 제거** (10-15분)
    - 메모리 누수 방지
-   
+
 2. **AddSearchProvider 테마 색상 로직** (15-20분)
    - 하드코딩 제거, 확장성 향상
-   
+
 3. **4-constructor 패턴 리팩토링** (1-2시간)
    - BaseDialogPreferenceCompat 추상 클래스 생성
    - 모든 Compat 클래스 통합
 
 ### 🟢 LOW (시간 여유시)
+
 1. **Magic Number 183 상수화** (10분)
 2. **AddSearchProvider 검증 로직 리팩토링** (1-2시간)
 
@@ -324,18 +345,20 @@ android:dialogMessage="@string/notification_dialog"
 ## 🎯 실행 계획
 
 ### Phase 6 완료 전
+
 - ✅ 개선사항 문서화 (현재 문서)
 - 🔄 Step 6-8 마이그레이션 집중
 
 ### Phase 6 완료 후 (Step 9: 개선 단계)
+
 1. **Week 1**: 🟡 MEDIUM 우선순위 개선
    - ColorPreference listener 제거
    - AddSearchProvider 테마 로직 개선
-   
+
 2. **Week 2**: 🟡 MEDIUM 리팩토링
    - BaseDialogPreferenceCompat 생성
    - 모든 Compat 클래스 통합
-   
+
 3. **Week 3**: 🟢 LOW 개선 (선택)
    - Magic number 상수화
    - 검증 로직 리팩토링 (필요시)
@@ -358,12 +381,14 @@ android:dialogMessage="@string/notification_dialog"
 ## 🤔 개선 가이드라인
 
 ### 언제 개선할까?
+
 - ✅ **즉시**: 빌드 에러, 기능 버그
 - ✅ **Phase 6 완료 후**: 메모리 누수, 확장성 문제
 - ⚠️ **신중히**: 리팩토링 (over-engineering 주의)
 - ❌ **하지 않기**: 작동하는 코드의 불필요한 변경
 
 ### 개선 시 주의사항
+
 1. **기능 유지**: 마이그레이션 중에는 1:1 호환성 최우선
 2. **테스트**: 개선 후 반드시 빌드 및 동작 테스트
 3. **문서화**: 변경 이유와 영향 범위 명확히 기록

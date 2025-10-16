@@ -41,7 +41,7 @@ Step 5: Logging (Low)
 
 ### 왜 이 순서가 더 좋은가?
 
-1. **Thread Safety 먼저**: 
+1. **Thread Safety 먼저**:
    - 다른 개선 작업의 안전한 기반
    - 가장 간단하고 리스크 낮음
    - Cancellation Checks 작업 전에 완료해야 안전
@@ -65,13 +65,16 @@ Step 5: Logging (Low)
 **Branch**: `phase2-step1-thread-safety`
 
 #### 목표
+
 - PriorityQueue에 synchronized 추가
 - 명시적 thread safety 보장
 
 #### 작업 파일
+
 - `app/src/main/java/fr/neamar/kiss/searcher/SearcherCoroutine.kt`
 
 #### 변경 내용
+
 ```kotlin
 // Line 87-92 수정
 open fun addResults(pojos: List<Pojo>): Boolean {
@@ -86,6 +89,7 @@ open fun addResults(pojos: List<Pojo>): Boolean {
 ```
 
 #### 검증
+
 1. **기능 테스트**
    - 모든 검색 타입 정상 동작
    - 결과 순서 유지
@@ -98,12 +102,14 @@ open fun addResults(pojos: List<Pojo>): Boolean {
    - 빠른 연속 검색 시 정상 동작
 
 #### 완료 기준
+
 - ✅ synchronized 블록 추가
 - ✅ 모든 검색 타입 테스트 통과
 - ✅ 성능 저하 없음
 - ✅ PR 생성 및 리뷰
 
 #### Commit 메시지
+
 ```
 feat(searcher): Add explicit thread safety to addResults()
 
@@ -122,16 +128,19 @@ Related: phase2-searcher-improvements.md
 **Branch**: `phase2-step2-error-handling`
 
 #### 목표
+
 - Exception 타입별 처리
 - Error와 Cancellation 구분
 - onError() 콜백 추가
 
 #### 작업 파일
+
 - `app/src/main/java/fr/neamar/kiss/searcher/SearcherCoroutine.kt`
 
 #### 변경 내용
 
 **1. execute() 메서드 수정 (line 118-145)**
+
 ```kotlin
 currentJob = CoroutineScope(Dispatchers.Main).launch {
     try {
@@ -157,6 +166,7 @@ currentJob = CoroutineScope(Dispatchers.Main).launch {
 ```
 
 **2. onError() 메서드 추가 (line 236 이후)**
+
 ```kotlin
 /**
  * Called when search encounters an error (not cancellation)
@@ -186,6 +196,7 @@ protected open fun onError(error: Exception) {
 ```
 
 #### 검증
+
 1. **정상 동작 테스트**
    - 에러 없는 검색: onPostExecute() 호출
    - 정상 취소: onCancelled() 호출
@@ -200,6 +211,7 @@ protected open fun onError(error: Exception) {
    - 기타 Exception: ERROR 레벨
 
 #### 완료 기준
+
 - ✅ CancellationException 별도 처리
 - ✅ onError() 메서드 추가
 - ✅ Amplitude 에러 이벤트 추가
@@ -207,6 +219,7 @@ protected open fun onError(error: Exception) {
 - ✅ PR 생성 및 리뷰
 
 #### Commit 메시지
+
 ```
 feat(searcher): Distinguish errors from cancellations
 
@@ -226,11 +239,13 @@ Related: phase2-searcher-improvements.md
 **Branch**: `phase2-step3-cancellation-checks`
 
 #### 목표
+
 - 긴 작업 중간에 취소 체크 추가
 - 빠른 취소 반응
 - 리소스 절약
 
 #### 작업 파일 (4개)
+
 1. `QuerySearcherCoroutine.kt`
 2. `HistorySearcherCoroutine.kt`
 3. `ApplicationsSearcherCoroutine.kt`
@@ -377,6 +392,7 @@ override suspend fun doInBackground() {
 ```
 
 #### 검증
+
 1. **취소 응답 테스트**
    - 검색 입력 후 즉시 변경: 이전 검색 즉시 중단 확인
    - Logcat에서 "Search cancelled" 메시지 확인
@@ -390,6 +406,7 @@ override suspend fun doInBackground() {
    - CPU 사용량: 취소 후 즉시 감소
 
 #### 완료 기준
+
 - ✅ 4개 Searcher 모두 수정
 - ✅ 모든 긴 작업 전후에 체크 추가
 - ✅ 취소 반응 시간 < 50ms
@@ -397,6 +414,7 @@ override suspend fun doInBackground() {
 - ✅ PR 생성 및 리뷰
 
 #### Commit 메시지
+
 ```
 feat(searcher): Add cancellation checks in long operations
 
@@ -422,16 +440,19 @@ Related: phase2-searcher-improvements.md
 **Branch**: `phase2-step4-static-cache-removal`
 
 #### 목표
+
 - QuerySearcher의 static MAX_RESULT_COUNT 제거
 - Instance 변수로 변경
 - 테스트 용이성 향상
 
 #### 작업 파일
+
 - `app/src/main/java/fr/neamar/kiss/searcher/QuerySearcherCoroutine.kt`
 
 #### 변경 내용
 
 **Before:**
+
 ```kotlin
 companion object {
     @Volatile
@@ -453,6 +474,7 @@ override fun getMaxResultCount(): Int {
 ```
 
 **After:**
+
 ```kotlin
 // ✅ Companion object에서 제거
 
@@ -471,16 +493,19 @@ override fun getMaxResultCount(): Int {
 ```
 
 #### 영향받는 코드 확인
+
 ```bash
 # clearMaxResultCountCache() 사용처 검색
 git grep "clearMaxResultCountCache"
 ```
 
 만약 사용처가 있다면:
+
 - `MainActivity.kt` 또는 설정 화면에서 호출하는 경우
 - 해당 호출 코드 제거 (더 이상 필요 없음)
 
 #### 검증
+
 1. **기능 테스트**
    - 검색 결과 개수 제한 정상 동작
    - 설정 변경 후 동작 확인
@@ -490,6 +515,7 @@ git grep "clearMaxResultCountCache"
    - 새로운 검색 시 반영 확인
 
 #### 완료 기준
+
 - ✅ Static 변수 제거
 - ✅ Instance 변수로 변경
 - ✅ clearMaxResultCountCache() 호출 제거
@@ -497,6 +523,7 @@ git grep "clearMaxResultCountCache"
 - ✅ PR 생성 및 리뷰
 
 #### Commit 메시지
+
 ```
 refactor(searcher): Remove static cache from QuerySearcher
 
@@ -516,11 +543,13 @@ Related: phase2-searcher-improvements.md
 **Branch**: `phase2-step5-logging-consolidation`
 
 #### 목표
+
 - 로깅 유틸리티 클래스 생성
 - 일관된 로깅 형식
 - 에러 로깅 개선
 
 #### 작업 파일
+
 1. `app/src/main/java/fr/neamar/kiss/utils/SearchPerformanceLogger.kt` (신규)
 2. `app/src/main/java/fr/neamar/kiss/searcher/SearcherCoroutine.kt` (수정)
 
@@ -673,6 +702,7 @@ private fun logPerformance(
 ```
 
 #### 검증
+
 1. **로그 확인**
    - 정상 검색: `[COMPLETED]` 로그
    - 취소: `[CANCELLED]` 로그
@@ -686,6 +716,7 @@ private fun logPerformance(
    - 로깅이 검색 기능에 영향 없음
 
 #### 완료 기준
+
 - ✅ SearchPerformanceLogger.kt 생성
 - ✅ SearcherCoroutine.kt 통합
 - ✅ 모든 상태(완료/취소/에러) 로깅 확인
@@ -693,6 +724,7 @@ private fun logPerformance(
 - ✅ PR 생성 및 리뷰
 
 #### Commit 메시지
+
 ```
 refactor(searcher): Consolidate search performance logging
 
@@ -797,6 +829,7 @@ git checkout -b phase2-step2-error-handling
 ## 🎯 각 Step 완료 기준
 
 ### 공통 기준
+
 - ✅ 브랜치 생성 및 작업 완료
 - ✅ 컴파일 에러 없음
 - ✅ 모든 검색 타입 기능 테스트 통과
@@ -809,25 +842,30 @@ git checkout -b phase2-step2-error-handling
 ### Step별 추가 기준
 
 **Step 1 (Thread Safety)**
+
 - ✅ synchronized 블록 추가 확인
 - ✅ Race condition 없음
 
 **Step 2 (Error Handling)**
+
 - ✅ CancellationException 별도 처리 확인
 - ✅ onError() 콜백 호출 확인
 - ✅ Amplitude 에러 로깅 확인
 
 **Step 3 (Cancellation Checks)**
+
 - ✅ 4개 Searcher 모두 수정 확인
 - ✅ 취소 반응 시간 < 50ms
 - ✅ 불필요한 작업 중단 확인
 
 **Step 4 (Static Cache)**
+
 - ✅ Static 변수 완전 제거
 - ✅ clearMaxResultCountCache() 호출 제거
 - ✅ 설정 변경 후 동작 확인
 
 **Step 5 (Logging)**
+
 - ✅ SearchPerformanceLogger 동작 확인
 - ✅ 3가지 상태 로그 확인 (완료/취소/에러)
 - ✅ Amplitude 이벤트 확인

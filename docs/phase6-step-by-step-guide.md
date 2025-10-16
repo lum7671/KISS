@@ -19,6 +19,7 @@ feature/phase2-step5-cleanup       # 정리
 ```
 
 **핵심 원칙**:
+
 1. ✅ 각 Step은 독립 브랜치
 2. ✅ 완료 후 dev에 머지
 3. ✅ 문제 발생 시 해당 Step만 롤백
@@ -47,6 +48,7 @@ dev (기준)
 ## 📝 Step 1: SwitchPreference 베이스 클래스
 
 ### 목표
+
 - androidx 기반 SwitchPreferenceCompat 생성
 - 기존 SwitchPreference와 공존
 - 테스트로 동작 확인
@@ -227,6 +229,7 @@ Phase 6 Step 2: SwitchPreference 하위 클래스 마이그레이션
 ## 📝 Step 2: SwitchPreference 하위 클래스 마이그레이션
 
 ### 목표
+
 - FreezeHistorySwitch, RootModeSwitch, ShizukuModeSwitch를 Compat 버전으로 마이그레이션
 - 기존 클래스와 공존
 - XML에서 선택적으로 사용 가능
@@ -433,6 +436,7 @@ git push origin dev
 ## 📝 Step 3: 간단한 DialogPreference 마이그레이션
 
 ### 목표
+
 - RestartPreference 등 7개 간단한 DialogPreference를 Compat 버전으로 마이그레이션
 - DialogFragment 패턴 확립
 
@@ -549,22 +553,27 @@ git push origin dev
 **동일한 패턴으로 계속 진행**:
 
 ### Step 4: 중간 복잡도 DialogPreference
+
 - 브랜치: `feature/phase6-step4-medium-dialogs`
 - 대상: DefaultLauncher, Notification, ResetShortcuts
 
 ### Step 5: 복잡한 DialogPreference
+
 - 브랜치: `feature/phase6-step5-complex-dialogs`
 - 대상: Import/Export, AddSearchProvider, ColorPreference
 
 ### Step 6: 특수 케이스
+
 - 브랜치: `feature/phase6-step6-special-cases`
 - 대상: ExcludePreferenceScreen, PreferenceScreenHelper
 
 ### Step 7: SettingsActivity
+
 - 브랜치: `feature/phase6-step7-settings-activity`
 - 대상: SettingsFragment 생성, SettingsActivity 단순화
 
 ### Step 8: 구버전 제거 및 정리
+
 - 브랜치: `feature/phase6-step8-cleanup`
 - 작업: Compat 접미사 제거, 구버전 클래스 삭제
 
@@ -608,6 +617,7 @@ git push origin dev
 ### 문제 발생 시
 
 1. **즉시 중단**
+
    ```bash
    git checkout dev
    ```
@@ -618,6 +628,7 @@ git push origin dev
    - 문제 문서화
 
 3. **브랜치 보존**
+
    ```bash
    # 브랜치 삭제하지 말고 보관
    git checkout -b feature/phase6-stepX-debug
@@ -632,16 +643,19 @@ git push origin dev
 ## 📚 각 Step별 체크리스트 템플릿
 
 ### 작업 전
+
 - [ ] dev 브랜치 최신 상태 확인
 - [ ] 새 브랜치 생성
 - [ ] 작업 목표 명확히 파악
 
 ### 작업 중
+
 - [ ] 코드 작성
 - [ ] 컴파일 확인
 - [ ] 로컬 테스트
 
 ### 작업 후
+
 - [ ] 기능 테스트 통과
 - [ ] 기존 기능 영향 없음 확인
 - [ ] 커밋 메시지 작성
@@ -654,12 +668,14 @@ git push origin dev
 ## 🎯 성공 기준
 
 ### 각 Step 성공
+
 - ✅ 컴파일 성공
 - ✅ 기능 테스트 통과
 - ✅ 기존 기능 영향 없음
 - ✅ 문서 업데이트 완료
 
 ### 전체 Phase 6 성공
+
 - ✅ 모든 8 Steps 완료
 - ✅ 43개 Preference warning 제거
 - ✅ 전체 설정 화면 정상 동작

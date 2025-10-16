@@ -9,14 +9,17 @@
 ## 🐛 발견된 문제
 
 ### 1. ADB 경로 문제
+
 `build_release_apk.sh` 스크립트가 `adb` 명령을 직접 호출하여 PATH에 설정되지 않은 경우 실패함.
 
 **에러 메시지**:
+
 ```
 ./scripts/build_release_apk.sh: 줄 69: adb: 명령을 찾을 수 없음
 ```
 
 **원인**:
+
 - `ANDROID_HOME` 환경변수는 설정되어 있음
 - 하지만 `adb` 명령을 직접 호출 시 `$ANDROID_HOME/platform-tools`가 PATH에 없으면 실패
 
@@ -27,6 +30,7 @@
 ### 변경 사항
 
 #### 1. ADB 변수 추가
+
 ```bash
 # Before
 APKSIGNER="$ANDROID_HOME/build-tools/34.0.0/apksigner"
@@ -53,6 +57,7 @@ fi
 **변경된 위치** (4곳):
 
 1. **ADB 연결 확인** (줄 73):
+
 ```bash
 # Before
 if ! adb devices | grep -q "device$"; then
@@ -62,6 +67,7 @@ if ! "$ADB" devices | grep -q "device$"; then
 ```
 
 2. **기존 앱 확인** (줄 148):
+
 ```bash
 # Before
 if adb shell pm list packages | grep -q "kr.lum7671.kiss"; then
@@ -71,6 +77,7 @@ if "$ADB" shell pm list packages | grep -q "kr.lum7671.kiss"; then
 ```
 
 3. **앱 제거** (줄 153):
+
 ```bash
 # Before
 adb uninstall kr.lum7671.kiss || true
@@ -80,6 +87,7 @@ adb uninstall kr.lum7671.kiss || true
 ```
 
 4. **APK 설치** (줄 158):
+
 ```bash
 # Before
 adb install "$APK_SIGNED"
@@ -89,6 +97,7 @@ adb install "$APK_SIGNED"
 ```
 
 5. **런처 화면 표시** (줄 162):
+
 ```bash
 # Before
 adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
@@ -102,6 +111,7 @@ adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
 ## 📋 테스트 결과
 
 ### 수정 전
+
 ```bash
 $ ./scripts/build_release_apk.sh
 🚀 KISS Release APK 빌드 시작...
@@ -112,6 +122,7 @@ $ ./scripts/build_release_apk.sh
 ```
 
 ### 수정 후
+
 ```bash
 $ ./scripts/build_release_apk.sh
 🚀 KISS Release APK 빌드 시작...
@@ -130,10 +141,12 @@ emulator-5554   device
 ### 손상된 파일들
 
 다음 스크립트 파일들도 Git 저장소에서 손상된 상태로 발견됨:
+
 1. `scripts/build_profile_apk.sh` - 첫 줄이 깨짐
 2. `scripts/install_and_test.sh` - 동일한 ADB 경로 문제 가능성
 
 **손상 내용**:
+
 ```bash
 # 정상:
 echo "🚀 KISS Profile APK 빌드 시작..."
@@ -151,16 +164,19 @@ echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요
 ## 📝 권장 사항
 
 ### 1. 즉시 수정 필요
+
 - [ ] `build_profile_apk.sh` 재생성 또는 복구
 - [ ] `install_and_test.sh`에 ADB 경로 수정 적용
 - [ ] `run_emulator.sh` 확인
 
 ### 2. 장기 개선
+
 - [ ] 모든 스크립트에 일관된 환경변수 사용 패턴 적용
 - [ ] 스크립트 검증 테스트 추가
 - [ ] CI/CD에서 스크립트 무결성 검사
 
 ### 3. 문서화
+
 - [ ] 스크립트 사용법 README 작성
 - [ ] 환경변수 설정 가이드 추가
 - [ ] 트러블슈팅 섹션 추가

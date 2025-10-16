@@ -88,6 +88,7 @@ override suspend fun doInBackground() {
 ```
 
 **영향**:
+
 - 사용자가 검색을 취소해도 긴 작업은 계속 실행
 - 불필요한 CPU 및 메모리 사용
 - 다음 검색 시작이 지연됨
@@ -177,11 +178,13 @@ open fun addResults(pojos: List<Pojo>): Boolean {
 ```
 
 **장점**:
+
 - 최소 변경
 - 명시적 thread safety
 - 기존 코드와 100% 호환
 
 **단점**:
+
 - 약간의 성능 오버헤드 (실제로는 미미함)
 
 #### Option B: ConcurrentLinkedQueue 사용 (더 나은 설계)
@@ -213,21 +216,25 @@ protected open fun onPostExecute() {
 ```
 
 **장점**:
+
 - Lock-free (더 나은 성능)
 - 명시적 thread-safe design
 - 더 현대적인 Kotlin 스타일
 
 **단점**:
+
 - 더 많은 변경 필요
 - onPostExecute() 로직 수정 필요
 
 ### 권장 사항
 
 **단기 (Phase 2.1)**: Option A (Synchronized)
+
 - 빠르고 안전한 수정
 - 리스크 최소
 
 **장기 (Phase 2.2 또는 Phase 3)**: Option B (ConcurrentLinkedQueue)
+
 - 더 나은 설계
 - 성능 최적화 기회
 
@@ -392,11 +399,13 @@ class QuerySearcherCoroutine(...) : SearcherCoroutine(...) {
 ```
 
 **장점**:
+
 - 더 깨끗한 코드
 - 테스트 용이
 - Static state 제거
 
 **단점**:
+
 - 인스턴스마다 캐시 중복 (실제로는 문제 없음)
 
 #### Option B: SharedPreferences Listener 사용 (더 나은 설계)
@@ -432,20 +441,24 @@ class QuerySearcherCoroutine(...) : SearcherCoroutine(...) {
 ```
 
 **장점**:
+
 - 설정 변경 시 자동 반영
 - 명시적 clear 불필요
 
 **단점**:
+
 - Listener 관리 필요
 - cleanup() 호출 필요
 
 ### 권장 사항
 
 **Phase 2**: Option A (Instance 변수)
+
 - 간단하고 효과적
 - 리스크 최소
 
 **Phase 3 (선택)**: Option B (Listener)
+
 - 더 나은 설계
 - 우선순위 낮음
 
@@ -695,7 +708,7 @@ Phase 2.2: Code Quality (1일) - 선택 사항
 
 ## 🔗 관련 문서
 
-- **Phase 1**: 
+- **Phase 1**:
   - [step1-analysis-report.md](./step1-analysis-report.md) - 초기 분석
   - [step2-searcher-base-implementation.md](./step2-searcher-base-implementation.md) - Base 클래스
   - [step3-summary.md](./step3-summary.md) - QuerySearcher 완료

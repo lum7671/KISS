@@ -25,6 +25,7 @@
 ### 분석 결과
 
 **총 32개 함수 분석 완료**:
+
 - ✅ **유지**: 5개 (수명주기 함수)
 - ⚠️ **선택적**: 1개 (getDataHandler - 제거됨)
 - ❌ **제거**: 26개 (81.3%)
@@ -80,6 +81,7 @@ class NewSettingsActivity : AppCompatActivity() {
 ```
 
 **역할**: 완벽한 Container Activity ✅
+
 - Fragment 로딩
 - ActionBar 설정
 - 네비게이션 처리
@@ -106,6 +108,7 @@ class NewSettingsActivity : AppCompatActivity() {
 #### NewSettingsActivity 분석
 
 모든 항목: 🟢 **완벽**
+
 - Listener 등록 없음
 - View 직접 참조 없음
 - 비동기 작업 없음
@@ -116,7 +119,8 @@ class NewSettingsActivity : AppCompatActivity() {
 
 **즉시 조치 필요**: ❌ 없음
 
-**선택적 개선 (사용자 선택 - Option A)**: 
+**선택적 개선 (사용자 선택 - Option A)**:
+
 - ❌ 적용 안 함 (현재 상태 충분히 안전)
 
 **문서**: `docs/newsettings-day3-step3-memory-leak-analysis.md`
@@ -276,6 +280,7 @@ SettingsFragment.java:
 ### Priority 2: 성능 테스트 (권장)
 
 1. **LeakCanary 실행**
+
    ```bash
    ./gradlew assembleDebug
    adb install app/build/outputs/apk/debug/app-debug.apk
@@ -350,6 +355,7 @@ SettingsFragment.java:
 ### Production Ready
 
 **NewSettingsActivity + SettingsFragment**:
+
 - ✅ 모든 기능 구현 완료
 - ✅ Material Design 준수
 - ✅ 메모리 안정성 확보

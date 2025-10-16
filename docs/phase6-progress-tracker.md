@@ -227,12 +227,14 @@ Step 6:
 ### 체크리스트
 
 #### 작업 전
+
 - [x] Step 1 완료
 - [x] dev 브랜치에 머지
 - [x] SwitchPreferenceCompat 베이스 준비 완료
 - [ ] Step 1 실제 기기 테스트 (선택)
 
 #### 작업 예정
+
 - [ ] 브랜치 생성: `feature/phase6-step2-switch-subclasses`
 - [ ] FreezeHistorySwitchCompat.java 생성
 - [ ] RootModeSwitchCompat.java 생성

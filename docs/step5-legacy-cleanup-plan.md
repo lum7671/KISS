@@ -11,6 +11,7 @@
 Step 4까지 완료된 상태에서 **Legacy Searcher 클래스들을 안전하게 제거**하고, Coroutines 버전만 사용하도록 전환합니다.
 
 ### 주요 목표
+
 1. ✅ **Legacy Searcher 클래스 제거** (8개 Java 파일)
 2. ✅ **Feature Flag 제거** (USE_ALL_SEARCHER_COROUTINES)
 3. ✅ **코드 단순화** (if-else 분기 제거)
@@ -40,6 +41,7 @@ app/src/main/java/fr/neamar/kiss/searcher/
 ### 2. Feature Flag 관련 코드
 
 #### app/build.gradle
+
 ```gradle
 debug {
     buildConfigField "boolean", "USE_ALL_SEARCHER_COROUTINES", "true"  // 제거
@@ -53,6 +55,7 @@ profile {
 ```
 
 #### MainActivity.java (5개 위치)
+
 - Line 1180: `if (BuildConfig.USE_ALL_SEARCHER_COROUTINES)`
 - Line 1258: `if (BuildConfig.USE_ALL_SEARCHER_COROUTINES)`
 - Line 1464: `if (BuildConfig.USE_ALL_SEARCHER_COROUTINES)`
@@ -66,6 +69,7 @@ profile {
 ### Phase 1: 준비 작업 (10분)
 
 #### 1.1 브랜치 생성
+
 ```bash
 git checkout step4-remaining-searchers
 git pull origin step4-remaining-searchers
@@ -73,6 +77,7 @@ git checkout -b step5-legacy-cleanup
 ```
 
 #### 1.2 현재 상태 확인
+
 ```bash
 # 빌드 성공 확인
 ./gradlew assembleDebug
@@ -82,6 +87,7 @@ grep -r "new Searcher\|new QuerySearcher\|new HistorySearcher" app/src/main/java
 ```
 
 #### 1.3 안전 백업
+
 ```bash
 # 제거 전 파일 백업
 mkdir -p tmp/step5-backup
@@ -95,6 +101,7 @@ cp -r app/src/main/java/fr/neamar/kiss/searcher/*.java tmp/step5-backup/
 #### 2.1 Feature Flag 사용 위치 분석
 
 **Location 1: Line ~1180 (displayQuickResult)**
+
 ```java
 // BEFORE
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -111,6 +118,7 @@ searcher.executeQuery();
 ```
 
 **Location 2: Line ~1258 (displayQuickResult - 다른 경로)**
+
 ```java
 // BEFORE
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -124,6 +132,7 @@ searcher = new ApplicationsSearcherCoroutine(this, query);
 ```
 
 **Location 3: Line ~1464 (updateSearchRecords - NULL)**
+
 ```java
 // BEFORE
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -137,6 +146,7 @@ searcher = new NullSearcherCoroutine(this, "");
 ```
 
 **Location 4: Line ~1475 (updateSearchRecords - HISTORY)**
+
 ```java
 // BEFORE
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -150,6 +160,7 @@ searcher = new HistorySearcherCoroutine(this, "");
 ```
 
 **Location 5: Line ~1487 (updateSearchRecords - TAGS/UNTAGGED)**
+
 ```java
 // BEFORE
 if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -165,6 +176,7 @@ searcher = getTagSearcherCoroutine(historyMode, "");
 #### 2.2 Legacy 임포트 제거
 
 **제거할 임포트들**:
+
 ```java
 import fr.neamar.kiss.searcher.QuerySearcher;
 import fr.neamar.kiss.searcher.HistorySearcher;
@@ -175,6 +187,7 @@ import fr.neamar.kiss.searcher.UntaggedSearcher;
 ```
 
 **유지할 임포트들**:
+
 ```java
 import fr.neamar.kiss.searcher.QuerySearcherCoroutine;
 import fr.neamar.kiss.searcher.HistorySearcherCoroutine;
@@ -200,6 +213,7 @@ private Searcher getTagSearcher(HistoryMode historyMode, String query) {
 ```
 
 **유지할 메서드**:
+
 ```java
 private Searcher getTagSearcherCoroutine(HistoryMode historyMode, String query) {
     if (historyMode == HistoryMode.TAGS) {
@@ -256,6 +270,7 @@ rm -f UntaggedSearcher.java
 #### Searcher.java 처리 방법
 
 **Option 1: Interface로 전환** (권장)
+
 ```kotlin
 // Searcher.kt로 전환
 interface Searcher {
@@ -267,6 +282,7 @@ interface Searcher {
 ```
 
 **Option 2: Abstract 클래스 유지**
+
 - 현재 Searcher adapter 패턴에서 사용 중
 - QuerySearcherCoroutine 등에서 참조
 - 제거 전 모든 참조 확인 필요
@@ -278,6 +294,7 @@ interface Searcher {
 ### Phase 5: 빌드 검증 (10분)
 
 #### 5.1 컴파일 확인
+
 ```bash
 # Clean build
 ./gradlew clean
@@ -292,24 +309,30 @@ interface Searcher {
 #### 5.2 에러 처리
 
 **예상 에러 1**: Searcher.java 참조 에러
+
 ```
 error: cannot find symbol
   class QuerySearcher
 ```
+
 → 모든 Legacy 클래스 참조가 제대로 제거되었는지 확인
 
 **예상 에러 2**: Import 에러
+
 ```
 error: package fr.neamar.kiss.searcher does not exist
   import fr.neamar.kiss.searcher.QuerySearcher;
 ```
+
 → MainActivity.java에서 임포트 제거 누락 확인
 
 **예상 에러 3**: BuildConfig 에러
+
 ```
 error: cannot find symbol
   symbol: variable USE_ALL_SEARCHER_COROUTINES
 ```
+
 → Feature flag 참조가 남아있는지 확인
 
 ---
@@ -319,6 +342,7 @@ error: cannot find symbol
 #### 6.1 기능 테스트 (수동)
 
 **Test Case 1: 일반 검색**
+
 ```
 1. 앱 실행
 2. 검색창에 "chrome" 입력
@@ -327,6 +351,7 @@ error: cannot find symbol
 ```
 
 **Test Case 2: 앱 드로어**
+
 ```
 1. 빈 검색창에서 위로 스와이프
 2. 앱 목록이 A→Z 정렬로 표시되는지 확인
@@ -334,6 +359,7 @@ error: cannot find symbol
 ```
 
 **Test Case 3: 히스토리**
+
 ```
 1. 검색창 비우기
 2. 최근 사용 앱들이 표시되는지 확인
@@ -341,6 +367,7 @@ error: cannot find symbol
 ```
 
 **Test Case 4: 태그 검색**
+
 ```
 1. 설정에서 태그 설정
 2. HistoryMode를 TAGS로 변경
@@ -348,6 +375,7 @@ error: cannot find symbol
 ```
 
 **Test Case 5: Null Searcher**
+
 ```
 1. 설정에서 minimalistic UI 활성화
 2. 검색창이 깔끔하게 표시되는지 확인
@@ -365,6 +393,7 @@ adb logcat | grep -E "SearcherCoroutine|QuerySearcher"
 ```
 
 **성능 기준**:
+
 - 검색 응답 시간: < 100ms
 - 메모리 사용량: 기존 대비 5~10% 감소 (중복 클래스 제거 효과)
 - ANR 없음
@@ -385,6 +414,7 @@ adb logcat | grep -E "SearcherCoroutine|QuerySearcher"
 **파일**: `docs/step5-legacy-cleanup-summary.md`
 
 내용:
+
 - 제거된 파일 목록 (8개)
 - 코드 라인 감소 (904 lines)
 - 빌드 속도 개선 측정 결과
@@ -478,6 +508,7 @@ git commit -m "Step 5: Update documentation for legacy cleanup
 **PR Title**: `[Step 5] Legacy Searcher 코드 정리 - AsyncTask 마이그레이션 완료`
 
 **PR Description**:
+
 ```markdown
 ## 🎉 Step 5: Legacy 코드 정리 완료
 
@@ -578,6 +609,7 @@ Step 5 완료로 마이그레이션은 종료되었으나, 추가 개선 가능:
 ### Rollback 계획
 
 **문제 발생 시 즉시 롤백**:
+
 ```bash
 # 현재 작업 취소
 git reset --hard HEAD
@@ -590,6 +622,7 @@ cp -r tmp/step5-backup/*.java app/src/main/java/fr/neamar/kiss/searcher/
 ```
 
 **Rollback 트리거**:
+
 - 빌드 실패 (해결 불가능한 에러)
 - 기능 테스트 실패 (검색 동작 안 함)
 - 성능 저하 (> 200ms 응답 시간)
@@ -600,16 +633,19 @@ cp -r tmp/step5-backup/*.java app/src/main/java/fr/neamar/kiss/searcher/
 ## 📊 예상 결과
 
 ### 코드 품질 개선
+
 - **코드 라인 감소**: 904 lines → 785 lines (-13%)
 - **중복 제거**: ExecutorService + Coroutines → Coroutines only
 - **유지보수성**: Feature flag 제거로 코드 단순화
 
 ### 성능 개선
+
 - **메모리 사용량**: 5~10% 감소 (중복 클래스 제거)
 - **빌드 시간**: 2~3% 감소 (컴파일 대상 파일 감소)
 - **APK 크기**: 10~20KB 감소 (ProGuard 후)
 
 ### 장기적 이점
+
 - **신규 개발자 진입장벽 감소**: 두 가지 구현 → 하나의 구현
 - **버그 리스크 감소**: 중복 로직 제거
 - **Modern Android**: 최신 Kotlin Coroutines 패턴 사용
@@ -619,23 +655,27 @@ cp -r tmp/step5-backup/*.java app/src/main/java/fr/neamar/kiss/searcher/
 ## ✅ Checklist
 
 ### Phase 1: 준비
+
 - [ ] 브랜치 생성 (step5-legacy-cleanup)
 - [ ] 현재 빌드 확인
 - [ ] 파일 백업
 
 ### Phase 2: MainActivity.java
+
 - [ ] Feature flag 5개 위치 제거
 - [ ] Legacy 임포트 제거
 - [ ] getTagSearcher() 메서드 제거
 - [ ] 컴파일 확인
 
 ### Phase 3: build.gradle
+
 - [ ] debug buildConfigField 제거
 - [ ] release buildConfigField 제거
 - [ ] profile buildConfigField 제거
 - [ ] Sync Gradle
 
 ### Phase 4: Legacy 파일 삭제
+
 - [ ] QuerySearcher.java 삭제
 - [ ] NullSearcher.java 삭제
 - [ ] HistorySearcher.java 삭제
@@ -646,12 +686,14 @@ cp -r tmp/step5-backup/*.java app/src/main/java/fr/neamar/kiss/searcher/
 - [ ] Searcher.java 처리 결정
 
 ### Phase 5: 빌드 검증
+
 - [ ] Clean build
 - [ ] Debug build 성공
 - [ ] Release build 성공
 - [ ] 에러 없음
 
 ### Phase 6: 테스트
+
 - [ ] 일반 검색 테스트
 - [ ] 앱 드로어 테스트
 - [ ] 히스토리 테스트
@@ -661,11 +703,13 @@ cp -r tmp/step5-backup/*.java app/src/main/java/fr/neamar/kiss/searcher/
 - [ ] 메모리 누수 확인
 
 ### Phase 7: 문서
+
 - [ ] step5-legacy-cleanup-summary.md 작성
 - [ ] asynctask-to-coroutines-migration.md 업데이트
 - [ ] README.md 업데이트
 
 ### Phase 8: Git
+
 - [ ] Commit 1: MainActivity.java
 - [ ] Commit 2: build.gradle
 - [ ] Commit 3: Legacy 파일 삭제

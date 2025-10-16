@@ -27,6 +27,7 @@
 ### 1. 정상 동작 테스트 (필수)
 
 #### 1.1 에러 없는 정상 검색
+
 ```
 목적: onPostExecute()가 정상 호출되는지 확인
 
@@ -45,6 +46,7 @@
 ```
 
 #### 1.2 정상 취소 동작
+
 ```
 목적: onCancelled()가 호출되고 DEBUG 레벨로 로깅되는지 확인
 
@@ -85,6 +87,7 @@ override suspend fun doInBackground() {
 ```
 
 **테스트**:
+
 ```
 1. "error" 입력
 2. Logcat 확인:
@@ -197,6 +200,7 @@ adb logcat *:S SearcherCoroutine:D SearchPerf:V
 ## 📊 테스트 체크리스트
 
 ### 필수 테스트
+
 - [ ] 정상 검색: onPostExecute() 호출, VERBOSE 로그
 - [ ] 정상 취소: onCancelled() 호출, DEBUG 로그
 - [ ] 에러 발생: onError() 호출, ERROR 로그
@@ -204,16 +208,19 @@ adb logcat *:S SearcherCoroutine:D SearchPerf:V
 - [ ] UI 정리: 에러/취소 시 로딩 인디케이터 제거
 
 ### 로그 검증
+
 - [ ] CancellationException → DEBUG 레벨
 - [ ] Exception → ERROR 레벨
 - [ ] 로그 메시지 구분 명확
 
 ### Amplitude 검증
+
 - [ ] Search 이벤트: 정상 검색
 - [ ] SearchError 이벤트: 에러 발생
 - [ ] 에러 속성: errorType, errorMessage, query
 
 ### 안정성
+
 - [ ] 앱 크래시 없음
 - [ ] 에러 후 정상 복구
 - [ ] 메모리 누수 없음
@@ -259,6 +266,7 @@ override suspend fun doInBackground() {
 ## ✅ 완료 조건
 
 ### Step 2 완료 기준
+
 - ✅ 코드 수정 완료 (CancellationException 구분)
 - ✅ 빌드 성공
 - ✅ 커밋 완료
@@ -305,6 +313,7 @@ _______________________________________________
 ## 🔄 다음 단계
 
 ### 테스트 통과 시
+
 ```bash
 # dev에 머지
 git checkout dev
@@ -315,6 +324,7 @@ git checkout -b phase2-step3-cancellation-checks
 ```
 
 ### 테스트 실패 시
+
 ```bash
 # 문제 분석 및 수정
 # 재테스트

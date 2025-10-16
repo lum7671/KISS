@@ -287,6 +287,7 @@ public class MemoryAwareIconManager {
 ### 성능 테스트
 
 1. **아이콘 로딩 시간 측정**
+
    ```bash
    # 설정 변경 전후 시간 측정
    adb shell am start -W kr.lum7671.kiss/.SettingsActivity
@@ -294,12 +295,14 @@ public class MemoryAwareIconManager {
    ```
 
 2. **메모리 사용량 모니터링**
+
    ```bash
    # 아이콘 캐시 메모리 사용량
    adb shell dumpsys meminfo kr.lum7671.kiss | grep -i icon
    ```
 
 3. **UI 반응성 측정**
+
    ```bash
    # 스크롤 성능 측정
    adb shell dumpsys gfxinfo kr.lum7671.kiss

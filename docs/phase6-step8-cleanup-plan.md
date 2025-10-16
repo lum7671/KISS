@@ -10,16 +10,18 @@
 ## 📊 현재 상태 분석
 
 ### APK 용량 추이
+
 ```
 v4.2.0 (2025-10-15): 2.4MB
 v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ```
 
 ### 용량 증가 원인
+
 1. **NewSettingsActivity 마이그레이션** (Phase 6 Step 7 완료)
    - NewSettingsActivity.kt (4KB)
    - SettingsFragment.java (52KB, 1,183줄)
-   
+
 2. **Compat 클래스 33개 추가** (Phase 6 Step 1-6 완료)
    - 총 약 200KB
 
@@ -33,16 +35,19 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ## 🎯 Step 8 목표
 
 ### 1차 목표: Legacy 파일 제거
+
 - ✅ NewSettingsActivity 완전 전환 확인
 - ✅ Legacy Preference 클래스 15개 제거
 - ✅ 예상 효과: 100-150KB 감소
 
 ### 2차 목표: ProGuard/R8 최적화
+
 - ✅ 미사용 코드 제거 강화
 - ✅ 최적화 옵션 추가
 - ✅ 예상 효과: 50-100KB 추가 감소
 
 ### 3차 목표: 불필요한 Compat 클래스 검토
+
 - ✅ 실제 사용되지 않는 클래스 확인
 - ✅ 필요시 제거
 
@@ -51,32 +56,38 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ## 📋 작업 체크리스트
 
 ### Phase 1: 현재 상태 확인 ✅
+
 - [x] APK 용량 추이 분석
 - [x] Legacy vs Compat 파일 매핑
 - [x] 사용 중인 클래스 확인
 - [x] AndroidManifest 확인
 
 ### Phase 2: Legacy 파일 안전성 검증
+
 - [ ] SettingsActivity 사용 여부 확인
 - [ ] Legacy Preference 참조 검색
 - [ ] 테스트 항목 확인
 
 ### Phase 3: Legacy 파일 제거
+
 - [ ] 15개 Legacy Preference 삭제
 - [ ] SettingsActivity.java 처리 결정
 - [ ] Import 문 정리
 
 ### Phase 4: ProGuard/R8 최적화
+
 - [ ] proguard-rules.pro 강화
 - [ ] R8 최적화 옵션 추가
 - [ ] gradle.properties 설정
 
 ### Phase 5: 빌드 & 테스트
+
 - [ ] Release APK 빌드
 - [ ] 용량 확인
 - [ ] 기능 테스트
 
 ### Phase 6: 문서화
+
 - [ ] 완료 보고서 작성
 - [ ] 용량 감소 측정
 - [ ] Phase 6 전체 완료 표시
@@ -88,6 +99,7 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ### A. 반드시 제거할 파일 (15개)
 
 #### 1. SwitchPreference 계열 (4개)
+
 ```
 ❌ app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.java
 ❌ app/src/main/java/fr/neamar/kiss/preference/FreezeHistorySwitch.java
@@ -98,6 +110,7 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ```
 
 #### 2. DialogPreference 계열 (11개)
+
 ```
 ❌ AddSearchProviderPreference.java
 ❌ ColorPreference.java
@@ -120,6 +133,7 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ### B. 검토가 필요한 파일
 
 #### 1. SettingsActivity.java (859줄)
+
 ```java
 // 현재 상태: AndroidManifest에 fallback으로 유지 중
 // 옵션:
@@ -129,17 +143,20 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ```
 
 **결정 기준**:
+
 - NewSettingsActivity 안정성 확인
 - 사용자 피드백 대기 기간 고려
 - 롤백 가능성 평가
 
 #### 2. ExcludePreferenceScreen.java
+
 ```java
 // 현재 상태: ExcludePreferenceScreenCompat.java 생성됨
 // 확인 필요: SettingsActivity.java에서 직접 참조 여부
 ```
 
 #### 3. PreferenceScreenHelper.java
+
 ```java
 // 현재 상태: Helper 클래스
 // 확인 필요: NewSettingsActivity에서 사용 여부
@@ -150,6 +167,7 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ## 🔍 사용 중인 클래스 확인 결과
 
 ### XML 파일 (preferences.xml)
+
 ```xml
 ✅ 모든 참조가 *Compat 클래스로 변경됨
    - fr.neamar.kiss.preference.SwitchPreferenceCompat
@@ -161,6 +179,7 @@ v4.2.4 (2025-10-16): 3.8MB  ← 1.4MB 증가!
 ```
 
 ### Java 파일 참조
+
 ```java
 // SettingsActivity.java (Line 51) - Legacy 사용 중
 import fr.neamar.kiss.preference.SwitchPreference;
@@ -184,11 +203,13 @@ import android.preference.SwitchPreference;  // Android SDK (OK)
 ### 1. proguard-rules.pro 강화
 
 #### A. 현재 설정 확인
+
 ```bash
 cat app/proguard-rules.pro
 ```
 
 #### B. 추가할 규칙
+
 ```proguard
 # ======================================================================
 # Phase 6 Step 8: Preference 최적화
@@ -247,6 +268,7 @@ buildTypes {
 ## 📝 작업 순서 (Step-by-Step)
 
 ### Step 1: 브랜치 생성
+
 ```bash
 cd /Users/1001028/git/KISS
 git checkout dev
@@ -255,6 +277,7 @@ git checkout -b feature/phase6-step8-cleanup
 ```
 
 ### Step 2: Legacy 파일 사용 여부 최종 확인
+
 ```bash
 # Legacy 클래스 참조 검색
 grep -r "import fr.neamar.kiss.preference.SwitchPreference[^C]" app/src/main/java
@@ -269,6 +292,7 @@ grep "fr.neamar.kiss.preference." app/src/main/res/xml/preferences.xml | grep -v
 ### Step 3: SettingsActivity.java 처리 결정
 
 #### Option A: 완전 제거 (권장)
+
 ```bash
 # 1. AndroidManifest.xml에서 제거
 # 2. SettingsActivity.java 삭제
@@ -276,6 +300,7 @@ grep "fr.neamar.kiss.preference." app/src/main/res/xml/preferences.xml | grep -v
 ```
 
 #### Option B: Deprecated 마킹
+
 ```java
 @Deprecated
 public class SettingsActivity extends PreferenceActivity {
@@ -284,11 +309,13 @@ public class SettingsActivity extends PreferenceActivity {
 ```
 
 #### Option C: 최소화
+
 ```java
 // NewSettingsActivity로 리다이렉트만 하는 껍데기로 축소
 ```
 
 ### Step 4: Legacy Preference 파일 삭제
+
 ```bash
 cd /Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/preference
 
@@ -316,6 +343,7 @@ rm RestartPreference.java
 ```
 
 ### Step 5: ProGuard 규칙 추가
+
 ```bash
 # proguard-rules.pro 수정
 nano app/proguard-rules.pro
@@ -324,6 +352,7 @@ nano app/proguard-rules.pro
 ```
 
 ### Step 6: gradle.properties 최적화
+
 ```bash
 nano gradle.properties
 
@@ -332,6 +361,7 @@ android.enableR8.fullMode=true
 ```
 
 ### Step 7: 빌드 & 용량 확인
+
 ```bash
 # Release APK 빌드
 ./scripts/build_release_apk.sh
@@ -343,6 +373,7 @@ ls -lh app/build/outputs/apk/release/*.apk
 ```
 
 ### Step 8: 기능 테스트
+
 ```bash
 # 설치
 ./scripts/install_and_test.sh
@@ -355,6 +386,7 @@ ls -lh app/build/outputs/apk/release/*.apk
 ```
 
 ### Step 9: 커밋 & 머지
+
 ```bash
 git add .
 git commit -m "Phase 6 Step 8: Remove legacy Preference classes and optimize build
@@ -380,6 +412,7 @@ git push origin feature/phase6-step8-cleanup
 ```
 
 ### Step 10: 문서 작성
+
 ```bash
 # phase6-step8-completion-report.md 작성
 # README.md 업데이트
@@ -391,12 +424,14 @@ git push origin feature/phase6-step8-cleanup
 ## 🧪 테스트 체크리스트
 
 ### 빌드 테스트
+
 - [ ] Debug APK 빌드 성공
 - [ ] Release APK 빌드 성공
 - [ ] APK 용량 측정 (3.5MB 이하 목표)
 - [ ] ProGuard 에러 없음
 
 ### 기능 테스트
+
 - [ ] 설정 화면 열기
 - [ ] SwitchPreference 토글
 - [ ] ColorPreference 다이얼로그
@@ -405,6 +440,7 @@ git push origin feature/phase6-step8-cleanup
 - [ ] ShizukuMode/RootMode 스위치
 
 ### 회귀 테스트
+
 - [ ] 앱 실행
 - [ ] 검색 기능
 - [ ] 즐겨찾기
@@ -416,6 +452,7 @@ git push origin feature/phase6-step8-cleanup
 ## 📊 예상 결과
 
 ### APK 용량 감소
+
 ```
 현재:     3.8MB (v4.2.4)
 목표:     3.5MB 이하
@@ -428,6 +465,7 @@ git push origin feature/phase6-step8-cleanup
 ```
 
 ### 코드 정리
+
 ```
 제거:
 - 15개 Legacy Preference 클래스
@@ -444,16 +482,19 @@ git push origin feature/phase6-step8-cleanup
 ## ⚠️ 주의사항
 
 ### 1. SettingsActivity 제거 시점
+
 - **권장**: v4.2.5에서 제거 (현재)
 - **보수적**: v4.3.0까지 유지 후 제거
 - **이유**: NewSettingsActivity 안정성 검증 기간
 
 ### 2. ProGuard 설정
+
 - R8 Full Mode는 앱 전체에 영향
 - 충분한 테스트 필요
 - 문제 발생 시 즉시 롤백 가능
 
 ### 3. 롤백 계획
+
 ```bash
 # 문제 발생 시
 git checkout dev
@@ -468,16 +509,19 @@ git show HEAD~1:app/src/main/java/fr/neamar/kiss/preference/SwitchPreference.jav
 ## 🎯 성공 기준
 
 ### 필수 달성
+
 - ✅ Legacy 파일 15개 제거
 - ✅ APK 빌드 성공
 - ✅ 모든 설정 기능 정상 동작
 
 ### 추가 달성
+
 - ✅ APK 300KB 이상 감소
 - ✅ ProGuard 최적화 적용
 - ✅ SettingsActivity 제거 결정
 
 ### Phase 6 전체 완료 조건
+
 - ✅ Step 1-7 완료 (이미 완료)
 - ✅ Step 8 완료 (진행 중)
 - ✅ 모든 Preference AndroidX 전환

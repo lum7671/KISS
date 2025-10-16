@@ -27,11 +27,11 @@ Liberapay is a donation platform whose primary goal is to fund the commons, part
 
 In the spirit of open-source, we accept Bitcoin and Ethereum.
 
-### Bitcoin wallet:
+### Bitcoin wallet
 
 <p style="text-align:center; font-size: 1.5em"><tt>bc1q9ztyh7ndnay2vc2tarljx0vugs4zx4mgfy663a</tt></p>
 
-### Lightning URL:
+### Lightning URL
 
 <p style="text-align:center; font-size: 1.5em"><tt>LNURL1DP68GURN8GHJ7EM9W3SKCCNE9E3K7MF0D3H82UNVWQHKUETPD4SHYYTGYZQ</tt></p>
 

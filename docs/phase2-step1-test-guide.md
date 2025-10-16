@@ -29,6 +29,7 @@
 ### 1. 기능 테스트 (필수)
 
 #### 1.1 기본 검색 동작
+
 ```
 테스트: 모든 검색 타입이 정상 동작하는지 확인
 
@@ -51,6 +52,7 @@
 **예상 결과**: 모두 정상 동작 (synchronized 추가는 기능 변경 없음)
 
 #### 1.2 결과 순서 검증
+
 ```
 테스트: 검색 결과의 정렬 순서가 유지되는지 확인
 
@@ -66,6 +68,7 @@
 **예상 결과**: 순서 변경 없음 (synchronized는 순서에 영향 없음)
 
 #### 1.3 취소 동작 검증
+
 ```
 테스트: 검색 취소가 정상 동작하는지 확인
 
@@ -86,6 +89,7 @@
 ### 2. 성능 테스트 (권장)
 
 #### 2.1 검색 속도
+
 ```
 테스트: synchronized 추가로 성능 저하가 없는지 확인
 
@@ -101,6 +105,7 @@
 **예상 결과**: 성능 차이 없음 (synchronized 오버헤드 미미)
 
 #### 2.2 Logcat 확인
+
 ```bash
 # 검색 시간 로그 확인
 adb logcat | grep "SearchPerf"
@@ -116,6 +121,7 @@ adb logcat | grep "SearchPerf"
 ### 3. 동시성 테스트 (선택 사항)
 
 #### 3.1 빠른 연속 검색
+
 ```
 테스트: Race condition이 발생하지 않는지 확인
 
@@ -136,6 +142,7 @@ adb logcat | grep "SearchPerf"
 ## 📊 테스트 체크리스트
 
 ### 필수 테스트
+
 - [ ] 텍스트 검색 정상 동작
 - [ ] 히스토리 검색 정상 동작
 - [ ] 앱 목록 검색 정상 동작
@@ -145,10 +152,12 @@ adb logcat | grep "SearchPerf"
 - [ ] 빠른 연속 검색 정상 동작
 
 ### 성능 테스트
+
 - [ ] 검색 속도 확인 (Logcat)
 - [ ] 성능 저하 없음 확인
 
 ### 안정성 테스트
+
 - [ ] 앱 크래시 없음
 - [ ] 메모리 누수 없음 (장시간 사용)
 
@@ -157,6 +166,7 @@ adb logcat | grep "SearchPerf"
 ## 🚀 테스트 실행 방법
 
 ### Option 1: 스크립트 사용 (추천)
+
 ```bash
 # APK 빌드 + 설치 + 실행
 cd /Users/1001028/git/KISS
@@ -164,6 +174,7 @@ cd /Users/1001028/git/KISS
 ```
 
 ### Option 2: 수동 실행
+
 ```bash
 # 1. Debug APK 빌드
 ./gradlew assembleDebug
@@ -186,6 +197,7 @@ adb logcat | grep -E "SearchPerf|SearcherCoroutine"
 ## ✅ 완료 조건
 
 ### Step 1 완료 기준
+
 - ✅ 코드 수정 완료 (synchronized 추가)
 - ✅ 빌드 성공
 - ✅ 커밋 완료
@@ -194,6 +206,7 @@ adb logcat | grep -E "SearchPerf|SearcherCoroutine"
 - [ ] **PR 생성** (다음 단계)
 
 ### PR 생성 전 확인사항
+
 1. 모든 검색 타입 정상 동작
 2. 검색 결과 순서 유지
 3. 성능 저하 없음
@@ -236,6 +249,7 @@ adb logcat | grep -E "SearchPerf|SearcherCoroutine"
 ## 🔄 다음 단계
 
 ### 테스트 통과 시
+
 ```bash
 # PR 생성 (GitHub에서)
 # Title: feat(searcher): Add explicit thread safety to addResults()
@@ -250,6 +264,7 @@ git checkout -b phase2-step2-error-handling
 ```
 
 ### 테스트 실패 시
+
 ```bash
 # 문제 분석 및 수정
 # 재테스트

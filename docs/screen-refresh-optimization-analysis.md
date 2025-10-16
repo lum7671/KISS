@@ -215,6 +215,7 @@ public void onPrefChanged(SharedPreferences pref, String key) {
 ```
 
 **문제점**:
+
 - 아이콘 관련 설정 하나만 변경해도 전체 아이콘 캐시가 삭제됨
 - 모든 아이콘을 다시 로딩해야 함
 - `cacheClear()`가 파일 시스템에서 물리적으로 캐시 파일들을 삭제
@@ -233,6 +234,7 @@ public void updateResults(@NonNull Context context, List<Result<?>> results, boo
 ```
 
 **문제점**:
+
 - 검색 결과 업데이트 시 전체 리스트뷰가 다시 그려짐
 - 각 아이템의 아이콘도 다시 로딩됨
 - `isRefresh=true`인 경우에도 전체 새로고침 수행
@@ -251,6 +253,7 @@ public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, Strin
 ```
 
 **문제점**:
+
 - 아이콘과 무관한 설정 변경 시에도 아이콘 핸들러 호출
 - 불필요한 아이콘 시스템 체크 및 처리
 
@@ -264,6 +267,7 @@ adapter.notifyDataSetChanged(); // 뷰 갱신 중단
 ```
 
 **문제점**:
+
 - 화면 전환 후 복귀 시 불필요한 아이콘 재로딩
 - 메모리에서 아이콘이 해제된 후 다시 로딩
 
@@ -324,14 +328,17 @@ public class SmartIconCache {
 ## 📊 아이콘 Refresh 영향도
 
 ### 높은 영향도
+
 1. **설정 변경 시 전체 캐시 삭제** - 모든 아이콘 재로딩 필요
 2. **notifyDataSetChanged 과다 호출** - 매번 전체 리스트 새로고침
 
 ### 중간 영향도
+
 1. **화면 전환 시 재로딩** - 일부 아이콘만 영향
 2. **메모리 압박 시 캐시 해제** - 점진적 성능 저하
 
 ### 낮은 영향도
+
 1. **개별 아이콘 로딩 실패** - 특정 앱만 영향
 
 ---

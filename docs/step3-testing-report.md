@@ -9,12 +9,14 @@
 ## 테스트 환경
 
 ### APK 정보
+
 - **File**: `/Users/1001028/git/KISS/app/build/outputs/apk/debug/app-debug.apk`
 - **Size**: 15MB
 - **Build Type**: Debug
 - **Feature Flag**: `BuildConfig.USE_SEARCHER_COROUTINE = true`
 
 ### 에뮬레이터 정보
+
 - **AVD**: Medium_Phone_API_36.0
 - **API Level**: 36 (Android 15+)
 - **Architecture**: ARM64-v8a
@@ -22,6 +24,7 @@
 - **Memory**: 4GB
 
 ### APK 설치
+
 ```bash
 $ adb install -r app-debug.apk
 Performing Streamed Install
@@ -42,6 +45,7 @@ Success ✅
 | TC-1.4 | "gal" | Gallery/갤러리 앱 표시 | ⏳ Pending | - |
 
 **검증 항목**:
+
 - ✅ 검색 결과가 즉시 표시되는가?
 - ✅ 결과가 relevance 순으로 정렬되는가?
 - ✅ Loading indicator가 정상 동작하는가?
@@ -57,11 +61,13 @@ Success ✅
 | TC-2.3 | 3번 더 선택 후 재검색 | 갤러리가 최상위 (+25*4=+100 boost) | ⏳ Pending | - |
 
 **검증 항목**:
+
 - ✅ DBHelper.getPreviousResultsForQuery() 정상 작동
 - ✅ knownIds HashMap 올바르게 생성
 - ✅ relevance += 25 * value 정상 적용
 
 **LogCat 확인**:
+
 ```bash
 # 다음 로그 확인
 V/QuerySearcherCoroutine: Time to run query `gal` to completion: XXXms
@@ -79,6 +85,7 @@ amplitude: Search event with query length, time, result count
 | TC-3.3 | 즉시 "l" 추가 ("gal") | 이전 검색 취소, 새 검색 시작 | ⏳ Pending | - |
 
 **검증 항목**:
+
 - ✅ MainActivity.resetTask() 이전 Job 취소
 - ✅ searchJob.cancel() 정상 작동
 - ✅ isCancelled() 체크 정상 작동
@@ -95,6 +102,7 @@ amplitude: Search event with query length, time, result count
 | TC-4.3 | 검색 시 최대 20개만 표시 | getMaxResultCount() = 20 | ⏳ Pending | - |
 
 **검증 항목**:
+
 - ✅ SettingsActivity에서 양쪽 cache clear 호출
 - ✅ QuerySearcherCoroutine.clearMaxResultCountCache() 작동
 - ✅ 다음 검색부터 새 값 적용
@@ -111,6 +119,7 @@ amplitude: Search event with query length, time, result count
 | Memory 사용량 | 이전 버전과 동일 | ⏳ Pending | - |
 
 **Amplitude 로그 확인**:
+
 ```json
 {
   "event": "Search",
@@ -164,6 +173,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ### 8. Memory Leak 체크 (LeakCanary)
 
 **확인 방법**:
+
 1. KISS 런처 사용 중 반복적으로 검색
 2. 홈 버튼으로 나갔다가 다시 진입 (Activity destroy/create)
 3. LeakCanary 알림 확인
@@ -175,6 +185,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 | TC-8.3 | 빠른 연속 검색 50회 | Leak 없음 | ⏳ Pending | - |
 
 **LeakCanary 확인 항목**:
+
 - ✅ WeakReference<MainActivity> 정상 작동
 - ✅ Job cancellation 정상 작동
 - ✅ Searcher adapter 객체 GC됨
@@ -231,12 +242,15 @@ D/ShortcutsProvider: requestResults() processing...
 ## 발견된 이슈
 
 ### Critical Issues
+
 _(테스트 중 발견된 critical 이슈)_
 
 ### Major Issues
+
 _(테스트 중 발견된 major 이슈)_
 
 ### Minor Issues
+
 _(테스트 중 발견된 minor 이슈)_
 
 ---
@@ -255,6 +269,7 @@ _(테스트 중 발견된 minor 이슈)_
 ## 테스트 실행 완료
 
 ### 테스트 세션 정보
+
 - **Date**: 2025-01-17 14:00
 - **Duration**: ~10 minutes
 - **Device**: Android Emulator (API 36, ARM64)
@@ -264,26 +279,31 @@ _(테스트 중 발견된 minor 이슈)_
 ### 주요 테스트 결과
 
 #### ✅ 기본 검색 기능
+
 - 검색 결과 즉시 표시됨
 - 검색 응답 속도 빠름
 - UI 반응성 양호
 
 #### ✅ Coroutines 동작 확인
+
 - MainActivity.runTaskCoroutine() 정상 작동
 - SearcherCoroutine.execute() Job 생성 확인
 - 검색 취소 메커니즘 정상 작동
 
 #### ✅ Provider 연동
+
 - Searcher 어댑터 패턴 정상 작동
 - DataHandler.requestResults() 호출 성공
 - 모든 Provider (App, Contacts, Shortcuts 등) 정상 동작
 
 #### ✅ Performance
+
 - 검색 응답 시간: 빠름 (체감상 문제 없음)
 - UI 프레임 드롭: 없음
 - 메모리 사용: 정상
 
 #### ✅ No Visible Issues
+
 - 크래시 없음
 - UI 버그 없음
 - 기능 동작 정상
@@ -319,11 +339,13 @@ _(테스트 중 발견된 minor 이슈)_
 ### 다음 단계
 
 ✅ **Manual Testing 완료 후**:
+
 1. 테스트 결과를 이 문서에 업데이트
 2. 발견된 이슈 수정
 3. Step 3 완료 선언
 
 🔄 **Step 4 준비**:
+
 - HistorySearcher migration
 - ApplicationsSearcher migration
 - NullSearcher, TagsSearcher, UntaggedSearcher migration
@@ -333,6 +355,7 @@ _(테스트 중 발견된 minor 이슈)_
 ## 테스트 명령어 참조
 
 ### APK 설치
+
 ```bash
 cd /Users/1001028/git/KISS
 export ANDROID_HOME=~/Library/Android/sdk
@@ -340,6 +363,7 @@ $ANDROID_HOME/platform-tools/adb install -r app/build/outputs/apk/debug/app-debu
 ```
 
 ### LogCat 모니터링
+
 ```bash
 # QuerySearcher 관련 로그
 $ANDROID_HOME/platform-tools/adb logcat | grep -E "(SearcherCoroutine|QuerySearcher)"
@@ -352,6 +376,7 @@ $ANDROID_HOME/platform-tools/adb logcat | grep KISS
 ```
 
 ### Performance Profiling
+
 ```bash
 # CPU 사용률
 $ANDROID_HOME/platform-tools/adb shell top | grep kiss

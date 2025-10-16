@@ -11,6 +11,7 @@
 ## 📊 최종 결과
 
 ### APK 용량 감소
+
 ```
 Before (v4.2.4): 3.8MB
 After  (Step 8): 3.6MB
@@ -18,6 +19,7 @@ After  (Step 8): 3.6MB
 ```
 
 ### 코드 정리
+
 ```
 제거된 파일: 19개
 제거된 코드: 2,076줄
@@ -32,6 +34,7 @@ After  (Step 8): 3.6MB
 ### 1. Legacy 파일 제거 (19개)
 
 #### A. SettingsActivity.java (1개, 859줄)
+
 ```bash
 ❌ app/src/main/java/fr/neamar/kiss/SettingsActivity.java
    - 기능: Legacy PreferenceActivity 기반 설정 화면
@@ -42,6 +45,7 @@ After  (Step 8): 3.6MB
 #### B. Legacy Preference 클래스 (18개)
 
 **SwitchPreference 계열 (4개)**:
+
 ```
 ❌ SwitchPreference.java
 ❌ FreezeHistorySwitch.java
@@ -52,6 +56,7 @@ After  (Step 8): 3.6MB
 ```
 
 **DialogPreference 계열 (14개)**:
+
 ```
 ❌ AddSearchProviderPreference.java
 ❌ ColorPreference.java
@@ -74,6 +79,7 @@ After  (Step 8): 3.6MB
 ### 2. ProGuard/R8 최적화
 
 #### A. proguard-rules.pro 강화 (+66줄)
+
 ```proguard
 # ======================================================================
 # Phase 6 Step 8: APK Size Optimization
@@ -109,6 +115,7 @@ After  (Step 8): 3.6MB
 ```
 
 #### B. gradle.properties 최적화 (+6줄)
+
 ```properties
 # ======================================================================
 # Phase 6 Step 8: APK Size Optimization
@@ -124,6 +131,7 @@ android.enableResourceOptimizations=true
 ### 3. 버그 수정
 
 #### ExcludePreferenceScreen.java
+
 ```java
 // Before: 컴파일 에러
 SwitchPreference pref = createExcludeAppSwitch(...);  // Cannot find symbol
@@ -133,6 +141,7 @@ import android.preference.SwitchPreference;
 ```
 
 ### 4. AndroidManifest 정리
+
 ```xml
 <!-- Before: 주석으로 유지 -->
 <!-- Keep old SettingsActivity for fallback if needed -->
@@ -150,6 +159,7 @@ import android.preference.SwitchPreference;
 ### APK 용량 상세 분석
 
 #### Before (v4.2.4)
+
 ```
 전체 크기: 3.8MB
   ├─ Code: ~1.5MB
@@ -158,6 +168,7 @@ import android.preference.SwitchPreference;
 ```
 
 #### After (Step 8)
+
 ```
 전체 크기: 3.6MB (-200KB)
   ├─ Code: ~1.3MB (-200KB) ← Legacy 제거 + R8 최적화
@@ -166,6 +177,7 @@ import android.preference.SwitchPreference;
 ```
 
 ### 빌드 경고 감소
+
 ```
 Before: 365 baseline warnings
 After:  52 deprecation warnings
@@ -173,6 +185,7 @@ After:  52 deprecation warnings
 ```
 
 **남은 52개 경고 분류**:
+
 - Deprecation warnings: 52개 (향후 별도 작업으로 해결)
 - Compile errors: 0개 ✅
 
@@ -194,6 +207,7 @@ After:  52 deprecation warnings
 | **Step 8** | **Legacy 제거 & 최적화** | **-19** | **✅** | **10/16** |
 
 ### 최종 파일 현황
+
 ```
 ✅ Compat 클래스: 33개 (Phase 6 Step 1-6)
 ✅ NewSettingsActivity: 1개 + SettingsFragment: 1개 (Step 7)
@@ -208,6 +222,7 @@ After:  52 deprecation warnings
 ## 🧪 테스트 결과
 
 ### 빌드 테스트
+
 - [x] Debug APK 빌드 성공 ✅
 - [x] Release APK 빌드 성공 ✅
 - [x] APK 서명 성공 ✅
@@ -216,6 +231,7 @@ After:  52 deprecation warnings
 - [x] Lint 에러 없음 ✅
 
 ### 기능 테스트 (예정)
+
 - [ ] 설정 화면 열기 (NewSettingsActivity)
 - [ ] SwitchPreference 토글
 - [ ] ColorPreference 다이얼로그
@@ -224,6 +240,7 @@ After:  52 deprecation warnings
 - [ ] ShizukuMode/RootMode 스위치
 
 ### 회귀 테스트 (예정)
+
 - [ ] 앱 실행
 - [ ] 검색 기능
 - [ ] 즐겨찾기
@@ -235,6 +252,7 @@ After:  52 deprecation warnings
 ## 📚 생성된 문서
 
 ### 새로 작성된 문서
+
 ```
 ✅ docs/phase6-step8-cleanup-plan.md
    - Step 8 전체 계획서
@@ -244,6 +262,7 @@ After:  52 deprecation warnings
 ```
 
 ### 업데이트 예정 문서
+
 ```
 - README.md (v4.2.5 정보 추가)
 - phase6-progress-tracker.md (Step 8 완료 표시)
@@ -257,6 +276,7 @@ After:  52 deprecation warnings
 ### R8 Full Mode 효과
 
 #### 활성화 전 (Standard Mode)
+
 ```
 - 기본 코드 최적화
 - 보수적인 난독화
@@ -264,6 +284,7 @@ After:  52 deprecation warnings
 ```
 
 #### 활성화 후 (Full Mode)
+
 ```
 - 적극적인 코드 최적화
 - 미사용 코드 완전 제거
@@ -275,6 +296,7 @@ After:  52 deprecation warnings
 ### ProGuard 규칙 효과
 
 #### Log 제거
+
 ```proguard
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
@@ -286,6 +308,7 @@ After:  52 deprecation warnings
 ```
 
 #### Preference 최적화
+
 ```proguard
 -assumenosideeffects class * extends androidx.preference.Preference {
     public void setEnabled(boolean);
@@ -302,6 +325,7 @@ After:  52 deprecation warnings
 ### 1. 남은 Deprecation Warnings (52개)
 
 #### 우선순위 HIGH (17개)
+
 ```java
 // MainActivity.java (6개)
 - getWindow().setStatusBarColor() [API 35+]
@@ -320,11 +344,13 @@ After:  52 deprecation warnings
 ### 2. ExcludePreferenceScreen 이슈
 
 **현재 상태**:
+
 - Legacy PreferenceActivity용 Helper 클래스
 - Android SDK의 `android.preference.SwitchPreference` 사용
 - NewSettingsActivity와 호환 안됨
 
 **해결 방안**:
+
 - Option 1: ExcludePreferenceScreenCompat로 대체 (권장)
 - Option 2: NewSettingsActivity에서 제외 기능 재구현
 - Option 3: 현재 상태 유지 (Legacy 지원용)
@@ -332,11 +358,13 @@ After:  52 deprecation warnings
 ### 3. R8 Full Mode 모니터링
 
 **체크 포인트**:
+
 - 앱 실행 시 Crash 없는지 확인
 - ProGuard 규칙이 너무 aggressive하지 않은지 테스트
 - 특정 기능이 최적화로 인해 제거되지 않았는지 검증
 
 **롤백 계획**:
+
 ```properties
 # gradle.properties에서 비활성화
 # android.enableR8.fullMode=true  # 주석 처리
@@ -349,26 +377,31 @@ After:  52 deprecation warnings
 ### 달성한 목표
 
 #### ✅ 1. AndroidX Preference 완전 마이그레이션
+
 - 33개 Compat 클래스 생성
 - NewSettingsActivity + SettingsFragment 구현
 - Legacy 클래스 19개 완전 제거
 
 #### ✅ 2. 코드 품질 향상
+
 - 중복 코드 제거 (~2,000줄)
 - 최신 AndroidX API 사용
 - Deprecation warning 313개 해결 (via baseline removal)
 
 #### ✅ 3. APK 용량 최적화
+
 - 3.8MB → 3.6MB (200KB 감소)
 - ProGuard/R8 규칙 강화
 - R8 Full Mode 활성화
 
 #### ✅ 4. 빌드 안정성 향상
+
 - Lint baseline 정리 (365 → 52 warnings)
 - Compile error 0개
 - Release 빌드 성공률 100%
 
 ### 미달성 목표 (Next Phase)
+
 - [ ] Deprecation warning 52개 해결 → Phase 7로 이월
 - [ ] APK 3.5MB 이하 → 3.6MB (거의 달성, 추가 최적화 가능)
 - [ ] ExcludePreferenceScreen 마이그레이션 → 향후 작업
@@ -386,6 +419,7 @@ After:  52 deprecation warnings
 | **v4.2.5** | **3.6MB** | **181** | **19** | **51,400** |
 
 **분석**:
+
 - v4.2.0 → v4.2.4: Phase 6 Step 1-7 완료, 기능 추가로 용량 증가
 - v4.2.4 → v4.2.5: Step 8 완료, Legacy 제거로 용량 감소
 - 최종: v4.2.0 대비 +1.2MB, 하지만 기능은 크게 향상
@@ -393,6 +427,7 @@ After:  52 deprecation warnings
 ### Phase 6 전후 비교
 
 #### Before (v4.1.9, Phase 6 시작 전)
+
 ```
 설정 시스템:
 - PreferenceActivity (deprecated)
@@ -406,6 +441,7 @@ APK 크기: 2.4MB
 ```
 
 #### After (v4.2.5, Phase 6 완료)
+
 ```
 설정 시스템:
 - PreferenceFragmentCompat (latest)
@@ -423,7 +459,9 @@ APK 크기: 3.6MB (+1.2MB)
 ## 🚀 Next Steps
 
 ### 즉시 수행
+
 1. **브랜치 머지**
+
    ```bash
    git checkout dev
    git merge feature/phase6-step8-cleanup
@@ -431,12 +469,14 @@ APK 크기: 3.6MB (+1.2MB)
    ```
 
 2. **버전 업데이트**
+
    ```gradle
    versionCode 425
    versionName "4.2.5"
    ```
 
 3. **Release APK 배포**
+
    ```bash
    ./scripts/build_release_apk.sh
    # GitHub Release 생성
@@ -444,6 +484,7 @@ APK 크기: 3.6MB (+1.2MB)
    ```
 
 ### 단기 계획 (1주 이내)
+
 1. **사용자 피드백 수집**
    - NewSettingsActivity 안정성
    - 설정 기능 정상 동작 확인
@@ -455,6 +496,7 @@ APK 크기: 3.6MB (+1.2MB)
    - 작업 계획 수립
 
 ### 중기 계획 (1개월 이내)
+
 1. **Phase 7: Deprecation Warning 제거**
    - MainActivity UI 최적화
    - Fragment API 업데이트
@@ -479,6 +521,7 @@ APK 크기: 3.6MB (+1.2MB)
 ## ✅ 체크리스트
 
 ### Phase 6 Step 8 완료 확인
+
 - [x] Legacy 파일 19개 제거
 - [x] ProGuard 규칙 추가
 - [x] R8 Full Mode 활성화
@@ -488,6 +531,7 @@ APK 크기: 3.6MB (+1.2MB)
 - [x] 완료 보고서 작성
 
 ### Phase 6 전체 완료 확인
+
 - [x] Step 1: SwitchPreference 베이스
 - [x] Step 2: SwitchPreference 하위 클래스
 - [x] Step 3: 간단한 DialogPreference
@@ -498,6 +542,7 @@ APK 크기: 3.6MB (+1.2MB)
 - [x] Step 8: Legacy 제거 & 최적화
 
 ### 남은 작업
+
 - [ ] dev 브랜치 머지
 - [ ] 버전 4.2.5 릴리즈
 - [ ] 기능 테스트

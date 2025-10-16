@@ -46,6 +46,7 @@ private void showSnackbar(String message, int duration, @Nullable String actionT
 ```
 
 **특징**:
+
 - View가 없을 경우 Toast로 폴백
 - 액션 버튼 지원 (Retry 등)
 - 일관된 에러 처리 패턴
@@ -67,6 +68,7 @@ private void showSnackbar(String message, int duration, @Nullable String actionT
 #### 1.3 Retry 액션 추가
 
 **Import 에러 처리**:
+
 ```java
 catch (Exception e) {
     // Show error with retry action
@@ -76,6 +78,7 @@ catch (Exception e) {
 ```
 
 **Export 에러 처리**:
+
 ```java
 catch (Exception e) {
     // Show error with retry action
@@ -86,6 +89,7 @@ catch (Exception e) {
 ```
 
 **개선 효과**:
+
 - 사용자가 에러 발생 시 즉시 재시도 가능
 - 설정 화면을 다시 열 필요 없음
 - 더 나은 사용자 경험
@@ -115,6 +119,7 @@ implementation 'com.google.android.material:material:1.12.0'
 **파일**: `docs/newsettings-day2-test-checklist.md`
 
 **내용**:
+
 - 7개 메인 설정 카테고리 테스트 항목
 - Fragment 네비게이션 테스트
 - Snackbar 에러 처리 테스트

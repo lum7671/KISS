@@ -32,6 +32,7 @@
 **변경 사항**:
 
 1. **ActivityTestRule → ActivityScenarioRule**
+
    ```java
    // Before (Deprecated)
    @Rule
@@ -48,6 +49,7 @@
    ```
 
 2. **PreferenceManager 마이그레이션**
+
    ```java
    // Before (Deprecated - API 29+)
    import android.preference.PreferenceManager;
@@ -57,6 +59,7 @@
    ```
 
 3. **Window Flags 현대화**
+
    ```java
    // Before (Deprecated - API 27+)
    activity.getWindow().addFlags(
@@ -72,6 +75,7 @@
    ```
 
 **영향 받는 파일**:
+
 - `AbstractMainActivityTest.java` - 완전히 현대화
 - `FavoritesTest.java` - ActivityScenario API 사용으로 업데이트
 
@@ -231,6 +235,7 @@ public void onShortcutsChanged(@NonNull String packageName,
 ```
 
 필요한 import 추가:
+
 ```java
 import androidx.annotation.NonNull;
 ```
@@ -271,11 +276,13 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 ### Android 15 대응
 
 ✅ **Test 코드 현대화 완료**
+
 - ActivityScenarioRule 사용 (AndroidX Test 권장 방식)
 - androidx.preference 사용 (API 29+ 호환)
 - Modern Window API 사용 (API 27+ 권장)
 
 ✅ **Null Safety 강화**
+
 - Fragment lifecycle 검증 추가
 - System service null 체크
 - ComponentName validation
@@ -289,6 +296,7 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 **현재 상태**: DialogFragment (deprecated in API 28) 사용 중
 
 **마이그레이션 계획**:
+
 ```java
 // android.app.DialogFragment → androidx.fragment.app.DialogFragment
 ```
@@ -299,6 +307,7 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 ### 추가 DataFlowIssue (~500개)
 
 **우선순위별 분류 필요**:
+
 - Critical: 런타임 crash 가능성 높음 → 즉시 수정
 - High: 특정 조건에서 crash → 순차 수정
 - Medium: 드물게 발생 → 장기 계획
@@ -306,6 +315,7 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 ### Annotator 이슈 (19,178개)
 
 **점진적 해결 계획**:
+
 1. 타입 불일치 우선 수정
 2. Import 누락 수정
 3. Generic 타입 명시화
@@ -315,10 +325,12 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 ## 🔍 변경된 파일 목록
 
 ### Test 코드
+
 1. `app/src/androidTest/java/fr/neamar/kiss/androidTest/AbstractMainActivityTest.java`
 2. `app/src/androidTest/java/fr/neamar/kiss/androidTest/FavoritesTest.java`
 
 ### Main 코드
+
 3. `app/src/main/java/fr/neamar/kiss/CustomIconDialog.java`
 4. `app/src/main/java/com/android/colorpicker/ColorPickerDialog.java`
 5. `app/src/main/java/fr/neamar/kiss/MainActivity.java`
@@ -360,6 +372,7 @@ gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListen
 ## 📝 테스트 결과
 
 ### Build 결과
+
 ```bash
 ./gradlew assembleDebug
 BUILD SUCCESSFUL in 2s
@@ -367,6 +380,7 @@ BUILD SUCCESSFUL in 2s
 ```
 
 ### Unit Test 결과
+
 ```bash
 ./gradlew test
 BUILD SUCCESSFUL in 9s
@@ -374,6 +388,7 @@ BUILD SUCCESSFUL in 9s
 ```
 
 ### 경고 메시지
+
 - **30개 경고**: ColorPickerDialog의 deprecated API (별도 수정 예정)
 - **빌드 차단 없음**: 모든 경고는 runtime에 영향 없음
 
@@ -382,16 +397,19 @@ BUILD SUCCESSFUL in 9s
 ## 🎯 Next Steps
 
 ### Phase 1 (완료 ✅)
+
 - [x] Deprecation 해결 (Test 코드)
 - [x] Critical null safety 수정
 - [x] @NonNull 어노테이션 추가
 
 ### Phase 2 (다음 작업)
+
 - [ ] ColorPickerDialog 마이그레이션 (DialogFragment → androidx)
 - [ ] 나머지 DataFlowIssue 분류 및 수정 계획
 - [ ] Annotator 이슈 우선순위 분류
 
 ### Phase 3 (장기)
+
 - [ ] Java → Kotlin 마이그레이션 고려
 - [ ] Null-safety 자동화
 - [ ] Inspection baseline 업데이트

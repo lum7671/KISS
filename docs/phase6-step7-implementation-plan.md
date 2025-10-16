@@ -15,12 +15,14 @@
 ### SettingsActivity.java (859 lines)
 
 **Current State**:
+
 ```java
 public class SettingsActivity extends PreferenceActivity 
     implements SharedPreferences.OnSharedPreferenceChangeListener {
 ```
 
 **Key Features**:
+
 1. **Preference Loading**: `addPreferencesFromResource(R.xml.preferences)` (line 116)
 2. **SharedPreferences Listener**: Registers in `onResume()`, unregisters in `onPause()`
 3. **Dynamic Preferences**: Creates preferences programmatically
@@ -66,12 +68,14 @@ SettingsFragment.java (700-800 lines)
 ### Phase A: Create SettingsFragment (3-4 hours)
 
 **Step A1: Base Fragment Setup** (30min)
+
 - Create `SettingsFragment.java`
 - Extend `PreferenceFragmentCompat`
 - Implement `onCreatePreferences(Bundle, String)`
 - Move `addPreferencesFromResource(R.xml.preferences)`
 
 **Step A2: Move Initialization Logic** (1h)
+
 - Move `onCreate()` business logic to `onCreatePreferences()`
 - Move version conditional logic (API level checks)
 - Move `removePreference()` calls
@@ -79,6 +83,7 @@ SettingsFragment.java (700-800 lines)
 - Move async initialization (`CoroutineUtils.execute(runnable)`)
 
 **Step A3: Move Dynamic Preference Creation** (1h)
+
 - Move `addExcludedAppSettings()` → Update to use `ExcludePreferenceScreenCompat`
 - Move `addExcludedFromHistoryAppSettings()` → Update to use `ExcludePreferenceScreenCompat`
 - Move `addExcludedShortcutAppSettings()` → Update to use `ExcludePreferenceScreenCompat`
@@ -89,6 +94,7 @@ SettingsFragment.java (700-800 lines)
 - Move `setListPreferenceIconsPacksData()`
 
 **Step A4: Move Helper Methods** (30min)
+
 - Move all private helper methods
 - Move `getParent()` methods
 - Move `removePreference()`, `removeSearchProviderSelect()`, etc.
@@ -98,6 +104,7 @@ SettingsFragment.java (700-800 lines)
 - Move `reorderPreferencesWithDisplayDependency()`
 
 **Step A5: Lifecycle & Listener** (1h)
+
 - Implement lifecycle methods:
   - `onResume()` → Register SharedPreferences listener
   - `onPause()` → Unregister listener
@@ -108,15 +115,18 @@ SettingsFragment.java (700-800 lines)
 ### Phase B: Update SettingsActivity (1-2 hours)
 
 **Step B1: Change Base Class** (15min)
+
 - Change `extends PreferenceActivity` → `extends AppCompatActivity`
 - Remove PreferenceActivity-specific imports
 - Add FragmentActivity imports
 
 **Step B2: Implement Activity Layout** (30min)
+
 - Create simple layout with Toolbar + FrameLayout container
 - Or use AppCompatActivity's default content view with Fragment transaction
 
 **Step B3: Fragment Transaction** (30min)
+
 - In `onCreate()`:
   - Setup theme (keep existing logic)
   - Setup SystemUiVisibilityHelper
@@ -124,6 +134,7 @@ SettingsFragment.java (700-800 lines)
   - Load SettingsFragment via FragmentManager
 
 **Step B4: Menu & Permission Forwarding** (30min)
+
 - Keep `onCreateOptionsMenu()`
 - Keep `onMenuItemSelected()`
 - Keep `onRequestPermissionsResult()` → Forward to PermissionManager
@@ -132,6 +143,7 @@ SettingsFragment.java (700-800 lines)
 ### Phase C: Update ExcludePreferenceScreen Usage (30min)
 
 **Original Usage (3 places)**:
+
 ```java
 PreferenceScreen excludedAppsScreen = ExcludePreferenceScreen.getInstance(
     this,  // PreferenceActivity
@@ -143,6 +155,7 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreen.getInstance(
 ```
 
 **New Usage**:
+
 ```java
 PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
     requireContext(),  // Context
@@ -155,6 +168,7 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
 ```
 
 **Changes**:
+
 - Add `getPreferenceManager()` parameter (androidx requires explicit PreferenceManager)
 - `this` → `requireContext()`
 - `ExcludePreferenceScreen` → `ExcludePreferenceScreenCompat`
@@ -163,11 +177,13 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
 ### Phase D: Testing & Validation (1 hour)
 
 **Build Validation**:
+
 - `./gradlew assembleDebug --quiet` → 0 warnings expected
 - Verify all imports resolved
 - Verify no deprecated API usage
 
 **Functional Testing**:
+
 1. Launch Settings activity
 2. Navigate through all preference screens
 3. Test ExcludePreferenceScreen (3 types)
@@ -179,6 +195,7 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
 9. Test back navigation
 
 **Edge Cases**:
+
 - Rotate device (savedInstanceState handling)
 - Background -> Foreground (lifecycle)
 - Permission denial flow
@@ -191,11 +208,13 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
 ### Challenge 1: PreferenceActivity-specific APIs
 
 **Problem**: Many methods are PreferenceActivity-specific
+
 - `getPreferenceScreen()`
 - `findPreference()`
 - `addPreferencesFromResource()`
 
 **Solution**: PreferenceFragmentCompat equivalents exist
+
 - `getPreferenceScreen()` - Available in Fragment
 - `findPreference()` - Available in Fragment (with generic type parameter)
 - `addPreferencesFromResource()` → `setPreferencesFromResource()` in `onCreatePreferences()`
@@ -203,25 +222,30 @@ PreferenceScreen excludedAppsScreen = ExcludePreferenceScreenCompat.getInstance(
 ### Challenge 2: Context References
 
 **Problem**: `this` refers to PreferenceActivity
+
 - `new ListPreference(this)`
 - `new MultiSelectListPreference(this)`
 
 **Solution**: Use Fragment context
+
 - `new ListPreference(requireContext())`
 - Or use `getPreferenceManager().createPreferenceScreen(requireContext())`
 
 ### Challenge 3: Toolbar Handling
 
 **Problem**: PreferenceActivity auto-manages toolbar for PreferenceScreen dialogs
+
 - `onPreferenceTreeClick()` finds toolbar and sets navigation
 
 **Solution**: androidx.preference.PreferenceScreen handles this automatically
+
 - Remove `onPreferenceTreeClick()` logic (or simplify)
 - Still need to apply theme colors and system bar insets
 
 ### Challenge 4: Async Initialization State
 
 **Problem**: `savedInstanceState` handling for async operations
+
 ```java
 if (savedInstanceState == null) {
     CoroutineUtils.execute(runnable);  // Async
@@ -233,23 +257,27 @@ if (savedInstanceState == null) {
 ```
 
 **Solution**: Keep same logic in Fragment
+
 - Fragment has `savedInstanceState` in `onCreate()` and `onCreatePreferences()`
 - Preserve sync/async branching
 
 ### Challenge 5: FindPreference Type Casting
 
 **Problem**: PreferenceActivity `findPreference()` returns `Preference`
+
 ```java
 ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 ```
 
 **Solution**: PreferenceFragmentCompat has generic version
+
 ```java
 ListPreference iconsPack = findPreference("icons-pack");
 // No cast needed if using Kotlin, but in Java still need cast
 ```
 
 **Actually in Java**: Still need cast, no change
+
 ```java
 ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 ```
@@ -259,12 +287,15 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 ## Code Organization
 
 ### Files to Create
+
 - `app/src/main/java/fr/neamar/kiss/SettingsFragment.java` (new, 700-800 lines)
 
 ### Files to Modify
+
 - `app/src/main/java/fr/neamar/kiss/SettingsActivity.java` (859 → 100-150 lines)
 
 ### Files to Reference
+
 - `app/src/main/java/fr/neamar/kiss/preference/ExcludePreferenceScreenCompat.java` (created in Step 6)
 - All Step 1-5 created Compat preferences (will be used in SettingsFragment)
 
@@ -273,6 +304,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 ## Implementation Checklist
 
 ### Pre-Implementation
+
 - [x] Read and analyze SettingsActivity.java (859 lines)
 - [x] Identify all lifecycle methods
 - [x] Identify all dynamic preference creation
@@ -282,6 +314,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 - [x] Document implementation plan
 
 ### Phase A: SettingsFragment
+
 - [ ] Create SettingsFragment.java base class
 - [ ] Implement onCreatePreferences()
 - [ ] Move addPreferencesFromResource()
@@ -300,6 +333,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 - [ ] Add getDataHandler() helper
 
 ### Phase B: SettingsActivity
+
 - [ ] Change extends PreferenceActivity → AppCompatActivity
 - [ ] Update imports
 - [ ] Keep theme and SystemUiVisibilityHelper setup
@@ -311,6 +345,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 - [ ] Remove all business logic (moved to Fragment)
 
 ### Phase C: Build & Test
+
 - [ ] ./gradlew assembleDebug --quiet → 0 warnings
 - [ ] Test settings activity launch
 - [ ] Test all preference screens
@@ -323,6 +358,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 - [ ] Test theme application
 
 ### Phase D: Documentation
+
 - [ ] Create phase6-step7-completion-report.md
 - [ ] Update phase6-progress-tracker.md
 - [ ] Document any issues encountered
@@ -386,7 +422,7 @@ ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
 ## Success Criteria
 
 1. ✅ **Build Success**: `./gradlew assembleDebug --quiet` → 0 warnings
-2. ✅ **No Deprecated APIs**: All android.preference.* replaced with androidx.preference.*
+2. ✅ **No Deprecated APIs**: All android.preference.*replaced with androidx.preference.*
 3. ✅ **Functional Equivalence**: All features work identically to before
 4. ✅ **UI Consistency**: Visual appearance unchanged
 5. ✅ **Lifecycle Correct**: No memory leaks, proper listener registration/unregistration

@@ -203,6 +203,7 @@ SettingsActivity (extends PreferenceActivity)
 #### 1-1. SwitchPreference 마이그레이션
 
 **파일 생성**:
+
 ```
 app/src/main/java/fr/neamar/kiss/preference/
 ├── SwitchPreference.java (기존, android.preference 기반)
@@ -210,6 +211,7 @@ app/src/main/java/fr/neamar/kiss/preference/
 ```
 
 **SwitchPreferenceCompat.java 구현**:
+
 ```java
 package fr.neamar.kiss.preference;
 
@@ -250,6 +252,7 @@ public class SwitchPreferenceCompat extends AndroidXSwitchPreference {
 ```
 
 **체크리스트**:
+
 - [ ] SwitchPreferenceCompat.java 생성
 - [ ] 기존 SwitchPreference와 동일한 동작 확인
 - [ ] 테스트 코드 작성 (가능하면)
@@ -261,6 +264,7 @@ public class SwitchPreferenceCompat extends AndroidXSwitchPreference {
 **대신**: 각 클래스를 개별적으로 마이그레이션
 
 **참고 패턴**:
+
 ```java
 // 기존 (android.preference)
 public class ResetPreference extends android.preference.DialogPreference {
@@ -283,6 +287,7 @@ public class ResetPreferenceCompat extends androidx.preference.DialogPreference 
 #### 2-1. FreezeHistorySwitch (가장 간단)
 
 **파일**:
+
 ```
 app/src/main/java/fr/neamar/kiss/preference/
 ├── FreezeHistorySwitch.java (기존, SwitchPreference 기반)
@@ -290,6 +295,7 @@ app/src/main/java/fr/neamar/kiss/preference/
 ```
 
 **변경 사항**:
+
 ```java
 // Before
 public class FreezeHistorySwitch extends SwitchPreference {
@@ -311,6 +317,7 @@ public class FreezeHistorySwitchCompat extends SwitchPreferenceCompat {
 **추가 고려사항**: Shizuku 리스너, 권한 체크
 
 **체크리스트**:
+
 - [ ] 각 클래스별 Compat 버전 생성
 - [ ] XML에서 사용할 수 있도록 등록
 - [ ] 기존 버전과 병렬 테스트
@@ -339,6 +346,7 @@ public class FreezeHistorySwitchCompat extends SwitchPreferenceCompat {
    - 한 번 패턴 확립하면 빠르게 적용 가능
 
 **AndroidX 패턴 (DialogFragment 기반)**:
+
 ```java
 // Step 1: DialogPreference 클래스
 public class ResetPreferenceCompat extends androidx.preference.DialogPreference {
@@ -373,6 +381,7 @@ public class ResetPreferenceDialogFragmentCompat
 ```
 
 **체크리스트**:
+
 - [ ] 각 Reset* 클래스별 Compat + DialogFragment 생성
 - [ ] XML에 등록
 - [ ] 다이얼로그 표시 테스트
@@ -385,6 +394,7 @@ public class ResetPreferenceDialogFragmentCompat
 **대상**: DefaultLauncherPreference, NotificationPreference, ResetShortcutsPreference
 
 **추가 고려사항**:
+
 - RoleManager API (DefaultLauncher)
 - NotificationManager 권한 체크 (Notification)
 - DataHandler 연동 (ResetShortcuts)
@@ -398,12 +408,14 @@ public class ResetPreferenceDialogFragmentCompat
 #### 5-1. Import/ExportSettingsPreference
 
 **복잡도 요인**:
+
 - 파일 I/O (SAF - Storage Access Framework)
 - JSON 파싱/생성
 - 권한 처리
 - ActivityResult API
 
 **마이그레이션 접근**:
+
 ```java
 // ActivityResultLauncher 사용 (AndroidX 패턴)
 private ActivityResultLauncher<Intent> filePickerLauncher;
@@ -423,6 +435,7 @@ public void onCreate(Bundle savedInstanceState) {
 #### 5-2. AddSearchProviderPreference
 
 **복잡도 요인**:
+
 - 커스텀 다이얼로그 뷰
 - 동적 UI 생성
 - EditText 입력 검증
@@ -430,11 +443,13 @@ public void onCreate(Bundle savedInstanceState) {
 #### 5-3. ColorPreference
 
 **복잡도 요인**:
+
 - ColorPickerPalette 통합
 - 커스텀 뷰 생성
 - 색상 선택 콜백
 
 **추천 접근**:
+
 - ColorPickerDialog를 PreferenceDialogFragmentCompat 안에 통합
 - 기존 ColorPickerPalette 재사용
 - onColorSelected 콜백을 onDialogClosed로 변환
@@ -446,6 +461,7 @@ public void onCreate(Bundle savedInstanceState) {
 #### 6-1. ExcludePreferenceScreen
 
 **현재 구조**:
+
 ```java
 public class ExcludePreferenceScreen {
     public static android.preference.PreferenceScreen getInstance(
@@ -463,6 +479,7 @@ public class ExcludePreferenceScreen {
 ```
 
 **AndroidX 마이그레이션**:
+
 ```java
 public class ExcludePreferenceScreenCompat {
     public static androidx.preference.PreferenceScreen getInstance(
@@ -485,6 +502,7 @@ public class ExcludePreferenceScreenCompat {
 ```
 
 **주의사항**:
+
 - PreferenceActivity → PreferenceFragmentCompat 파라미터 변경
 - SwitchPreference → SwitchPreferenceCompat 사용
 - 동적 생성 로직은 최대한 유지
@@ -576,6 +594,7 @@ public class SettingsActivity extends AppCompatActivity {
 **모든 마이그레이션 완료 후 안전하게 제거**:
 
 1. 구버전 클래스 삭제
+
    ```
    - SwitchPreference.java
    - FreezeHistorySwitch.java (구버전)
@@ -584,6 +603,7 @@ public class SettingsActivity extends AppCompatActivity {
    ```
 
 2. Compat 접미사 제거
+
    ```
    SwitchPreferenceCompat → SwitchPreference
    ResetPreferenceCompat → ResetPreference
@@ -617,27 +637,32 @@ public class SettingsActivity extends AppCompatActivity {
 ## ✅ 각 Step별 완료 기준
 
 ### Step 1 완료 기준
+
 - [ ] SwitchPreferenceCompat.java 생성 및 동작 확인
 - [ ] 기존 SwitchPreference와 병렬 존재
 - [ ] 테스트 앱에서 둘 다 동작 확인
 
 ### Step 2 완료 기준
+
 - [ ] 3개 하위 클래스 모두 Compat 버전 생성
 - [ ] XML에서 전환 가능
 - [ ] 기능 테스트 통과
 
 ### Step 3-6 완료 기준
+
 - [ ] 각 클래스별 Compat 버전 생성
 - [ ] DialogFragment 정상 동작
 - [ ] 기존 기능 유지 확인
 
 ### Step 7 완료 기준
+
 - [ ] SettingsFragment 정상 동작
 - [ ] 모든 Preference 표시 확인
 - [ ] 동적 Preference 생성 정상
 - [ ] 설정 변경 저장 확인
 
 ### Step 8 완료 기준
+
 - [ ] 구버전 클래스 모두 제거
 - [ ] 컴파일 warning 0개
 - [ ] 전체 기능 테스트 통과
@@ -650,7 +675,8 @@ public class SettingsActivity extends AppCompatActivity {
 ### 리스크 1: DialogFragment 패턴 복잡도
 
 **문제**: PreferenceDialogFragmentCompat 사용이 복잡함  
-**대응**: 
+**대응**:
+
 - 먼저 가장 간단한 RestartPreference로 패턴 확립
 - 템플릿 코드 작성 후 복사/수정
 
@@ -658,6 +684,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 **문제**: com.android.colorpicker 패키지가 androidx와 호환되지 않을 수 있음  
 **대응**:
+
 - 먼저 ColorPicker 없는 다른 Preference 완료
 - 필요시 대체 라이브러리 검토
 - 최악의 경우 커스텀 구현
@@ -666,6 +693,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 **문제**: 100+ 개의 동적 Preference 생성이 느려질 수 있음  
 **대응**:
+
 - 기존 로직 최대한 유지
 - 성능 테스트 우선
 - 필요시 RecyclerView 기반 커스텀 구현 고려
@@ -674,6 +702,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 **문제**: 40시간이 예상보다 길 수 있음  
 **대응**:
+
 - Step 1-3 완료 후 중간 평가
 - 필요시 우선순위 재조정
 - Phase 6를 Phase 6A, 6B로 분할
@@ -683,16 +712,19 @@ public class SettingsActivity extends AppCompatActivity {
 ## 📚 참고 자료
 
 ### AndroidX Preference 문서
+
 - [Preference Guide](https://developer.android.com/guide/topics/ui/settings)
 - [PreferenceFragmentCompat](https://developer.android.com/reference/androidx/preference/PreferenceFragmentCompat)
 - [DialogPreference](https://developer.android.com/reference/androidx/preference/DialogPreference)
 - [PreferenceDialogFragmentCompat](https://developer.android.com/reference/androidx/preference/PreferenceDialogFragmentCompat)
 
 ### 마이그레이션 가이드
+
 - [AndroidX Migration Guide](https://developer.android.com/jetpack/androidx/migrate)
 - [Preference Migration](https://developer.android.com/jetpack/androidx/releases/preference)
 
 ### KISS 프로젝트 문서
+
 - `phase5-preference-migration-analysis.md` (전체 분석)
 - `warning-removal-phases1-5-completion-report.md` (Phase 1-5 성공 사례)
 - `copilot-instructions.md` (프로젝트 가이드)

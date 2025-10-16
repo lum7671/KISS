@@ -37,6 +37,7 @@ KISS 프로젝트의 AsyncTask → Coroutines 마이그레이션은 **95% 완료
 #### 🔴 남은 변환 (5%)
 
 **Searcher System Only**
+
 - `Searcher.java` (base class) - ExecutorService 패턴 사용 중
 - 7개 하위 클래스들:
   - `QuerySearcher` ⭐ (가장 중요 - 메인 검색)
@@ -81,12 +82,14 @@ searchTask.executeOnExecutor(Searcher.SEARCH_THREAD);
    - 이전 검색이 완료되기 전에 새 검색 시작 가능 (취소됨)
 
 2. **Handler-based UI Update**: Main thread에서 UI 업데이트
+
    ```java
    private final Handler mainHandler = new Handler(Looper.getMainLooper());
    mainHandler.post(this::onPostExecute);
    ```
 
 3. **WeakReference**: 메모리 누수 방지
+
    ```java
    final WeakReference<MainActivity> activityWeakReference;
    ```
@@ -98,6 +101,7 @@ searchTask.executeOnExecutor(Searcher.SEARCH_THREAD);
 ### Why This Failed Before?
 
 과거 실패 원인 추정:
+
 1. **한번에 모든 Searcher 변환 시도** → 너무 큰 변경
 2. **Single thread 보장 실패** → 검색 결과 순서 꼬임
 3. **취소 메커니즘 미구현** → 메모리 누수
@@ -155,11 +159,13 @@ companion object {
 ```
 
 **장점**:
+
 - Coroutines의 구조화된 동시성
 - 자동 취소 전파
 - 더 나은 메모리 관리
 
 **주의점**:
+
 - `limitedParallelism(1)` 반드시 필요 (순차 실행 보장)
 
 ### Job-based Cancellation
@@ -202,6 +208,7 @@ class SearcherCoroutine(
 ### 3-Layer Testing
 
 #### Layer 1: Unit Tests
+
 ```kotlin
 @Test
 fun `QuerySearcherCoroutine returns correct results`() = runBlocking {
@@ -212,6 +219,7 @@ fun `QuerySearcherCoroutine returns correct results`() = runBlocking {
 ```
 
 #### Layer 2: Integration Tests
+
 ```kotlin
 @Test
 fun `Search flow with MainActivity`() {
@@ -220,6 +228,7 @@ fun `Search flow with MainActivity`() {
 ```
 
 #### Layer 3: Performance Tests
+
 ```kotlin
 @Test
 fun `Search performance comparison`() {
@@ -278,7 +287,7 @@ fun `No memory leak after 100 searches`() {
 
 1. **QuerySearcher 변환** 🔴🔴🔴
    - **리스크**: 가장 많이 사용되는 기능
-   - **완화책**: 
+   - **완화책**:
      - Feature flag로 점진적 배포
      - 충분한 테스트 기간 (최소 1주)
      - A/B 테스트
@@ -359,6 +368,7 @@ Week 3:
 ### 즉시 시작 가능한 작업
 
 1. **Step 1 시작**: Searcher 시스템 상세 분석
+
    ```bash
    # 새 branch 생성
    git checkout -b step1-searcher-analysis
@@ -370,6 +380,7 @@ Week 3:
    ```
 
 2. **테스트 환경 준비**
+
    ```bash
    # Unit test 스캐폴딩 생성
    # Performance test 준비
@@ -377,6 +388,7 @@ Week 3:
    ```
 
 3. **Feature Flag 구조 설계**
+
    ```kotlin
    // SharedPreferences 또는 BuildConfig
    object FeatureFlags {
@@ -397,6 +409,7 @@ Week 3:
 ## 📞 Support & Questions
 
 진행 중 질문이나 문제 발생 시:
+
 1. 현재 Step과 구체적인 문제 설명
 2. 에러 메시지 및 로그 공유
 3. 시도한 해결 방법 설명
@@ -406,6 +419,7 @@ Week 3:
 ## 📚 부록: 핵심 파일 리스트
 
 ### 이미 Coroutines로 변환된 파일 ✅
+
 ```
 app/src/main/java/fr/neamar/kiss/
 ├── loader/
@@ -420,6 +434,7 @@ app/src/main/java/fr/neamar/kiss/
 ```
 
 ### 변환 대상 파일 🔴
+
 ```
 app/src/main/java/fr/neamar/kiss/searcher/
 ├── Searcher.java 🔴 (Step 2)
@@ -433,6 +448,7 @@ app/src/main/java/fr/neamar/kiss/searcher/
 ```
 
 ### 수정 필요 파일 🟡
+
 ```
 app/src/main/java/fr/neamar/kiss/
 └── MainActivity.java 🟡 (Searcher 호출 부분만)

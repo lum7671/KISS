@@ -9,9 +9,11 @@
 ## 🎯 작업 목표 및 달성 결과
 
 ### 목표
+
 APK 용량이 v4.2.0 (2.4MB) → v4.2.4 (3.8MB)로 1.4MB 증가한 원인을 분석하고, Legacy 코드 제거를 통해 용량을 최적화한다.
 
 ### 달성 결과
+
 ✅ **APK 용량**: 3.8MB → 3.6MB (200KB 감소, -5.3%)  
 ✅ **코드 정리**: 2,076줄 제거, 568줄 추가 (순감소 1,508줄)  
 ✅ **파일 제거**: 19개 Legacy 파일 완전 제거  
@@ -52,6 +54,7 @@ v4.2.5 (10월 16일 오후): 3.6MB (-200KB)
 ### 1. Legacy 파일 완전 제거 (19개)
 
 #### 제거된 파일 목록
+
 ```bash
 # 1. SettingsActivity.java (859줄)
 ❌ app/src/main/java/fr/neamar/kiss/SettingsActivity.java
@@ -87,6 +90,7 @@ v4.2.5 (10월 16일 오후): 3.6MB (-200KB)
 ### 2. ProGuard/R8 최적화 강화
 
 #### A. proguard-rules.pro (+66줄)
+
 ```proguard
 # Phase 6 Step 8 최적화
 
@@ -119,11 +123,13 @@ v4.2.5 (10월 16일 오후): 3.6MB (-200KB)
 ```
 
 **효과**:
+
 - Debug 로그 완전 제거 (Release 빌드)
 - 미사용 Preference setter 제거
 - 예상 추가 감소: 50-100KB
 
 #### B. gradle.properties (+6줄)
+
 ```properties
 # R8 Full Mode 활성화
 android.enableR8.fullMode=true
@@ -133,6 +139,7 @@ android.enableResourceOptimizations=true
 ```
 
 **효과**:
+
 - 더 적극적인 코드 최적화
 - 미사용 리소스 자동 제거
 - 난독화 강화
@@ -140,6 +147,7 @@ android.enableResourceOptimizations=true
 ### 3. 버그 수정
 
 #### ExcludePreferenceScreen.java
+
 ```java
 // Before: Compile Error
 SwitchPreference pref = ...;  // Cannot find symbol
@@ -149,6 +157,7 @@ import android.preference.SwitchPreference;
 ```
 
 ### 4. AndroidManifest 정리
+
 ```xml
 <!-- Before: 주석으로 유지 -->
 <!-- Keep old SettingsActivity for fallback if needed -->
@@ -231,6 +240,7 @@ After Phase 6:
 ## 🧪 테스트 결과
 
 ### 빌드 테스트 ✅
+
 ```bash
 ./gradlew clean assembleRelease
 BUILD SUCCESSFUL in 27s
@@ -241,6 +251,7 @@ APK 생성: app-release.apk (3.6MB)
 ```
 
 ### 정적 분석 ✅
+
 ```
 Compile Errors: 0 ✅
 Lint Errors: 0 ✅
@@ -248,6 +259,7 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 ```
 
 ### 기능 테스트 (예정)
+
 - [ ] NewSettingsActivity 실행
 - [ ] Preference 동작 확인
 - [ ] Dialog 열기 테스트
@@ -259,6 +271,7 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 ## 📚 생성된 문서
 
 ### 새 문서 (2개)
+
 1. **phase6-step8-cleanup-plan.md** (493줄)
    - 전체 작업 계획
    - ProGuard 최적화 가이드
@@ -276,6 +289,7 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 ### 1. 남은 Deprecation Warnings (52개)
 
 #### 우선순위별 분류
+
 ```
 🔴 HIGH (17개) - Phase 7에서 해결
 ├─ MainActivity.java (6개)
@@ -297,12 +311,14 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 ### 2. R8 Full Mode 모니터링
 
 **체크 포인트**:
+
 - ✅ 빌드 성공
 - ⏳ 앱 실행 테스트 필요
 - ⏳ 모든 기능 정상 동작 확인
 - ⏳ Crash 모니터링
 
 **롤백 준비**:
+
 ```properties
 # gradle.properties에서 비활성화
 # android.enableR8.fullMode=true  # 문제 발생 시 주석 처리
@@ -313,6 +329,7 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 **현재 상태**: Legacy PreferenceActivity용 Helper 클래스  
 **문제**: NewSettingsActivity와 호환 안 됨  
 **해결 방안** (향후):
+
 - Option 1: ExcludePreferenceScreenCompat 생성
 - Option 2: NewSettingsActivity에서 기능 재구현
 - Option 3: 현재 상태 유지 (Legacy 지원)
@@ -322,6 +339,7 @@ Warnings: 52 (deprecation만, Phase 7에서 해결 예정)
 ## 🚀 Next Steps
 
 ### 즉시 실행
+
 ```bash
 # 1. dev 브랜치 머지
 git checkout dev
@@ -340,6 +358,7 @@ git push origin dev
 ```
 
 ### 단기 계획 (1주)
+
 1. **사용자 피드백 수집**
    - NewSettingsActivity 안정성 확인
    - 버그 리포트 모니터링
@@ -351,6 +370,7 @@ git push origin dev
    - APK 용량 최적화 설명
 
 ### 중기 계획 (1개월)
+
 1. **Phase 7 시작**
    - Deprecation warning 52개 해결
    - MainActivity UI 최적화
@@ -366,6 +386,7 @@ git push origin dev
 ## 💡 핵심 성과 요약
 
 ### ✅ 달성한 것
+
 1. **APK 용량 최적화**: 3.8MB → 3.6MB (200KB, -5.3%)
 2. **코드 정리**: Legacy 파일 19개 제거, 1,508줄 감소
 3. **빌드 품질**: Warning 313개 해결 (-85.8%)
@@ -392,16 +413,19 @@ git push origin dev
 ### 🎯 Phase 6 전체 평가
 
 **목표 달성도**: ⭐⭐⭐⭐⭐ (5/5)
+
 - AndroidX 마이그레이션: 100% ✅
 - Legacy 제거: 100% ✅
 - APK 최적화: 5.3% 감소 ✅
 - 문서화: 완벽 ✅
 
 **코드 품질**:
+
 - Before: Legacy API 사용, 중복 코드 존재
 - After: 최신 AndroidX, Clean Architecture
 
 **유지보수성**:
+
 - Before: 낮음 (deprecated API 의존)
 - After: 높음 (modern API, 잘 구조화됨)
 
@@ -419,6 +443,7 @@ git push origin dev
 ## ✅ 최종 체크리스트
 
 ### Step 8 완료
+
 - [x] Legacy 파일 19개 제거
 - [x] ProGuard 규칙 추가 (+66줄)
 - [x] R8 Full Mode 활성화
@@ -430,6 +455,7 @@ git push origin dev
 - [x] 커밋 & 푸시
 
 ### Phase 6 전체
+
 - [x] Step 1: SwitchPreference 베이스
 - [x] Step 2: SwitchPreference 서브클래스
 - [x] Step 3: 간단한 DialogPreference
@@ -440,6 +466,7 @@ git push origin dev
 - [x] Step 8: Legacy 제거 & 최적화
 
 ### 다음 작업
+
 - [ ] dev 브랜치 머지
 - [ ] v4.2.5 릴리즈
 - [ ] 사용자 테스트

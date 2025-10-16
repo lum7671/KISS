@@ -11,6 +11,7 @@
 ### Release 빌드 실패
 
 **에러**:
+
 ```
 /Users/1001028/git/KISS/app/src/main/java/fr/neamar/kiss/MainActivity.java:1180: error: cannot find symbol
             if (BuildConfig.USE_ALL_SEARCHER_COROUTINES) {
@@ -20,6 +21,7 @@
 ```
 
 **총 5개 위치에서 에러 발생**:
+
 - MainActivity.java:1180 (ApplicationsSearcher - kissBar reveal)
 - MainActivity.java:1258 (ApplicationsSearcher - refresh)
 - MainActivity.java:1464 (TagsSearcher)
@@ -115,6 +117,7 @@ buildTypes {
 ## 📊 빌드 결과
 
 ### Before (실패)
+
 ```bash
 $ ./gradlew assembleRelease
 ...
@@ -125,6 +128,7 @@ BUILD FAILED in 2s
 ```
 
 ### After (성공)
+
 ```bash
 $ ./gradlew assembleRelease
 ...
@@ -142,6 +146,7 @@ $ ls -lh app/build/outputs/apk/release/
 ```
 
 **특징**:
+
 - **크기**: 2.3MB (ProGuard/R8 최적화 적용)
 - **Minified**: true
 - **Shrunk Resources**: true
@@ -154,6 +159,7 @@ $ ls -lh app/build/outputs/apk/release/
 ### 1. Feature Flag는 모든 빌드 타입에 정의해야 함
 
 **잘못된 접근** (이번 케이스):
+
 ```gradle
 debug {
     buildConfigField "boolean", "FEATURE_FLAG", "true"
@@ -164,6 +170,7 @@ release {
 ```
 
 **올바른 접근**:
+
 ```gradle
 debug {
     buildConfigField "boolean", "FEATURE_FLAG", "true"
@@ -183,6 +190,7 @@ profile {
 - ❌ Profile 빌드 테스트 (누락)
 
 **권장**:
+
 ```bash
 # 모든 빌드 변형 테스트
 ./gradlew assembleDebug
@@ -193,6 +201,7 @@ profile {
 ### 3. CI/CD에서 자동 검증
 
 **권장 사항**:
+
 - CI/CD 파이프라인에 모든 빌드 변형 컴파일 단계 추가
 - 빌드 실패 시 즉시 알림
 - PR 머지 전 자동 검증
@@ -225,11 +234,13 @@ Result: ✅ BUILD SUCCESSFUL
 ## ✅ 검증 완료
 
 ### Debug Build
+
 - ✅ Compile: SUCCESS
 - ✅ APK Size: ~15MB
 - ✅ Feature Flag: Active
 
 ### Release Build
+
 - ✅ Compile: SUCCESS
 - ✅ APK Size: 2.3MB (84% reduction)
 - ✅ Feature Flag: Active
@@ -237,6 +248,7 @@ Result: ✅ BUILD SUCCESSFUL
 - ✅ Resource Shrinking: Applied
 
 ### Profile Build
+
 - ⏳ Not yet tested (but should work)
 - ✅ Feature Flag: Defined
 

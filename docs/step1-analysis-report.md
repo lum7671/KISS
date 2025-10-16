@@ -12,12 +12,14 @@ Searcher 시스템은 KISS 런처의 **핵심 검색 기능**을 담당하는 �
 
 ### 핵심 발견사항
 
-✅ **잘 설계된 아키텍처**: 
+✅ **잘 설계된 아키텍처**:
+
 - 명확한 생명주기 (onPreExecute → doInBackground → onPostExecute)
 - WeakReference로 메모리 누수 방지
 - Single thread executor로 순차 실행 보장
 
 ⚠️ **변환 시 주의사항**:
+
 - Single thread 보장 필수 (`limitedParallelism(1)`)
 - 취소 메커니즘 정확히 구현 필요
 - UI 업데이트 타이밍 유지
@@ -147,12 +149,14 @@ public class MainActivity {
 **사용 빈도**: 매우 높음 (메인 검색)
 
 #### 특징
+
 - DB에서 히스토리 조회 (`DBHelper.getPreviousResultsForQuery()`)
 - 히스토리 기반 관련성 점수 부여 (`pojo.relevance += 25 * value`)
 - Disabled 항목 페널티 (`pojo.relevance -= 200`)
 - SharedPreferences에서 최대 결과 수 읽기
 
 #### doInBackground() 로직
+
 ```java
 protected void doInBackground() {
     // 1. DB에서 히스토리 조회
@@ -173,6 +177,7 @@ protected void doInBackground() {
 ```
 
 #### 변환 시 고려사항
+
 - DB 조회 성능 (동기 작업)
 - HashMap 생성 및 조회 성능
 - Provider들의 비동기 호출 타이밍
@@ -185,12 +190,14 @@ protected void doInBackground() {
 **사용 빈도**: 높음 (빈 검색어 시)
 
 #### 특징
+
 - 히스토리 데이터 조회
 - 즐겨찾기 제외 옵션
 - 단축키 제외 로직 (Android O+)
 - 최대 결과 수 제한
 
 #### doInBackground() 로직
+
 ```java
 protected void doInBackground() {
     // 1. 설정에서 옵션 읽기
@@ -218,12 +225,14 @@ protected void doInBackground() {
 **사용 빈도**: 중간 (앱 목록 보기)
 
 #### 특징
+
 - 모든 앱 목록 표시
 - 즐겨찾기 제외 필터링
 - 알파벳 역순 정렬 (Z → A, 하단부터 표시)
 - Fast scroll 섹션 빌드 (`adapter.buildSections()`)
 
 #### Custom PriorityQueue
+
 ```java
 @Override
 PriorityQueue<Pojo> getPojoProcessor(Context context) {
@@ -241,6 +250,7 @@ PriorityQueue<Pojo> getPojoProcessor(Context context) {
 **사용 빈도**: 낮음 (특수 상황)
 
 #### 특징
+
 - 빈 결과만 반환
 - 로더 표시 안 함 (`displayActivityLoader()` override)
 
@@ -261,12 +271,14 @@ protected void doInBackground() {
 **사용 빈도**: 낮음 (태그 기능 사용 시)
 
 #### 특징
+
 - 추상 클래스 (TagsSearcher, UntaggedSearcher의 부모)
 - 태그 기반 필터링 (`acceptPojo()`)
 - 히스토리 기반 정렬 (`applyRelevanceFromHistory()`)
 - 최적화된 태그 검색 (`requestRecordsByTag()`)
 
 #### 템플릿 메서드 패턴
+
 ```java
 @Override
 public boolean addResults(List<? extends Pojo> pojos) {
@@ -296,6 +308,7 @@ abstract protected boolean acceptPojo(PojoWithTags pojoWithTags);
 **사용 빈도**: 낮음
 
 #### 특징
+
 - PojoWithTagSearcher 상속
 - 특정 태그를 가진 항목만 필터링
 
@@ -315,6 +328,7 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 **사용 빈도**: 낮음
 
 #### 특징
+
 - PojoWithTagSearcher 상속
 - 태그가 없는 항목만 필터링
 
@@ -333,6 +347,7 @@ protected boolean acceptPojo(PojoWithTags pojoWithTags) {
 ### 1. 검색 속도 (Search Latency)
 
 #### 현재 성능 측정 코드
+
 ```java
 protected void onPreExecute() {
     start = System.currentTimeMillis();
@@ -351,11 +366,13 @@ protected void onPostExecute() {
 ```
 
 #### 목표 성능
+
 - **QuerySearcher**: < 100ms (사용자 타이핑 속도)
 - **HistorySearcher**: < 50ms (즉시 표시)
 - **ApplicationsSearcher**: < 200ms (전체 앱 목록)
 
 #### Coroutines 변환 후 성능 목표
+
 - 기존 ±5% 이내 유지
 - 메모리 사용량 15-20% 감소
 
@@ -364,17 +381,20 @@ protected void onPostExecute() {
 ### 2. Single Thread 보장 (순차 실행)
 
 #### 현재 구현
+
 ```java
 public static final ExecutorService SEARCH_THREAD = 
     Executors.newSingleThreadExecutor();
 ```
 
 **Why Single Thread?**
+
 1. 검색 요청이 순차적으로 처리됨
 2. 이전 검색 결과가 나중 검색 후에 표시되는 것 방지
 3. UI 업데이트 순서 보장
 
 #### Coroutines 변환 시
+
 ```kotlin
 companion object {
     // Single thread dispatcher
@@ -383,6 +403,7 @@ companion object {
 ```
 
 **검증 필요**:
+
 - [ ] 순차 실행 보장 테스트
 - [ ] 빠른 타이핑 시나리오 테스트
 - [ ] 취소 후 새 검색 시작 테스트
@@ -392,6 +413,7 @@ companion object {
 ### 3. 취소 메커니즘 (Cancellation)
 
 #### 현재 패턴
+
 ```java
 // MainActivity
 resetTask() → searchTask.cancel(true) → Future.cancel()
@@ -404,6 +426,7 @@ if (isCancelled()) return;
 ```
 
 #### Coroutines 변환 시
+
 ```kotlin
 private var currentJob: Job? = null
 
@@ -434,6 +457,7 @@ fun cancel() {
 #### 현재 메모리 안전 패턴
 
 1. **WeakReference**
+
 ```java
 final WeakReference<MainActivity> activityWeakReference;
 
@@ -443,12 +467,14 @@ if (activity == null) return;
 ```
 
 2. **Volatile 플래그**
+
 ```java
 private volatile Future<?> task;
 private volatile boolean cancelled = false;
 ```
 
 3. **PriorityQueue 크기 제한**
+
 ```java
 int maxResults = getMaxResultCount();
 while (queue.size() > maxResults)
@@ -456,6 +482,7 @@ while (queue.size() > maxResults)
 ```
 
 #### Coroutines에서도 유지 필요
+
 - WeakReference 패턴 그대로 유지
 - Job 취소 시 리소스 정리
 - PriorityQueue 크기 제한 유지
@@ -467,6 +494,7 @@ while (queue.size() > maxResults)
 ### 난이도별 분류
 
 #### 🟢 Low Complexity (쉬움)
+
 1. **NullSearcher** - 빈 구현만
 2. **TagsSearcher** - 단순 필터링
 3. **UntaggedSearcher** - 단순 필터링
@@ -476,6 +504,7 @@ while (queue.size() > maxResults)
 ---
 
 #### 🟡 Medium Complexity (보통)
+
 4. **HistorySearcher** - DB 조회 + 필터링
 5. **ApplicationsSearcher** - 전체 앱 목록 + 정렬
 
@@ -484,6 +513,7 @@ while (queue.size() > maxResults)
 ---
 
 #### 🟠 High Complexity (어려움)
+
 6. **PojoWithTagSearcher** - 추상 클래스 + 템플릿 메서드
 
 **예상 소요**: 1일
@@ -491,6 +521,7 @@ while (queue.size() > maxResults)
 ---
 
 #### 🔴 Critical Complexity (매우 중요)
+
 7. **QuerySearcher** ⭐ - 메인 검색 기능
    - 복잡한 로직 (DB, 히스토리, 관련성 점수)
    - 가장 많이 사용됨
@@ -501,6 +532,7 @@ while (queue.size() > maxResults)
 ---
 
 #### ⚫ Infrastructure
+
 8. **Searcher.java (Base)** - 모든 하위 클래스의 기반
 
 **예상 소요**: 1-2일
@@ -550,6 +582,7 @@ private val searchDispatcher = Dispatchers.IO.limitedParallelism(1)
 ```
 
 **테스트 방법**:
+
 ```kotlin
 @Test
 fun `빠른 연속 검색 시 순차 실행 보장`() {
@@ -586,6 +619,7 @@ suspend fun doInBackground() {
 ### 3. Handler 기반 UI 업데이트 타이밍 🔴
 
 **현재 패턴**:
+
 ```java
 mainHandler.post(this::onPreExecute);   // UI thread
 doInBackground();                        // Background
@@ -593,6 +627,7 @@ mainHandler.post(this::onPostExecute);  // UI thread
 ```
 
 **Coroutines 변환**:
+
 ```kotlin
 CoroutineScope(Dispatchers.Main).launch {
     onPreExecute()  // Main dispatcher에서
@@ -616,6 +651,7 @@ CoroutineScope(Dispatchers.Main).launch {
 **현재 해결**: Single thread executor가 순차 실행 보장
 
 **Coroutines에서도 동일하게**:
+
 - `searchDispatcher`를 통해 순차 실행
 - 또는 `synchronized` 블록 사용
 
@@ -646,16 +682,19 @@ class SearcherCoroutine(
 ## 📈 예상 성과
 
 ### 성능 개선
+
 - **메모리 사용량**: 15-20% 감소 (ExecutorService 오버헤드 제거)
 - **검색 속도**: 동등 또는 향상 (경량 코루틴)
 - **취소 반응 속도**: 향상 (Job-based cancellation)
 
 ### 코드 품질
+
 - **가독성**: Kotlin suspend 함수로 더 명확
 - **유지보수성**: 구조화된 동시성
 - **테스트 용이성**: Coroutines test utilities 활용
 
 ### 안정성
+
 - **Crash 감소**: ExecutorService 관련 에러 제거
 - **메모리 누수**: Job 자동 정리로 방지
 
@@ -675,6 +714,7 @@ class SearcherCoroutine(
 ## 🚀 다음 단계: Step 2 준비
 
 ### Step 2 작업 항목
+
 1. **SearcherCoroutine.kt 설계**
    - 인터페이스 정의
    - Single thread dispatcher 구현
@@ -691,6 +731,7 @@ class SearcherCoroutine(
    - 구현 계획 승인
 
 ### 예상 소요 시간
+
 - 설계: 0.5일
 - 구현: 1일
 - 테스트: 0.5일
@@ -701,15 +742,18 @@ class SearcherCoroutine(
 ## 📚 참고 자료
 
 ### 내부 문서
+
 - [asynctask-migration-executive-summary.md](./asynctask-migration-executive-summary.md)
 - [asynctask-migration-master-plan.md](./asynctask-migration-master-plan.md)
 
 ### 핵심 파일
+
 - `app/src/main/java/fr/neamar/kiss/searcher/Searcher.java`
 - `app/src/main/java/fr/neamar/kiss/MainActivity.java`
 - 각 Searcher 하위 클래스들
 
 ### Coroutines 참고
+
 - [Kotlin Coroutines Guide](https://kotlinlang.org/docs/coroutines-guide.html)
 - [limitedParallelism](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-limited-dispatcher/)
 

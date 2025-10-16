@@ -9,6 +9,7 @@
 ## 📋 작업 요약
 
 ### 목표
+
 중간 복잡도의 2개 DialogPreference를 AndroidX 버전으로 마이그레이션
 
 ### 완료된 작업
@@ -51,12 +52,14 @@
 ### 코드 리뷰
 
 #### DefaultLauncherPreferenceCompat
+
 - ✅ 50줄 원본 → 28줄 Preference + 73줄 DialogFragment
 - ✅ DummyActivity 패턴 유지
 - ✅ PackageManager 사용하여 컴포넌트 활성화/비활성화
 - ✅ Intent 기반 런처 선택 트릭 동일
 
 #### NotificationPreferenceCompat
+
 - ✅ 20줄 원본 → 28줄 Preference + 42줄 DialogFragment
 - ✅ Settings Intent 사용
 - ✅ 매우 간단한 로직
@@ -100,6 +103,7 @@
 ### 1. DefaultLauncher 트릭 유지
 
 **Before** (Legacy):
+
 ```java
 public class DefaultLauncherPreference extends DialogPreference {
     @Override
@@ -120,6 +124,7 @@ public class DefaultLauncherPreference extends DialogPreference {
 ```
 
 **After** (AndroidX):
+
 ```java
 // DialogFragment 클래스
 @Override
@@ -135,6 +140,7 @@ public void onDialogClosed(boolean positiveResult) {
 ### 2. Settings Intent 간소화
 
 **NotificationPreference**는 매우 간단:
+
 ```java
 @Override
 public void onDialogClosed(boolean positiveResult) {
@@ -151,11 +157,13 @@ public void onDialogClosed(boolean positiveResult) {
 ## ✅ 체크리스트
 
 ### 코드 작성
+
 - [x] DefaultLauncherPreferenceCompat + DialogFragment 생성
 - [x] NotificationPreferenceCompat + DialogFragment 생성
 - [x] preferences.xml 테스트 항목 추가 (2개)
 
 ### 코드 품질
+
 - [x] 4개 생성자 구현
 - [x] newInstance() 메서드 구현
 - [x] onDialogClosed() 로직 100% 동일
@@ -163,12 +171,14 @@ public void onDialogClosed(boolean positiveResult) {
 - [x] JavaDoc 주석 추가
 
 ### 빌드 & 테스트
+
 - [x] 컴파일 성공
 - [x] Warning 0개
 - [x] 기존 코드 영향 없음
 - [ ] 실제 기기 테스트 (선택)
 
 ### 문서화
+
 - [x] Step 4 완료 보고서 작성
 - [x] 코드 주석 충분
 - [x] 변경사항 기록
@@ -183,6 +193,7 @@ public void onDialogClosed(boolean positiveResult) {
 **실제**: 30분  
 
 **이유**:
+
 - Step 3에서 확립된 DialogFragment 패턴
 - 원본 코드가 매우 간단 (DefaultLauncher 50줄, Notification 20줄)
 - 복잡한 UI 없음
@@ -193,10 +204,12 @@ public void onDialogClosed(boolean positiveResult) {
 **실제 발견**: Export(120줄), Import(150줄)는 너무 복잡 → Step 5로 이동
 
 **Step 4 대상 (완료)**:
+
 - DefaultLauncherPreference (50줄 → 101줄)
 - NotificationPreference (20줄 → 70줄)
 
 **Step 5 대상 (예정)**:
+
 - ExportSettingsPreference (120줄, JSON/SharedPreferences)
 - ImportSettingsPreference (150줄, JSON 파싱/validation)
 - AddSearchProviderPreference (220줄, 커스텀 Dialog View)
@@ -205,6 +218,7 @@ public void onDialogClosed(boolean positiveResult) {
 ### 3. DummyActivity 트릭
 
 **흥미로운 패턴**:
+
 - Android는 여러 HOME Activity가 있으면 선택 다이얼로그 표시
 - KISS는 임시로 DummyActivity를 활성화하여 이 동작 유발
 - 선택 후 다시 비활성화
@@ -214,6 +228,7 @@ public void onDialogClosed(boolean positiveResult) {
 ### 4. 간단한 것부터
 
 **전략 성공**:
+
 - Step 3: 간단한 DialogPreference 7개
 - Step 4: 중간 복잡도 2개 (매우 간단한 것들)
 - Step 5: 복잡한 4개 (JSON, 커스텀 UI, validation)
@@ -229,6 +244,7 @@ public void onDialogClosed(boolean positiveResult) {
 **목표**: 복잡한 DialogPreference 4개 마이그레이션 (6-8시간)
 
 **대상 클래스**:
+
 1. **ExportSettingsPreference** (120줄)
    - JSON 직렬화
    - SharedPreferences 전체 스캔

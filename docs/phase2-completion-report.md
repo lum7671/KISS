@@ -37,10 +37,12 @@ Phase 1 (AsyncTask → Coroutines 마이그레이션) 완료 후, Searcher 시�
 **브랜치**: `phase2-step1-thread-safety`
 
 **변경 사항**:
+
 - `SearcherCoroutine.kt`의 `addResults()` 메서드에 synchronized 블록 추가
 - PriorityQueue 동시 접근 문제 해결
 
 **코드**:
+
 ```kotlin
 override fun addResults(pojos: List<Pojo>): Boolean {
     if (isCancelled()) {
@@ -62,11 +64,13 @@ override fun addResults(pojos: List<Pojo>): Boolean {
 **브랜치**: `phase2-step2-error-handling`
 
 **변경 사항**:
+
 - `SearcherCoroutine.kt`의 execute() 메서드에서 CancellationException과 Exception 구분
 - `onError()` 메서드 추가 (Amplitude 에러 로깅 포함)
 - 취소와 에러를 명확히 구분하여 처리
 
 **코드**:
+
 ```kotlin
 } catch (e: CancellationException) {
     // Normal cancellation - user cancelled the search
@@ -89,11 +93,13 @@ override fun addResults(pojos: List<Pojo>): Boolean {
 **브랜치**: `phase2-step3-cancellation-checks`
 
 **변경 사항**:
+
 - 4개 Searcher 파일에 총 23개 취소 체크 포인트 추가
 - 긴 작업 중간에 `if (isCancelled()) return` 추가
 - 빠른 취소 응답 구현
 
 **파일별 변경**:
+
 | 파일 | 체크 포인트 |
 |------|------------|
 | QuerySearcherCoroutine.kt | 4개 (DB 쿼리 전, HashMap 생성 전, 루프 내, Provider 요청 전) |
@@ -110,11 +116,13 @@ override fun addResults(pojos: List<Pojo>): Boolean {
 **브랜치**: `phase2-step4-static-cache-removal`
 
 **변경 사항**:
+
 - `QuerySearcherCoroutine.kt`와 `HistorySearcherCoroutine.kt`의 static MAX_RESULT_COUNT → instance 변수
 - `clearMaxResultCountCache()` 메서드 제거
 - `SettingsActivity.java`의 cache clear 호출 제거
 
 **Before**:
+
 ```kotlin
 companion object {
     @Volatile
@@ -128,6 +136,7 @@ companion object {
 ```
 
 **After**:
+
 ```kotlin
 private var maxResultCount: Int? = null
 
@@ -149,11 +158,13 @@ override fun getMaxResultCount(): Int {
 **브랜치**: `phase2-step5-logging-consolidation`
 
 **변경 사항**:
+
 - `SearchPerformanceLogger.kt` 유틸리티 클래스 생성 (137줄)
 - `SearcherCoroutine.kt`의 로깅 코드 통합
 - Android Log + Amplitude 로깅 일원화
 
 **새 파일**: `SearchPerformanceLogger.kt`
+
 ```kotlin
 object SearchPerformanceLogger {
     data class SearchMetrics(
@@ -173,6 +184,7 @@ object SearchPerformanceLogger {
 ```
 
 **로그 형식**:
+
 ```
 [COMPLETED] QuerySearcherCoroutine query='test' time=1ms results=45 providersLoaded=true
 [CANCELLED] QuerySearcherCoroutine query='test' time=0ms results=0 providersLoaded=false
@@ -222,11 +234,13 @@ object SearchPerformanceLogger {
 ### 1. 안정성 (Stability)
 
 **Before**:
+
 - Thread safety가 암시적으로만 보장됨
 - PriorityQueue 동시 접근 시 잠재적 문제
 - 에러와 취소를 구분하지 않음
 
 **After**:
+
 - ✅ synchronized 블록으로 명시적 thread safety
 - ✅ 90+ 연속 검색에서 크래시 없음
 - ✅ CancellationException vs Exception 명확히 구분
@@ -235,10 +249,12 @@ object SearchPerformanceLogger {
 ### 2. 성능 (Performance)
 
 **Before**:
+
 - 취소 체크 없어서 불필요한 작업 계속 진행
 - Static cache로 인한 메모리 유지
 
 **After**:
+
 - ✅ 23개 취소 체크로 불필요한 작업 즉시 중단
 - ✅ 0-2ms 취소 응답 (목표 50ms 대비 25배 빠름)
 - ✅ Instance 변수로 메모리 효율 개선
@@ -247,11 +263,13 @@ object SearchPerformanceLogger {
 ### 3. 유지보수성 (Maintainability)
 
 **Before**:
+
 - Static mutable state로 테스트 어려움
 - 로깅 코드 3곳에 중복
 - 설정 변경 시 수동 cache clear 필요
 
 **After**:
+
 - ✅ Static state 제거로 테스트 용이
 - ✅ SearchPerformanceLogger로 로깅 일원화
 - ✅ 설정 변경 자동 반영
@@ -260,11 +278,13 @@ object SearchPerformanceLogger {
 ### 4. 관찰 가능성 (Observability)
 
 **Before**:
+
 - 불일치한 로그 형식
 - 에러와 취소 구분 불가
 - Amplitude 로깅 분산
 
 **After**:
+
 - ✅ 일관된 로그 형식: `[STATUS] SearcherType query='...' time=Xms results=X providersLoaded=true`
 - ✅ 상태 명확히 구분: COMPLETED / CANCELLED / ERROR
 - ✅ Amplitude 이벤트 통합
@@ -275,6 +295,7 @@ object SearchPerformanceLogger {
 ## 🧪 테스트 결과
 
 ### 테스트 환경
+
 - Device: Android Emulator
 - Android Version: API Level 33+
 - Build: Debug APK
@@ -283,16 +304,19 @@ object SearchPerformanceLogger {
 ### 테스트 시나리오
 
 #### 시나리오 1: 일반 검색 (25회)
+
 - 검색: "c", "ch", "chr", "chrome", "s", "settings" 등
 - 결과: ✅ 모든 검색 정상 완료
 - 평균 시간: ~1ms
 
 #### 시나리오 2: 연속 검색 (90+ 회)
+
 - 매우 긴 문자열 입력 후 연속 삭제
 - 결과: ✅ 크래시 없음, 모든 검색 [COMPLETED]
 - 평균 시간: ~1ms
 
 #### 시나리오 3: 히스토리 검색 (2회)
+
 - 빈 화면에서 히스토리 표시
 - 결과: ✅ HistorySearcherCoroutine 정상 동작
 - 평균 시간: ~2ms
@@ -452,11 +476,13 @@ b5278af36 Merge phase2-step4-static-cache-removal into dev
 ### 다음 Phase 제안
 
 **Phase 3: 성능 최적화**
+
 - Provider별 결과 캐싱
 - 검색 결과 재사용
 - 메모리 최적화
 
 **Phase 4: 기능 확장**
+
 - 새로운 Searcher 타입 추가
 - 커스텀 필터링 옵션
 - 고급 검색 기능

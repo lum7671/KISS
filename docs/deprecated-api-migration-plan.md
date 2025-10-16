@@ -3,11 +3,13 @@
 ## 즉시 수정 완료 항목
 
 ### ✅ 1. 사용하지 않는 리소스 제거
+
 - `ic_contact_background.xml` 삭제
 - `R.string.toast_hibernate_error` 제거 (모든 번역 파일 포함)
 - `R.string.rate_the_app` 제거 (모든 번역 파일 포함)
 
 ### ✅ 2. ObsoleteSdkInt 이슈 수정
+
 - `ShortcutUtil.canDeviceShowShortcuts()` → 항상 `true` 반환
 - 불필요한 `@RequiresApi` 어노테이션 제거 (O, LOLLIPOP, JELLY_BEAN, M, S)
 - `values-v21`, `values-v31` 폴더 제거 (minSdk 33보다 낮음)
@@ -18,6 +20,7 @@
 다음 API들은 deprecated 되었지만 즉시 수정하지 않고 향후 리팩토링 계획:
 
 ### MainActivity.java
+
 ```java
 // ❌ Deprecated (현재 사용 중)
 getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -42,6 +45,7 @@ if (controller != null) {
 ```
 
 ### UIColors.java
+
 ```java
 // ❌ Deprecated
 Resources.getColor(int id)
@@ -51,6 +55,7 @@ ContextCompat.getColor(Context context, int id)
 ```
 
 ### SettingsFragment.java
+
 ```java
 // ❌ Deprecated
 setTargetFragment(Fragment fragment, int requestCode)
@@ -64,6 +69,7 @@ getParentFragmentManager().setFragmentResultListener("requestKey", this,
 ```
 
 ### PreferenceManager
+
 ```java
 // ❌ Deprecated
 android.preference.PreferenceManager.getDefaultSharedPreferences(context)
