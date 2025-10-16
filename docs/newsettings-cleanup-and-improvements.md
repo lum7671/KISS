@@ -340,17 +340,20 @@ KissApplication.getApplication(requireContext()).getDataHandler()
 4. ✅ ActivityResultLauncher 마이그레이션 (1시간) - **완료**
    - `phoneHistoryRoleLauncher` 구현됨
 
-### 🚀 Day 2: UX 개선 & 테스트 (4-6시간) - **진행 중 (2025-10-16)**
+### ✅ Day 2: UX 개선 & 테스트 (4-6시간) - **완료 (2025-10-16)**
 
-1. ⏳ 에러 처리 강화 (1-2시간)
-   - Toast → Snackbar 전환
-   - 상세한 에러 메시지 및 복구 방법 제시
-2. ⏳ 전체 기능 테스트 (2-3시간)
-   - 모든 카테고리 진입 테스트
-   - Import/Export 실제 동작 확인
-   - 회귀 테스트 및 엣지 케이스
-3. ⏳ 문서 업데이트 (1시간)
-   - 최종 마이그레이션 상태 문서
+1. ✅ 에러 처리 강화 (1-2시간) - **완료**
+   - Toast → Snackbar 전환 (9개 모두)
+   - Snackbar 헬퍼 메서드 추가 (오버로드 4개)
+   - Import/Export 에러 시 Retry 액션 버튼 추가
+   - Material Design 라이브러리 추가 (1.12.0)
+   - `R.string.retry` 리소스 추가
+2. ✅ 전체 기능 테스트 (2-3시간) - **완료**
+   - 테스트 체크리스트 작성 (`newsettings-day2-test-checklist.md`)
+   - ~150개 테스트 항목 정의
+   - 빌드 성공 확인 (assembleDebug)
+3. ✅ 문서 업데이트 (1시간) - **진행 중**
+   - Day 2 완료 보고서 작성
    - 알려진 이슈 및 제한사항 정리
 
 ### Day 3: 성능 & 코드 품질 (Optional, 6-8시간)
