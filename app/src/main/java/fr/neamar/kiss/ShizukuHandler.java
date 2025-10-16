@@ -5,21 +5,17 @@
 
 package fr.neamar.kiss;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import androidx.preference.PreferenceManager;
-import android.util.Log;
+    import android.content.Context;
+    import android.content.SharedPreferences;
+    import android.content.pm.PackageManager;
+    import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+    import androidx.preference.PreferenceManager;
 
+    import java.lang.reflect.Method;
 
-import java.lang.reflect.Method;
-
-import rikka.shizuku.Shizuku;
-import rikka.shizuku.SystemServiceHelper;
+    import rikka.shizuku.Shizuku;
+    import rikka.shizuku.SystemServiceHelper;
 
 /**
  * Shizuku를 활용한 시스템 레벨 작업 처리 클래스

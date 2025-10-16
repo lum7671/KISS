@@ -3,11 +3,10 @@ package fr.neamar.kiss;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
-import fr.neamar.kiss.utils.IconPackCache;
 import fr.neamar.kiss.profiling.ProfileManager;
+import fr.neamar.kiss.utils.IconPackCache;
 
 public class KissApplication extends Application {
     /**

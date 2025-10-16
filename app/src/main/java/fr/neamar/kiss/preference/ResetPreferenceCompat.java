@@ -3,8 +3,6 @@ package fr.neamar.kiss.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import fr.neamar.kiss.R;
-
 /**
  * AndroidX-based ResetPreference.
  * Shows a confirmation dialog before clearing application history.

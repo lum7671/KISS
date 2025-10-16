@@ -3,19 +3,17 @@ package fr.neamar.kiss.shortcut
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ShortcutInfo
-import android.os.Build
-import androidx.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
+import androidx.preference.PreferenceManager
 import fr.neamar.kiss.DataHandler
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.R
-import fr.neamar.kiss.utils.ShortcutUtil
-import fr.neamar.kiss.utils.CoroutineUtils
 import fr.neamar.kiss.utils.AsyncCallable
 import fr.neamar.kiss.utils.AsyncCallback
-import kotlinx.coroutines.*
+import fr.neamar.kiss.utils.CoroutineUtils
+import fr.neamar.kiss.utils.ShortcutUtil
+import kotlinx.coroutines.Job
 import java.lang.ref.WeakReference
 
 class SaveAllOreoShortcuts private constructor(

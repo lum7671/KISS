@@ -1,7 +1,6 @@
 package fr.neamar.kiss.searcher
 
 import android.content.SharedPreferences
-import android.content.pm.ShortcutInfo
 import android.os.Build
 import androidx.preference.PreferenceManager
 import fr.neamar.kiss.KissApplication

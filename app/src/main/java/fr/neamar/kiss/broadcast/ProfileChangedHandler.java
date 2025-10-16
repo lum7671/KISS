@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.UserManager;
 
-import androidx.annotation.RequiresApi;
-
 import fr.neamar.kiss.DataHandler;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.utils.UserHandle;

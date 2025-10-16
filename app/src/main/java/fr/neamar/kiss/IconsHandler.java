@@ -12,27 +12,22 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.LinkedHashMap;
 
-import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.db.AppRecord;
 import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.icons.IconPack;
@@ -41,12 +36,12 @@ import fr.neamar.kiss.icons.SystemIconPack;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.result.AppResult;
 import fr.neamar.kiss.result.TagDummyResult;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.DrawableUtils;
-import fr.neamar.kiss.utils.IconShape;
 import fr.neamar.kiss.utils.IconCacheManager;
+import fr.neamar.kiss.utils.IconShape;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.UserHandle;
-import fr.neamar.kiss.utils.CoroutineUtils;
 import kotlinx.coroutines.Job;
 
 /**

@@ -1,14 +1,12 @@
 package fr.neamar.kiss.preference;
 
 import android.app.Dialog;
-import android.os.Build;
 import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import java.util.ArrayDeque;
 

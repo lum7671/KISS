@@ -17,12 +17,9 @@ package fr.neamar.kiss.ui;
  */
 
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.QuickContactBadge;
-
-import androidx.annotation.RequiresApi;
 
 /**
  * A {@link QuickContactBadge} that allows setting a click listener. The base

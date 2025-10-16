@@ -1,11 +1,5 @@
 package fr.neamar.kiss.androidTest;
 
-import androidx.test.filters.LargeTest;
-
-import org.junit.Test;
-
-import fr.neamar.kiss.R;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -13,6 +7,12 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
+
+import androidx.test.filters.LargeTest;
+
+import org.junit.Test;
+
+import fr.neamar.kiss.R;
 
 @LargeTest
 public class FavoritesTest extends AbstractMainActivityTest {

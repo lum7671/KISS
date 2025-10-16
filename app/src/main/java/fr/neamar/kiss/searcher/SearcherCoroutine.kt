@@ -8,9 +8,14 @@ import fr.neamar.kiss.pojo.Pojo
 import fr.neamar.kiss.pojo.RelevanceComparator
 import fr.neamar.kiss.result.Result
 import fr.neamar.kiss.utils.SearchPerformanceLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.PriorityQueue
 
 /**
  * Kotlin Coroutines replacement for Searcher (ExecutorService → Coroutines)

@@ -2,7 +2,6 @@ package fr.neamar.kiss.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EdgeEffect;

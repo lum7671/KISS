@@ -1,13 +1,13 @@
 package fr.neamar.kiss.utils.calculator;
 
+import androidx.annotation.NonNull;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import java.text.ParseException;
 import java.util.ArrayDeque;
-
-import androidx.annotation.NonNull;
+import java.util.Locale;
 
 public class Tokenizer {
 	public static final class Token {

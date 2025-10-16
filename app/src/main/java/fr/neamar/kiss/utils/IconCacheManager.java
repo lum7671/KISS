@@ -8,13 +8,12 @@ import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import coil.ImageLoader;
-import coil.request.ImageRequest;
-import coil.request.Disposable;
-import coil.target.Target;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import coil.ImageLoader;
+import coil.request.ImageRequest;
+import coil.target.Target;
 
 /**
  * 고성능 아이콘 캐시 매니저

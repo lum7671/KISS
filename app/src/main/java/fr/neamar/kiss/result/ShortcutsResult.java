@@ -10,7 +10,6 @@ import android.content.pm.ShortcutInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.UserManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -18,12 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
-
-import androidx.core.content.res.ResourcesCompat;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,12 +32,12 @@ import fr.neamar.kiss.R;
 import fr.neamar.kiss.adapter.RecordAdapter;
 import fr.neamar.kiss.pojo.ShortcutPojo;
 import fr.neamar.kiss.ui.ListPopup;
+import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.ShortcutUtil;
 import fr.neamar.kiss.utils.SpaceTokenizer;
 import fr.neamar.kiss.utils.UserHandle;
-import fr.neamar.kiss.utils.CoroutineUtils;
 import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 import kotlinx.coroutines.Job;
 

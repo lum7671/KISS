@@ -1,6 +1,5 @@
 package fr.neamar.kiss.adapter;
 
-import androidx.fragment.app.DialogFragment;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;

@@ -1,14 +1,11 @@
 package fr.neamar.kiss.utils;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Process;
 import android.os.UserManager;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 /**
  * Wrapper class for `android.os.UserHandle` that works with all Android versions

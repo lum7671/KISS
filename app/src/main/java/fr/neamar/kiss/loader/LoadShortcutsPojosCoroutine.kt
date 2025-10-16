@@ -1,11 +1,9 @@
 package fr.neamar.kiss.loader
 
 import android.content.Context
-import android.content.pm.ShortcutInfo
 import android.os.Build
 import android.os.UserManager
 import androidx.annotation.WorkerThread
-import fr.neamar.kiss.DataHandler
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.TagsHandler
 import fr.neamar.kiss.db.DBHelper

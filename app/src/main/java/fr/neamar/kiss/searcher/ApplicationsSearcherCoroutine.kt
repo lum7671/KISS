@@ -3,10 +3,8 @@ package fr.neamar.kiss.searcher
 import android.content.Context
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.MainActivity
-import fr.neamar.kiss.pojo.AppPojo
 import fr.neamar.kiss.pojo.Pojo
 import fr.neamar.kiss.pojo.ReversedNameComparator
-import fr.neamar.kiss.pojo.ShortcutPojo
 import java.util.PriorityQueue
 
 /**

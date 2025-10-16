@@ -1,4 +1,5 @@
 # KISS 프로젝트 정적 분석 결과 종합 리포트
+
 ## 생성일: 2025년 10월 16일
 
 ---
@@ -6,6 +7,7 @@
 ## 📊 실행한 분석 도구
 
 ### 1. ✅ Dependency Updates (의존성 업데이트)
+
 ```bash
 ./gradlew dependencyUpdates
 ```
@@ -13,10 +15,12 @@
 **결과 위치**: `build/dependencyUpdates/report.txt`
 
 **주요 발견사항**:
+
 - ✅ 최신 안정 버전 사용 중: 30개 라이브러리
 - ⚠️ 업데이트 가능: 26개 라이브러리 (주로 alpha/beta 버전)
 
 **업데이트 권장**:
+
 - `com.amplitude:android-sdk` [2.40.3 → 3.35.1] - 메이저 업데이트 검토 필요
 - `com.squareup.leakcanary:leakcanary-android` [2.14 → 3.0-alpha-8]
 - `io.gitlab.arturbosch.detekt:detekt-formatting` [1.23.7 → 1.23.8]
@@ -25,6 +29,7 @@
 ---
 
 ### 2. ✅ Detekt (Kotlin 정적 분석)
+
 ```bash
 ./gradlew detekt
 ```
@@ -34,6 +39,7 @@
 **발견된 주요 이슈**:
 
 #### 🔴 높은 우선순위
+
 - **사용하지 않는 imports**: 다수 발견
   - `LoadContactsPojosCoroutine.kt:4:1`
   - `ApplicationsSearcherCoroutine.kt:6:1`
@@ -43,6 +49,7 @@
   - 자동 수정 가능: `./gradlew detektFormat`
 
 #### 🟡 중간 우선순위
+
 - **매직 넘버 사용**:
   - `HistorySearcherCoroutine.kt:157:39`
   - `QuerySearcherCoroutine.kt:73:35`
@@ -54,6 +61,7 @@
   → 함수 분리 검토
 
 #### 🟢 낮은 우선순위
+
 - **Wildcard imports**: 명시적 import 권장
   - `SearcherCoroutine.kt:11:1`
   - `SaveAllOreoShortcuts.kt:18:1`
@@ -65,6 +73,7 @@
 ---
 
 ### 3. ✅ Android Lint (리소스 및 코드 검사)
+
 ```bash
 ./gradlew lintDebug
 ```
@@ -72,6 +81,7 @@
 **결과 위치**: `app/build/reports/lint-results-debug.html`
 
 **통계**:
+
 - ⚠️ Warnings: 54개
 - 💡 Hints: 18개
 - ✅ Errors: 8개 (baseline에 의해 필터링됨)
@@ -80,6 +90,7 @@
 **주요 발견사항**:
 
 #### 🔴 Deprecated API 사용 (52개 경고)
+
 많은 Android API가 deprecated되어 있음:
 
 1. **View System UI Flags** (높은 우선순위)
@@ -100,6 +111,7 @@
    - ✅ **해결 방법**: AndroidX Preference 사용
 
 #### 💡 Baseline 정리 가능
+
 - 123개의 오래된 이슈가 baseline에 있지만 이미 수정됨
 - `./gradlew updateLintBaseline` 실행으로 정리 가능
 
@@ -108,6 +120,7 @@
 ## 🎯 우선순위별 액션 플랜
 
 ### Priority 1: 즉시 실행 가능 (자동화)
+
 ```bash
 # 1. Detekt 자동 수정 (trailing spaces, imports 등)
 ./gradlew detektFormat
@@ -123,6 +136,7 @@ git commit -m "chore: 정적 분석 자동 수정 적용"
 ### Priority 2: 코드 리팩토링 (수동)
 
 #### A. Deprecated API 마이그레이션
+
 ```java
 // MainActivity.java - WindowInsetsController 마이그레이션
 // Before (deprecated)
@@ -138,6 +152,7 @@ controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRAN
 ```
 
 #### B. Fragment Result API 마이그레이션
+
 ```java
 // SettingsFragment.java
 // Before (deprecated)
@@ -152,6 +167,7 @@ getParentFragmentManager().setFragmentResultListener("requestKey", this,
 ```
 
 #### C. 매직 넘버 상수화
+
 ```kotlin
 // Before
 if (count > 157) { ... }
@@ -164,6 +180,7 @@ if (count > MAX_HISTORY_COUNT) { ... }
 ```
 
 ### Priority 3: 의존성 업데이트 (주의 필요)
+
 ```gradle
 // app/build.gradle에서 안전한 업데이트
 dependencies {
@@ -185,6 +202,7 @@ dependencies {
 ### Android Studio 내장 분석기 사용
 
 #### 1. Unused Declarations 찾기
+
 ```
 1. Android Studio 메뉴: Analyze → Inspect Code...
 2. 범위 선택: "Whole project"
@@ -195,6 +213,7 @@ dependencies {
 ```
 
 #### 2. Unused Resources 찾기
+
 ```
 1. Android Studio 메뉈: Analyze → Run Inspection by Name...
 2. 검색: "Unused resources"
@@ -202,6 +221,7 @@ dependencies {
 ```
 
 ### ProGuard/R8 분석 활용
+
 ```bash
 # Release 빌드로 사용하지 않는 코드 확인
 ./gradlew assembleRelease
@@ -215,6 +235,7 @@ cat app/build/outputs/mapping/release/usage.txt
 ## 🛠️ 커스텀 분석 스크립트
 
 ### 사용하지 않는 Kotlin 파일 찾기
+
 ```bash
 #!/bin/bash
 # scripts/find_unused_kotlin_files.sh
@@ -237,6 +258,7 @@ done
 ```
 
 ### 사용하지 않는 함수 찾기 (Detekt 결과 파싱)
+
 ```bash
 #!/bin/bash
 # scripts/parse_unused_functions.sh
@@ -254,6 +276,7 @@ fi
 ## 📋 자동화 스크립트
 
 ### 전체 분석 실행 스크립트
+
 ```bash
 #!/bin/bash
 # scripts/run_all_analysis.sh
@@ -295,6 +318,7 @@ echo "  open app/build/reports/lint-results-debug.html"
 ## 🎬 다음 단계
 
 ### 1. 즉시 실행
+
 ```bash
 cd /Users/1001028/git/KISS
 
@@ -308,6 +332,7 @@ git diff
 ```
 
 ### 2. 리포트 확인
+
 ```bash
 # HTML 리포트 열기
 open app/build/reports/detekt/detekt.html
@@ -315,6 +340,7 @@ open app/build/reports/lint-results-debug.html
 ```
 
 ### 3. 수동 리팩토링 계획 수립
+
 - Deprecated API 우선순위 정하기
 - 매직 넘버 상수화 범위 결정
 - 사용하지 않는 코드 제거 계획
@@ -324,10 +350,12 @@ open app/build/reports/lint-results-debug.html
 ## 💡 추가 도구 추천
 
 ### 1. Android Studio Profiler
+
 - CPU, Memory, Network 사용량 실시간 모니터링
 - 메모리 누수 감지
 
 ### 2. Dependency Analysis Plugin (추가 설정)
+
 ```gradle
 // build.gradle (root)
 plugins {
@@ -339,6 +367,7 @@ plugins {
 ```
 
 ### 3. Code Coverage
+
 ```bash
 # JaCoCo 리포트 생성
 ./gradlew jacocoTestReport
@@ -354,6 +383,7 @@ open app/build/reports/jacoco/html/index.html
 분석 결과에 대한 질문이나 리팩토링 지원이 필요하시면 언제든 요청하세요!
 
 **생성된 스크립트**:
+
 - ✅ `/scripts/analyze_code.sh` - 분석 가이드
 - ✅ `/scripts/enhanced_analysis_setup.gradle` - 고급 설정
 - 🔜 추가 자동화 스크립트 생성 가능

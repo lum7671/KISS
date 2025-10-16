@@ -7,7 +7,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.CallSuper;
+
 import com.amplitude.api.Amplitude;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

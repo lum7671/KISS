@@ -6,10 +6,7 @@ import android.content.ContextWrapper;
 import android.os.Build;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.util.concurrent.Executor;
 
 public class Utilities {
 

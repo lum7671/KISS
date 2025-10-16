@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;

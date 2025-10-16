@@ -3,10 +3,7 @@ package fr.neamar.kiss.dataprovider;
 import android.annotation.SuppressLint;
 import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
-import android.os.Build;
 import android.os.UserHandle;
-
-import androidx.annotation.RequiresApi;
 
 import java.util.List;
 

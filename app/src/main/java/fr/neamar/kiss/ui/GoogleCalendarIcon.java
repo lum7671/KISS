@@ -2,22 +2,17 @@ package fr.neamar.kiss.ui;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.core.content.res.ResourcesCompat;
-import android.preference.PreferenceManager;
-
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Calendar;
 
-import fr.neamar.kiss.KissApplication;
-import fr.neamar.kiss.icons.IconPack;
 import fr.neamar.kiss.utils.DrawableUtils;
 
 /**

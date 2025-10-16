@@ -3,11 +3,9 @@ package fr.neamar.kiss.profiling;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Debug;
-import android.os.Environment;
-import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
-// import androidx.tracing.Trace; // debug/profile 빌드에서만 사용
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

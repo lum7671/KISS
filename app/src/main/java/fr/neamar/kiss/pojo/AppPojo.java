@@ -1,7 +1,5 @@
 package fr.neamar.kiss.pojo;
 
-import android.os.Build;
-
 import fr.neamar.kiss.utils.UserHandle;
 
 public final class AppPojo extends PojoWithTags {

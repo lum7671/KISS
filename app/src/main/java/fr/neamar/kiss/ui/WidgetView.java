@@ -2,7 +2,6 @@ package fr.neamar.kiss.ui;
 
 import android.appwidget.AppWidgetHostView;
 import android.content.Context;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;

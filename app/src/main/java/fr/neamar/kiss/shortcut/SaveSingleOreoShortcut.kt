@@ -3,17 +3,14 @@ package fr.neamar.kiss.shortcut
 import android.content.Context
 import android.content.Intent
 import android.content.pm.LauncherApps
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import fr.neamar.kiss.DataHandler
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.R
-import fr.neamar.kiss.utils.CoroutineUtils
 import fr.neamar.kiss.utils.AsyncCallable
 import fr.neamar.kiss.utils.AsyncCallback
-import kotlinx.coroutines.*
+import fr.neamar.kiss.utils.CoroutineUtils
+import kotlinx.coroutines.Job
 import java.lang.ref.WeakReference
 
 class SaveSingleOreoShortcut private constructor(

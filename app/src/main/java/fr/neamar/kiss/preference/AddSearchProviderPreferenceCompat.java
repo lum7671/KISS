@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 
 import androidx.preference.DialogPreference;
 
-import fr.neamar.kiss.R;
-
 /**
  * AndroidX-compatible version of AddSearchProviderPreference.
  * Allows user to add custom search providers with validation.

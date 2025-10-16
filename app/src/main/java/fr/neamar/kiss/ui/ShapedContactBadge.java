@@ -2,13 +2,11 @@ package fr.neamar.kiss.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.QuickContactBadge;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.utils.DrawableUtils;

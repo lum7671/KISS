@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.database.DataSetObserver;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -38,12 +40,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
-
-// 성능 추적을 위한 import
-// import androidx.tracing.Trace; // debug/profile 빌드에서만 사용
-import fr.neamar.kiss.BuildConfig;
-import fr.neamar.kiss.profiling.ProfileManager;
-import fr.neamar.kiss.profiling.ActionPerformanceTracker;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -54,12 +50,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
-
 import android.widget.TextView;
-import android.text.TextUtils;
-import android.graphics.Rect;
-import java.util.List;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -67,6 +59,7 @@ import com.amplitude.api.Amplitude;
 import com.amplitude.api.Identify;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import fr.neamar.kiss.adapter.RecordAdapter;
@@ -74,12 +67,13 @@ import fr.neamar.kiss.broadcast.IncomingCallHandler;
 import fr.neamar.kiss.dataprovider.simpleprovider.SearchProvider;
 import fr.neamar.kiss.forwarder.ForwarderManager;
 import fr.neamar.kiss.pojo.SearchPojo;
+import fr.neamar.kiss.profiling.ActionPerformanceTracker;
+import fr.neamar.kiss.profiling.ProfileManager;
 import fr.neamar.kiss.result.Result;
 import fr.neamar.kiss.searcher.ApplicationsSearcherCoroutine;
 import fr.neamar.kiss.searcher.HistorySearcherCoroutine;
 import fr.neamar.kiss.searcher.NullSearcherCoroutine;
 import fr.neamar.kiss.searcher.QueryInterface;
-import fr.neamar.kiss.searcher.QuerySearcherCoroutine;
 import fr.neamar.kiss.searcher.Searcher;
 import fr.neamar.kiss.searcher.TagsSearcherCoroutine;
 import fr.neamar.kiss.searcher.UntaggedSearcherCoroutine;

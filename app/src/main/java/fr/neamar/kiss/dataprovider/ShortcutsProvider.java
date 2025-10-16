@@ -3,7 +3,6 @@ package fr.neamar.kiss.dataprovider;
 import android.content.Context;
 import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 

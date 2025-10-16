@@ -1,13 +1,7 @@
 package fr.neamar.kiss.loader
 
 import android.content.Context
-import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.os.Build
 import android.os.UserManager
 import android.util.Log
@@ -15,12 +9,9 @@ import androidx.annotation.WorkerThread
 import fr.neamar.kiss.BuildConfig
 import fr.neamar.kiss.KissApplication
 import fr.neamar.kiss.TagsHandler
-import fr.neamar.kiss.db.AppRecord
 import fr.neamar.kiss.db.DBHelper
 import fr.neamar.kiss.pojo.AppPojo
-import fr.neamar.kiss.utils.PackageManagerUtils
 import fr.neamar.kiss.utils.UserHandle
-import java.util.*
 
 /**
  * Kotlin Coroutines replacement for LoadAppPojos AsyncTask

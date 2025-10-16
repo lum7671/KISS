@@ -2,6 +2,7 @@ package fr.neamar.kiss.profiling;
 
 import android.content.Context;
 import android.util.Log;
+
 import fr.neamar.kiss.BuildConfig;
 
 /**
