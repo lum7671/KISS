@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
