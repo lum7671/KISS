@@ -19,8 +19,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import fr.neamar.kiss.KissApplication;
-
 public class DBHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
     private static volatile DBHelper instance;
@@ -30,7 +28,6 @@ public class DBHelper {
     // 하이브리드 메모리 DB 구성 요소들
     private static final ConcurrentLinkedQueue<HistoryEntry> pendingWrites = new ConcurrentLinkedQueue<>();
     private static final ConcurrentHashMap<String, Integer> memoryHistoryCount = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, Long> memoryHistoryLatest = new ConcurrentHashMap<>();
     private static ScheduledExecutorService syncExecutor;
     private static boolean memoryMode = true;
     private static final int SYNC_INTERVAL_SECONDS = 30; // 30초마다 동기화
@@ -91,8 +88,8 @@ public class DBHelper {
     private static void initializeMemoryDB(Context context) {
         if (syncExecutor == null) {
             syncExecutor = Executors.newSingleThreadScheduledExecutor();
-            // 주기적 동기화 스케줄링
-            syncExecutor.scheduleAtFixedRate(() -> {
+            // 주기적 동기화 스케줄링 (scheduleWithFixedDelay 사용으로 Android 프로세스 캐싱 이슈 방지)
+            syncExecutor.scheduleWithFixedDelay(() -> {
                 try {
                     syncMemoryToDisk(context);
                 } catch (Exception e) {
@@ -117,27 +114,26 @@ public class DBHelper {
             SQLiteDatabase memDB = getMemoryDatabase(context);
             
             // 최근 1000개 히스토리만 메모리에 로드 (성능 최적화)
-            Cursor cursor = diskDB.rawQuery(
-                "SELECT query, record, timeStamp FROM history ORDER BY timeStamp DESC LIMIT 1000", null);
-            
-            memDB.beginTransaction();
-            try {
-                while (cursor.moveToNext()) {
-                    ContentValues values = new ContentValues();
-                    values.put("query", cursor.getString(0));
-                    values.put("record", cursor.getString(1));
-                    values.put("timeStamp", cursor.getLong(2));
-                    memDB.insert("history", null, values);
-                    
-                    // 메모리 카운트 업데이트
-                    String record = cursor.getString(1);
-                    memoryHistoryCount.merge(record, 1, Integer::sum);
-                    memoryHistoryLatest.put(record, cursor.getLong(2));
+            try (Cursor cursor = diskDB.rawQuery(
+                "SELECT \"query\", record, timeStamp FROM history ORDER BY timeStamp DESC LIMIT 1000", null)) {
+
+                memDB.beginTransaction();
+                try {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        values.put("query", cursor.getString(0));
+                        values.put("record", cursor.getString(1));
+                        values.put("timeStamp", cursor.getLong(2));
+                        memDB.insert("history", null, values);
+
+                        // 메모리 카운트 업데이트
+                        String record = cursor.getString(1);
+                        memoryHistoryCount.merge(record, 1, Integer::sum);
+                    }
+                    memDB.setTransactionSuccessful();
+                } finally {
+                    memDB.endTransaction();
                 }
-                memDB.setTransactionSuccessful();
-            } finally {
-                memDB.endTransaction();
-                cursor.close();
             }
             
             Log.d(TAG, "Loaded disk history to memory database");
@@ -180,8 +176,7 @@ public class DBHelper {
         
         // 1. 메모리 통계 즉시 업데이트 (초고속)
         memoryHistoryCount.merge(record, 1, Integer::sum);
-        memoryHistoryLatest.put(record, timestamp);
-        
+
         // 2. 메모리 DB에 즉시 삽입
         try {
             SQLiteDatabase memDB = getMemoryDatabase(context);
@@ -223,7 +218,7 @@ public class DBHelper {
         // 정리 작업 빈도 감소 (0.5% → 0.1%)로 성능 향상
         if (Math.random() <= 0.001) {
             // 백그라운드에서 정리 작업 수행
-            cleanupHistoryAsync(context, db);
+            cleanupHistoryAsync(db);
         }
     }
     
@@ -253,8 +248,8 @@ public class DBHelper {
             diskDB.beginTransaction();
             try {
                 SQLiteStatement statement = diskDB.compileStatement(
-                    "INSERT INTO history (query, record, timeStamp) VALUES (?, ?, ?)");
-                
+                    "INSERT INTO history (\"query\", record, timeStamp) VALUES (?, ?, ?)");
+
                 for (HistoryEntry historyEntry : toSync) {
                     statement.bindString(1, historyEntry.query);
                     statement.bindString(2, historyEntry.record);
@@ -298,27 +293,14 @@ public class DBHelper {
         
         // 메모리 데이터 정리
         memoryHistoryCount.clear();
-        memoryHistoryLatest.clear();
-        
+
         if (memoryDatabase != null) {
             memoryDatabase.close();
             memoryDatabase = null;
         }
     }
     
-    /**
-     * 메모리 모드로 다시 전환 (메모리 여유 있을 때)
-     */
-    public static void switchToMemoryMode(Context context) {
-        if (!memoryMode) {
-            Log.i(TAG, "Switching back to memory mode");
-            memoryMode = true;
-            // 메모리 DB 재초기화
-            getMemoryDatabase(context);
-        }
-    }
-    
-    private static void cleanupHistoryAsync(Context context, SQLiteDatabase db) {
+    private static void cleanupHistoryAsync(SQLiteDatabase db) {
         // 백그라운드 스레드에서 정리 작업 수행으로 UI 블로킹 방지
         new Thread(() -> {
             try {
@@ -348,10 +330,8 @@ public class DBHelper {
         db.delete("history", "", null);
     }
 
-    private static Cursor getHistoryByFrecency(SQLiteDatabase db, int limit) {
+    private static Cursor getHistoryByFrecency(SQLiteDatabase db, int limit, Context context) {
         // 메모리 모드에서는 메모리 통계 사용 (초고속)
-        Context context = KissApplication.getApplication(null).getApplicationContext();
-        
         if (memoryMode && !memoryHistoryCount.isEmpty()) {
             return getMemoryHistoryByFrecency(context, limit);
         }
@@ -491,7 +471,7 @@ public class DBHelper {
         Cursor cursor;
         switch (historyMode) {
             case FRECENCY:
-                cursor = getHistoryByFrecency(db, limit);
+                cursor = getHistoryByFrecency(db, limit, context);
                 break;
             case FREQUENCY:
                 cursor = getHistoryByFrequency(db, limit);
