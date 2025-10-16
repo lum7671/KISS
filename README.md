@@ -1,5 +1,14 @@
 # KISS
 
+## 🚀 v4.2.3 - Minor Update Edition (2025-10-16)
+
+### 🔧 버전 업데이트
+
+- **📦 버전 정보**: versionCode 423, versionName 4.2.3
+- **✅ 안정성 유지**: 기존 기능 및 안정성 유지
+
+---
+
 ## 🚀 v4.2.1 - Maintenance Edition (2025-10-15)
 
 ### 🔧 유지보수 및 안정성 개선
