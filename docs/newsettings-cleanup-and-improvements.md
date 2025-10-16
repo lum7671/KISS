@@ -328,18 +328,30 @@ KissApplication.getApplication(requireContext()).getDataHandler()
 
 ## 📅 작업 우선순위 및 예상 시간
 
-### Day 1: Cleanup & 필수 개선 (4-6시간)
+### ✅ Day 1: Cleanup & 필수 개선 (4-6시간) - **완료 (2025-10-16)**
 
-1. ✅ 디버그 로그 제거 (30분)
-2. ✅ ColorPreference 구현 (2-3시간)
-3. ✅ AddSearchProvider 구현 (2-3시간)
-4. ✅ ActivityResultLauncher 마이그레이션 (1시간)
+1. ✅ 디버그 로그 제거 (30분) - **완료**
+2. ✅ ColorPreference 구현 (2-3시간) - **완료**
+   - `ColorPreferenceDialogFragmentCompat.java` 완전 구현 (151줄)
+   - ColorPickerDialog 통합 및 실시간 미리보기
+3. ✅ AddSearchProvider 구현 (2-3시간) - **완료**
+   - `AddSearchProviderPreferenceDialogFragmentCompat.java` 완전 구현 (224줄)
+   - URL/URI 검증 로직 완료
+4. ✅ ActivityResultLauncher 마이그레이션 (1시간) - **완료**
+   - `phoneHistoryRoleLauncher` 구현됨
 
-### Day 2: UX 개선 & 테스트 (4-6시간)
+### 🚀 Day 2: UX 개선 & 테스트 (4-6시간) - **진행 중 (2025-10-16)**
 
-1. ✅ 에러 처리 강화 (1-2시간)
-2. ✅ 전체 기능 테스트 (2-3시간)
-3. ✅ 문서 업데이트 (1시간)
+1. ⏳ 에러 처리 강화 (1-2시간)
+   - Toast → Snackbar 전환
+   - 상세한 에러 메시지 및 복구 방법 제시
+2. ⏳ 전체 기능 테스트 (2-3시간)
+   - 모든 카테고리 진입 테스트
+   - Import/Export 실제 동작 확인
+   - 회귀 테스트 및 엣지 케이스
+3. ⏳ 문서 업데이트 (1시간)
+   - 최종 마이그레이션 상태 문서
+   - 알려진 이슈 및 제한사항 정리
 
 ### Day 3: 성능 & 코드 품질 (Optional, 6-8시간)
 

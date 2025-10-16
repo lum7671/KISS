@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import com.google.android.material.snackbar.Snackbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
@@ -100,6 +102,53 @@ public class SettingsFragment extends PreferenceFragmentCompat
      */
     public void setInitialPreferenceScreen(PreferenceScreen preferenceScreen) {
         this.initialPreferenceScreen = preferenceScreen;
+    }
+    
+    /**
+     * Show a Snackbar with a message string resource.
+     * Provides better UX than Toast with action button support.
+     */
+    private void showSnackbar(@StringRes int messageResId) {
+        showSnackbar(getString(messageResId), Snackbar.LENGTH_SHORT, null, null);
+    }
+    
+    /**
+     * Show a Snackbar with a message string.
+     */
+    private void showSnackbar(String message) {
+        showSnackbar(message, Snackbar.LENGTH_SHORT, null, null);
+    }
+    
+    /**
+     * Show a Snackbar with a message and custom duration.
+     */
+    private void showSnackbar(@StringRes int messageResId, int duration) {
+        showSnackbar(getString(messageResId), duration, null, null);
+    }
+    
+    /**
+     * Show a Snackbar with an action button.
+     */
+    private void showSnackbar(@StringRes int messageResId, @StringRes int actionTextResId, Runnable action) {
+        showSnackbar(getString(messageResId), Snackbar.LENGTH_LONG, getString(actionTextResId), action);
+    }
+    
+    /**
+     * Core Snackbar display method with all options.
+     */
+    private void showSnackbar(String message, int duration, @Nullable String actionText, @Nullable Runnable action) {
+        android.view.View rootView = getView();
+        if (rootView == null) {
+            // Fallback to Toast if view not available
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        Snackbar snackbar = Snackbar.make(rootView, message, duration);
+        if (actionText != null && action != null) {
+            snackbar.setAction(actionText, v -> action.run());
+        }
+        snackbar.show();
     }
 
     @Override
@@ -395,7 +444,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                             if (p != null) {
                                 p.setChecked(false);
                             }
-                            Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                            showSnackbar(R.string.permission_denied);
                         }
                     });
                 } else {
@@ -830,7 +879,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 editor.apply();
 
                 if (!searchProvidersToDelete.isEmpty()) {
-                    Toast.makeText(requireContext(), R.string.search_provider_deleted, Toast.LENGTH_LONG).show();
+                    showSnackbar(R.string.search_provider_deleted, Snackbar.LENGTH_LONG);
                 }
             }
 
@@ -994,10 +1043,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
             org.json.JSONObject jsonObject = new org.json.JSONObject(clipboardText);
             int minVersion = jsonObject.optInt("__v", -1);
             if (minVersion < 0) {
-                Toast.makeText(requireContext(), R.string.import_settings_version_missing, Toast.LENGTH_LONG).show();
+                showSnackbar(R.string.import_settings_version_missing, Snackbar.LENGTH_LONG);
                 return;
             } else if (minVersion > fr.neamar.kiss.BuildConfig.VERSION_CODE) {
-                Toast.makeText(requireContext(), R.string.import_settings_upgrade_kiss, Toast.LENGTH_LONG).show();
+                showSnackbar(R.string.import_settings_upgrade_kiss, Snackbar.LENGTH_LONG);
                 return;
             }
 
@@ -1043,17 +1092,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
             }
             
             if (!editor.commit()) {
-                Toast.makeText(requireContext(), R.string.import_settings_save_not_possible, Toast.LENGTH_SHORT).show();
+                showSnackbar(R.string.import_settings_save_not_possible, Snackbar.LENGTH_LONG);
                 return;
             }
 
-            Toast.makeText(requireContext(), R.string.import_settings_done, Toast.LENGTH_SHORT).show();
+            showSnackbar(R.string.import_settings_done, Snackbar.LENGTH_SHORT);
             
             // Recreate activity to apply imported settings
             requireActivity().recreate();
             
         } catch (Exception e) {
-            Toast.makeText(requireContext(), R.string.import_settings_error, Toast.LENGTH_LONG).show();
+            // Show error with retry action
+            showSnackbar(R.string.import_settings_error, R.string.retry, this::handleImportSettings);
             Log.e(TAG, "Import settings failed", e);
         }
     }
@@ -1104,10 +1154,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
             android.content.ClipData clip = android.content.ClipData.newPlainText("KISS Settings", jsonObject.toString());
             clipboard.setPrimaryClip(clip);
             
-            Toast.makeText(requireContext(), R.string.export_settings_done, Toast.LENGTH_SHORT).show();
+            showSnackbar(R.string.export_settings_done, Snackbar.LENGTH_LONG);
             
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show();
+            // Show error with retry action
+            showSnackbar("Export failed: " + e.getMessage(), Snackbar.LENGTH_LONG, getString(R.string.retry), this::handleExportSettings);
             Log.e(TAG, "Export settings failed", e);
         }
     }
