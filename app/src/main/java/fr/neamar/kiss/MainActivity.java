@@ -724,18 +724,24 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // Do not identify user (keep results anonymous)
         Identify identify = new Identify();
         for(String s: settings.keySet()) {
+            Object value = settings.get(s);
+            if (value == null) {
+                continue; // Skip null values
+            }
+            String valueStr = value.toString();
+            
             // Filter any Personal Information out
             if(s.equals("excluded-apps-list")) {
-                identify.set("excluded-apps-count", settings.get(s).toString().split(";").length);
+                identify.set("excluded-apps-count", valueStr.split(";").length);
             }
             else if(s.equals("favorite-apps-list")) {
-                identify.set("favorite-apps-count", settings.get(s).toString().split(";").length);
+                identify.set("favorite-apps-count", valueStr.split(";").length);
             }
             else if(s.equals(("selected-search-provider-names"))) {
-                identify.set("search-provider-count", settings.get(s).toString().split(",").length);
+                identify.set("search-provider-count", valueStr.split(",").length);
             }
             else if(!s.equals("excluded_apps_ui") && !s.equals("available-search-providers") && !s.equals("deleting-search-providers-names")) {
-                identify.set(s, settings.get(s).toString());
+                identify.set(s, valueStr);
             }
         }
         Amplitude.getInstance().identify(identify);
@@ -805,7 +811,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         return onOptionsItemSelected(item);
     }
 
@@ -963,7 +969,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (forwarderManager.onOptionsItemSelected(item)) {
             return true;
         }

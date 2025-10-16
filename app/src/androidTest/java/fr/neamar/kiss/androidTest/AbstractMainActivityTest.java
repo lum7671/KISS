@@ -4,11 +4,12 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import android.content.Context;
 import android.os.Build;
-import android.preference.PreferenceManager;
-import android.view.WindowManager;
 
-import androidx.test.rule.ActivityTestRule;
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,27 +20,35 @@ import fr.neamar.kiss.R;
 
 abstract class AbstractMainActivityTest {
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityScenarioRule<MainActivity> mActivityRule = new ActivityScenarioRule<>(MainActivity.class);
+
+    protected ActivityScenario<MainActivity> scenario;
+    protected MainActivity activity;
 
     @Before
     public void setUp() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + mActivityRule.getActivity().getPackageName()
-                            + " android.permission.READ_CONTACTS");
-        }
+        scenario = mActivityRule.getScenario();
+        scenario.onActivity(activity -> {
+            this.activity = activity;
+            
+            // Grant READ_CONTACTS permission for Android M+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getInstrumentation().getUiAutomation().executeShellCommand(
+                        "pm grant " + activity.getPackageName()
+                                + " android.permission.READ_CONTACTS");
+            }
 
-        mActivityRule.getActivity();
+            // Initialize to default preferences
+            Context context = activity.getApplicationContext();
+            KissApplication.getApplication(activity).getDataHandler().clearHistory();
+            assertThat(PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit(), is(true));
+            PreferenceManager.setDefaultValues(context, R.xml.preferences, true);
 
-        // Initialize to default preferences
-        KissApplication.getApplication(mActivityRule.getActivity()).getDataHandler().clearHistory();
-        assertThat(PreferenceManager.getDefaultSharedPreferences(mActivityRule.getActivity()).edit().clear().commit(), is(true));
-        PreferenceManager.setDefaultValues(mActivityRule.getActivity(), R.xml.preferences, true);
-
-        // Remove lock screen
-        Runnable wakeUpDevice = () -> mActivityRule.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mActivityRule.getActivity().runOnUiThread(wakeUpDevice);
+            // Remove lock screen - use modern API
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                activity.setShowWhenLocked(true);
+                activity.setTurnScreenOn(true);
+            }
+        });
     }
 }

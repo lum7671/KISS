@@ -18,13 +18,17 @@ import fr.neamar.kiss.R;
 public class FavoritesTest extends AbstractMainActivityTest {
     @SuppressWarnings("CatchAndPrintStackTrace")
     private void enableInternalBar() {
-        mActivityRule.getActivity().prefs.edit().putBoolean("enable-favorites-bar", false).apply();
+        scenario.onActivity(activity -> {
+            activity.prefs.edit().putBoolean("enable-favorites-bar", false).apply();
+            activity.recreate();
+        });
+        
+        // Wait for recreation
         try {
-            mActivityRule.runOnUiThread(() -> mActivityRule.getActivity().recreate());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        mActivityRule.getActivity();
     }
 
     @Test

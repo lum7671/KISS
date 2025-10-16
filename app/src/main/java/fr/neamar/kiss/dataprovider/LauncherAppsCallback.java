@@ -5,6 +5,8 @@ import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
 import android.os.UserHandle;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 /**
@@ -39,7 +41,7 @@ public class LauncherAppsCallback extends LauncherApps.Callback {
     }
 
     @Override
-    public void onShortcutsChanged(String packageName, List<ShortcutInfo> shortcuts, UserHandle user) {
+    public void onShortcutsChanged(@NonNull String packageName, @NonNull List<ShortcutInfo> shortcuts, @NonNull UserHandle user) {
     }
 
 }

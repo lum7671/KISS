@@ -16,13 +16,16 @@
 
 package com.android.colorpicker;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.android.colorpicker.ColorPickerSwatch.OnColorSelectedListener;
 
@@ -81,7 +84,7 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -92,17 +95,23 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
 
         if (savedInstanceState != null) {
             mColors = savedInstanceState.getIntArray(KEY_COLORS);
-            mSelectedColor = (Integer) savedInstanceState.getSerializable(KEY_SELECTED_COLOR);
+            // Null safety: check before unboxing
+            Object selectedColorObj = savedInstanceState.getSerializable(KEY_SELECTED_COLOR);
+            if (selectedColorObj instanceof Integer) {
+                mSelectedColor = (Integer) selectedColorObj;
+            }
             mColorContentDescriptions = savedInstanceState.getStringArray(
                     KEY_COLOR_CONTENT_DESCRIPTIONS);
         }
     }
 
+    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Activity activity = getActivity();
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        // Use requireContext() instead of getActivity() for modern androidx pattern
+        final Context context = requireContext();
 
-        View view = View.inflate(activity, R.layout.color_picker_dialog, null);
+        View view = View.inflate(context, R.layout.color_picker_dialog, null);
         mProgress = view.findViewById(android.R.id.progress);
         mPalette = view.findViewById(R.id.color_picker);
         mPalette.init(mSize, mColumns, this);
@@ -111,7 +120,7 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
             showPaletteView();
         }
 
-        return new AlertDialog.Builder(activity)
+        return new AlertDialog.Builder(context)
                 .setTitle(mTitleResId)
                 .setView(view)
                 .create();
@@ -123,6 +132,8 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
             mListener.onColorSelected(color);
         }
 
+        // Note: getTargetFragment() is deprecated but we keep it for backwards compatibility
+        // Consider using FragmentResult API for new implementations
         if (getTargetFragment() instanceof OnColorSelectedListener) {
             final OnColorSelectedListener listener =
                     (OnColorSelectedListener) getTargetFragment();
@@ -197,7 +208,7 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntArray(KEY_COLORS, mColors);
         outState.putSerializable(KEY_SELECTED_COLOR, mSelectedColor);

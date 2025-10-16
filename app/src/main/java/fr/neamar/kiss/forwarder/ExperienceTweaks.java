@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +74,7 @@ public class ExperienceTweaks extends Forwarder {
 
         gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onSingleTapUp(MotionEvent e) {
+            public boolean onSingleTapUp(@NonNull MotionEvent e) {
                 // Double tap disabled: display history directly
                 if (!prefs.getBoolean("double-tap", false)) {
                     if (prefs.getBoolean("history-onclick", false)) {
@@ -85,7 +87,7 @@ public class ExperienceTweaks extends Forwarder {
             }
 
             @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
+            public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
                 // Double tap enabled: wait to confirm this is indeed a single tap, not a double tap
                 if (prefs.getBoolean("double-tap", false)) {
                     if (prefs.getBoolean("history-onclick", false)) {

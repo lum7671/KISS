@@ -103,12 +103,18 @@ public class CustomIconDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.custom_icon_dialog, container, false);
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
-        lp.dimAmount = 0.7f;
-        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        getDialog().setCanceledOnTouchOutside(true);
+        
+        // Null safety check for dialog
+        if (getDialog() != null) {
+            getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+            
+            if (getDialog().getWindow() != null) {
+                WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
+                lp.dimAmount = 0.7f;
+                getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            }
+            getDialog().setCanceledOnTouchOutside(true);
+        }
 
         return root;
     }
@@ -118,7 +124,12 @@ public class CustomIconDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Context context = getDialog().getContext();
+        // Null safety check for context
+        Context context = getContext();
+        if (context == null) {
+            dismiss();
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             view.setClipToOutline(true);
@@ -156,6 +167,12 @@ public class CustomIconDialog extends DialogFragment {
         UserHandle userHandle = args.getParcelable("userHandle", UserHandle.class);
         String name = args.getString("componentName", "");
         long customIcon = args.getLong("customIcon", 0);
+
+        // Null safety check for ComponentName
+        if (cn == null) {
+            dismiss();
+            return;
+        }
 
         IconsHandler iconsHandler = KissApplication.getApplication(context).getIconsHandler();
 
@@ -254,19 +271,21 @@ public class CustomIconDialog extends DialogFragment {
         }
 
         // add Activity BadgedIcon
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && userHandle != null && userHandle.getRealHandle() != null) {
             LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-            List<LauncherActivityInfo> icons = launcher.getActivityList(cn.getPackageName(), userHandle.getRealHandle());
-            for (LauncherActivityInfo info : icons) {
-                Drawable drawable = info.getBadgedIcon(0);
-                if (drawable != null && checkDuplicateDrawable(dSet, drawable)) {
-                    addQuickOption(R.string.custom_icon_badged, drawable, quickList);
-                    if (iconPack != null && iconPack.hasMask())
-                        addQuickOption(R.string.custom_icon_badged_with_pack, iconPack.applyBackgroundAndMask(context, drawable, true, Color.WHITE), quickList);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        addQuickOption(R.string.custom_icon_badged_adaptive, systemPack.applyBackgroundAndMask(context, drawable, true, Color.WHITE), quickList);
-                    if (!DrawableUtils.isAdaptiveIconDrawable(drawable))
-                        addQuickOption(R.string.custom_icon_badged_adaptive_fill, systemPack.applyBackgroundAndMask(context, drawable, false, Color.TRANSPARENT), quickList);
+            if (launcher != null) {
+                List<LauncherActivityInfo> icons = launcher.getActivityList(cn.getPackageName(), userHandle.getRealHandle());
+                for (LauncherActivityInfo info : icons) {
+                    Drawable drawable = info.getBadgedIcon(0);
+                    if (drawable != null && checkDuplicateDrawable(dSet, drawable)) {
+                        addQuickOption(R.string.custom_icon_badged, drawable, quickList);
+                        if (iconPack != null && iconPack.hasMask())
+                            addQuickOption(R.string.custom_icon_badged_with_pack, iconPack.applyBackgroundAndMask(context, drawable, true, Color.WHITE), quickList);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                            addQuickOption(R.string.custom_icon_badged_adaptive, systemPack.applyBackgroundAndMask(context, drawable, true, Color.WHITE), quickList);
+                        if (!DrawableUtils.isAdaptiveIconDrawable(drawable))
+                            addQuickOption(R.string.custom_icon_badged_adaptive_fill, systemPack.applyBackgroundAndMask(context, drawable, false, Color.TRANSPARENT), quickList);
+                    }
                 }
             }
         }
@@ -304,6 +323,11 @@ public class CustomIconDialog extends DialogFragment {
     }
 
     protected void refreshList() {
+        // Null safety check for activity
+        if (getActivity() == null) {
+            return;
+        }
+        
         mIconData.clear();
         IconsHandler iconsHandler = KissApplication.getApplication(getActivity()).getIconsHandler();
         IconPackXML iconPack = iconsHandler.getCustomIconPack();
