@@ -26,7 +26,6 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.os.UserManager;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Html;
@@ -360,11 +359,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      * Called when the activity is first created.
      */
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    @SuppressWarnings("deprecation") // PreferenceManager migration planned in Phase 6
+    // Phase 6: PreferenceManager migration completed - default values now set in SettingsFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        // REMOVED: PreferenceManager.setDefaultValues() - now handled by AndroidX in SettingsFragment
+        // This caused ClassCastException because preferences.xml uses AndroidX classes
         Amplitude.getInstance().initialize(this, "ce5704d98bb60331b30cce7dee138112").enableForegroundTracking(getApplication());
 
         Log.d(TAG, "onCreate()");

@@ -29,6 +29,18 @@ class NewSettingsActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
     private lateinit var permissionManager: Permission
     private lateinit var systemUiVisibilityHelper: SystemUiVisibilityHelper
+    
+    // ActivityResultLauncher for phone history role request (Android Q+)
+    private val phoneHistoryRoleLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // Role request completed (user accepted or denied)
+        if (result.resultCode == RESULT_OK) {
+            android.util.Log.i(TAG, "Phone history role granted")
+        } else {
+            android.util.Log.i(TAG, "Phone history role denied")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -144,8 +156,7 @@ class NewSettingsActivity : AppCompatActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q && enabled) {
             val roleManager = getSystemService(ROLE_SERVICE) as android.app.role.RoleManager
             val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_CALL_SCREENING)
-            @Suppress("DEPRECATION")
-            startActivityForResult(intent, 1)
+            phoneHistoryRoleLauncher.launch(intent)
         }
     }
     
@@ -435,16 +446,9 @@ class NewSettingsActivity : AppCompatActivity() {
     }
     
     /**
-     * Step 31: Handle activity result (for deprecated startActivityForResult)
+     * Step 31: Migrated to ActivityResultLauncher
+     * No longer using deprecated onActivityResult
      */
-    @Suppress("DEPRECATION")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // Handle phone history role request result
-        if (requestCode == 1) {
-            // Role screening request completed
-        }
-    }
     
     /**
      * Step 32: Complete - All functions migrated!

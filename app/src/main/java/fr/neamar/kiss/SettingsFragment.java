@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -77,22 +78,46 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private SharedPreferences prefs;
     private boolean requireFullRestart = false;
+    
+    // For dynamically created PreferenceScreens (like ExcludePreferenceScreenCompat)
+    private PreferenceScreen initialPreferenceScreen = null;
+    
+    // ActivityResultLauncher for phone history role request (Android Q+)
+    private final androidx.activity.result.ActivityResultLauncher<Intent> phoneHistoryRoleLauncher =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Role request completed (user accepted or denied)
+                    if (result.getResultCode() == android.app.Activity.RESULT_OK) {
+                        android.util.Log.i(TAG, "Phone history role granted");
+                    } else {
+                        android.util.Log.i(TAG, "Phone history role denied");
+                    }
+                });
+
+    /**
+     * Set a dynamically created PreferenceScreen to be displayed.
+     * This is used for screens like ExcludePreferenceScreenCompat that are created at runtime.
+     */
+    public void setInitialPreferenceScreen(PreferenceScreen preferenceScreen) {
+        this.initialPreferenceScreen = preferenceScreen;
+    }
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         // Initialize preferences
         prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
         
+        // Check if we have a dynamically created PreferenceScreen to display
+        if (initialPreferenceScreen != null) {
+            // Use the dynamically created screen instead of loading from XML
+            setPreferenceScreen(initialPreferenceScreen);
+            updateActionBarTitle();
+            return;
+        }
+        
         // Load preferences from XML
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        
-        // Update ActionBar title based on root key
-        if (rootKey != null && getActivity() != null) {
-            PreferenceScreen screen = getPreferenceScreen();
-            if (screen != null && screen.getTitle() != null) {
-                requireActivity().setTitle(screen.getTitle());
-            }
-        }
+        updateActionBarTitle();
 
         // Remove API-level conditional preferences
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
@@ -186,10 +211,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 // 간단한 버전 정보를 title에, 상세 정보를 summary에 표시
                 versionPref.setTitle("KISS " + simpleVersion);
                 versionPref.setSummary(fullVersion);
-                
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Version info set successfully");
-                }
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.w(TAG, "version-info preference not found");
@@ -212,6 +233,36 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onResume() {
         super.onResume();
         prefs.registerOnSharedPreferenceChangeListener(this);
+        
+        // Update ActionBar title when fragment resumes
+        // This ensures the title is correct when navigating back from sub-screens
+        updateActionBarTitle();
+    }
+    
+    /**
+     * Update the ActionBar title based on the current PreferenceScreen.
+     * This is called from onCreatePreferences() and onResume() to ensure
+     * the title is always correct.
+     */
+    private void updateActionBarTitle() {
+        if (getActivity() == null) {
+            return;
+        }
+        
+        // Check if we have a dynamically created screen first
+        if (initialPreferenceScreen != null && initialPreferenceScreen.getTitle() != null) {
+            requireActivity().setTitle(initialPreferenceScreen.getTitle());
+            return;
+        }
+        
+        // For XML-based screens, get the current preference screen
+        PreferenceScreen screen = getPreferenceScreen();
+        if (screen != null && screen.getTitle() != null) {
+            requireActivity().setTitle(screen.getTitle());
+        } else {
+            // Default title for main settings screen
+            requireActivity().setTitle(R.string.activity_setting);
+        }
     }
 
     @Override
@@ -227,51 +278,87 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
-    public boolean onPreferenceTreeClick(@NonNull Preference preference) {
-        String key = preference.getKey();
+    public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+        // Handle custom DialogPreferences with dialog fragments
+        DialogFragment dialogFragment = null;
+        String preferenceKey = preference.getKey();
         
-        // Log all preference clicks for debugging
-        Log.d(TAG, "Preference clicked: " + key + ", type: " + preference.getClass().getSimpleName());
-        
-        // Handle PreferenceScreen navigation
-        if (preference instanceof PreferenceScreen) {
-            Log.d(TAG, "PreferenceScreen clicked: " + key);
-            // Navigate to sub-screen by creating new fragment instance
-            PreferenceScreen preferenceScreen = (PreferenceScreen) preference;
-            
-            // Create new fragment for sub-screen
-            SettingsFragment subFragment = new SettingsFragment();
-            Bundle args = new Bundle();
-            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
-            subFragment.setArguments(args);
-            
-            // Replace current fragment with sub-screen in the proper container
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.settings_container, subFragment)
-                    .addToBackStack(null)
-                    .commit();
-            
-            return true;
-        }
-        
-        // Handle custom dialog preferences that don't have DialogFragment implementations
-        if (preference instanceof fr.neamar.kiss.preference.ImportSettingsPreferenceCompat) {
+        if (preference instanceof fr.neamar.kiss.preference.ColorPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ColorPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.AddSearchProviderPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.AddSearchProviderPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetExcludedAppsPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetExcludedAppsPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetExcludedFromHistoryAppsPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetExcludedFromHistoryAppsPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetExcludedAppShortcutsPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetExcludedAppShortcutsPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetFavoritesPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetFavoritesPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetShortcutsPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetShortcutsPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ResetSearchProvidersPreferenceCompat) {
+            dialogFragment = fr.neamar.kiss.preference.ResetSearchProvidersPreferenceDialogFragmentCompat.newInstance(preferenceKey);
+        } else if (preference instanceof fr.neamar.kiss.preference.ImportSettingsPreferenceCompat) {
+            // Import/Export/Restart are action preferences, not dialogs
             handleImportSettings();
-            return true;
+            return;
         } else if (preference instanceof fr.neamar.kiss.preference.ExportSettingsPreferenceCompat) {
             handleExportSettings();
-            return true;
+            return;
         } else if (preference instanceof fr.neamar.kiss.preference.RestartPreferenceCompat) {
             handleRestartApp();
-            return true;
-        } else if (preference instanceof fr.neamar.kiss.preference.ColorPreferenceCompat) {
-            handleColorPicker((fr.neamar.kiss.preference.ColorPreferenceCompat) preference);
-            return true;
-        } else if (preference instanceof fr.neamar.kiss.preference.AddSearchProviderPreferenceCompat) {
-            handleAddSearchProvider();
-            return true;
+            return;
         }
+        
+        // Show the dialog fragment if we created one
+        if (dialogFragment != null) {
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+        } else {
+            // Let the framework handle other dialog preferences
+            super.onDisplayPreferenceDialog(preference);
+        }
+    }
+
+    @Override
+    public void onNavigateToScreen(@NonNull PreferenceScreen preferenceScreen) {
+        // This method is called when a PreferenceScreen is clicked
+        // For both XML-defined and dynamically created PreferenceScreens,
+        // create a new fragment and navigate to it
+        
+        SettingsFragment subFragment = new SettingsFragment();
+        Bundle args = new Bundle();
+        
+        String key = preferenceScreen.getKey();
+        if (key != null && !key.isEmpty()) {
+            // For XML-defined PreferenceScreens, use the key as root
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, key);
+        }
+        // For dynamically created screens without a key,
+        // the fragment will be created but onCreatePreferences will need to handle it
+        
+        subFragment.setArguments(args);
+        
+        // For dynamically created screens, we need to manually set the preference screen
+        // This is a workaround since PreferenceFragmentCompat doesn't natively support
+        // navigating to dynamically created screens
+        if (key == null || key.isEmpty()) {
+            subFragment.setInitialPreferenceScreen(preferenceScreen);
+        }
+        
+        // Replace current fragment with sub-screen
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings_container, subFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(@NonNull Preference preference) {
+        // Note: ColorPreferenceCompat, AddSearchProviderPreferenceCompat, ImportSettingsPreferenceCompat,
+        // ExportSettingsPreferenceCompat, and RestartPreferenceCompat are all handled in onDisplayPreferenceDialog()
         
         return super.onPreferenceTreeClick(preference);
     }
@@ -359,7 +446,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && enabled) {
             RoleManager roleManager = (RoleManager) requireActivity().getSystemService(android.content.Context.ROLE_SERVICE);
             Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING);
-            startActivityForResult(intent, 1);
+            phoneHistoryRoleLauncher.launch(intent);
         }
     }
 
@@ -1042,18 +1129,4 @@ public class SettingsFragment extends PreferenceFragmentCompat
     /**
      * Handle Color Picker preference click
      */
-    private void handleColorPicker(fr.neamar.kiss.preference.ColorPreferenceCompat preference) {
-        // For now, just show a toast - full color picker implementation would require more work
-        Toast.makeText(requireContext(), "Color picker coming soon", Toast.LENGTH_SHORT).show();
-        // TODO: Implement color picker dialog
-    }
-    
-    /**
-     * Handle Add Search Provider preference click
-     */
-    private void handleAddSearchProvider() {
-        // For now, just show a toast - full implementation would require more work
-        Toast.makeText(requireContext(), "Add search provider coming soon", Toast.LENGTH_SHORT).show();
-        // TODO: Implement search provider dialog
-    }
 }

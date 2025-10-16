@@ -1,7 +1,7 @@
 package fr.neamar.kiss.preference;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;

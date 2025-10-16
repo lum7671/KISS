@@ -120,12 +120,12 @@ public class ColorPreferenceDialogFragmentCompat extends PreferenceDialogFragmen
         if (color != this.selectedColor) {
             this.selectedColor = color;
 
-            // Redraw palette to show checkmark on newly selected color before dismissing
+            // Redraw palette to show checkmark on newly selected color
             this.drawPalette();
         }
 
-        // Close the dialog
-        getDialog().dismiss();
+        // Don't close the dialog - let user confirm with OK button
+        // The dialog will be closed when user clicks OK or Cancel
     }
 
     private void selectButton(Button button) {
