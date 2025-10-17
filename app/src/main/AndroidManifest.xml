@@ -73,7 +73,7 @@
         <!--
         clearTaskOnLaunch: when viewing kiss settings, display the main activity when pressing home https://github.com/Neamar/KISS/issues/117
         launchMode=singleTop: call onNewIntent() when pressing home again while already viewing main activity, also redisplay main activity when viewing full-screen contact from picture
-        windowSoftInputMode: hide keyboard by default
+        windowSoftInputMode: hide keyboard by default, adjustPan prevents window resize during keyboard show/hide
         stateNotNeeded: rebuild the whole UI each time onResume() is called
         -->
         <activity
@@ -84,7 +84,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="user"
             android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
