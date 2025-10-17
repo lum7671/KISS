@@ -59,6 +59,7 @@ public class ExperienceTweaks extends Forwarder {
             | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT;
     private static final String TAG = ExperienceTweaks.class.getSimpleName();
 
+    private final Handler keyboardHandler = new Handler(Looper.getMainLooper());
     private final Runnable displayKeyboardRunnable = mainActivity::showKeyboard;
 
     private View mainEmptyView;
@@ -253,15 +254,18 @@ public class ExperienceTweaks extends Forwarder {
         // so the keyboard will be hidden by default
         // we may want to display it if the setting is set
         if (shouldShowKeyboard()) {
+            // Cancel any previously scheduled keyboard display attempts to prevent duplicate calls
+            keyboardHandler.removeCallbacks(displayKeyboardRunnable);
+            
             // Display keyboard
             mainActivity.showKeyboard();
 
-            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 10);
             // For some weird reasons, keyboard may be hidden by the system
             // So we have to run this multiple time at different time
             // See https://github.com/Neamar/KISS/issues/119
-            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 100);
-            new Handler(Looper.getMainLooper()).postDelayed(displayKeyboardRunnable, 500);
+            keyboardHandler.postDelayed(displayKeyboardRunnable, 10);
+            keyboardHandler.postDelayed(displayKeyboardRunnable, 100);
+            keyboardHandler.postDelayed(displayKeyboardRunnable, 500);
         } else {
             // Not used (thanks windowSoftInputMode)
             // unless coming back from KISS settings
@@ -445,5 +449,10 @@ public class ExperienceTweaks extends Forwarder {
         } else {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
+    }
+    
+    public void onDestroy() {
+        // Clean up any pending keyboard display callbacks to prevent memory leaks
+        keyboardHandler.removeCallbacks(displayKeyboardRunnable);
     }
 }

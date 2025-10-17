@@ -113,5 +113,6 @@ public class ForwarderManager extends Forwarder {
 
     public void onDestroy() {
         widgetsForwarder.onDestroy();
+        experienceTweaks.onDestroy();
     }
 }
