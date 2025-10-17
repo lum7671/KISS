@@ -97,39 +97,9 @@ public class KeyboardScrollHider implements View.OnTouchListener {
             return;
         }
 
-        // Resize in progress - prevent the view from responding to touch events directly
-        this.list.blockTouchEvents();
-        this.list.setVerticalScrollBarEnabled(false);
-
-        int heightContainer = this.listParent.getHeight();
-        int offsetYDiff = (int) (this.offsetYCurrent - this.offsetYStart);
-        if (offsetYDiff < (this.offsetYDiff - THRESHOLD)) {
-            double pullFeedback = Math.sqrt((double) (this.offsetYDiff - offsetYDiff) / THRESHOLD);
-            offsetYDiff = this.offsetYDiff - (int) (THRESHOLD * pullFeedback);
-        }
-
-        // Determine new size of list view widget within its container
-        int listLayoutHeight = ViewGroup.LayoutParams.MATCH_PARENT;
-        if ((this.listHeightInitial + offsetYDiff) < heightContainer) {
-            listLayoutHeight = this.listHeightInitial + offsetYDiff;
-        }
-        this.setListLayoutHeight(listLayoutHeight);
-        if (offsetYDiff > this.offsetYDiff) {
-            this.offsetYDiff = offsetYDiff;
-        }
-
-        if (this.getWindowPadding() < this.initialWindowPadding
-                && listLayoutHeight == ViewGroup.LayoutParams.MATCH_PARENT) {
-            // Window size has increased and view has reached it's new maximum size - we're done
-            this.handleResizeDone();
-            return;
-        }
-
-        // Display edge pulling effect while list view is detached from the bottom of its
-        // container
-        float distance = ((float) (heightContainer - listLayoutHeight)) / heightContainer;
-        float displacement = 1 - this.lastMotionEvent.getX() / getWindowWidth();
-        this.pullEffect.setPull(distance, displacement, false);
+        // Skip animation during keyboard hide to prevent "earthquake" effect
+        // Just let adjustResize handle the window resize naturally
+        return;
     }
 
     @Override
@@ -145,61 +115,25 @@ public class KeyboardScrollHider implements View.OnTouchListener {
                 this.resizeDone = false;
                 this.initialWindowPadding = this.getWindowPadding();
 
-                // Lock list view height to its current value
-                this.listHeightInitial = this.list.getHeight();
-                this.setListLayoutHeight(this.listHeightInitial);
+                // Don't lock list height - let adjustResize handle it
+                // this.listHeightInitial = this.list.getHeight();
+                // this.setListLayoutHeight(this.listHeightInitial);
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 this.offsetYCurrent = event.getY();
                 this.lastMotionEvent = event;
 
-                this.updateListViewHeight();
+                // Skip updateListViewHeight to prevent animation conflicts
+                // this.updateListViewHeight();
                 break;
 
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 this.lastMotionEvent = null;
 
-                if (!this.resizeDone) {
-                    ValueAnimator animator = ValueAnimator.ofInt(
-                            this.list.getHeight(),
-                            this.listParent.getHeight()
-                    );
-                    animator.setDuration(250);
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.addUpdateListener(animation -> {
-                        int height = (int) animation.getAnimatedValue();
-                        KeyboardScrollHider.this.setListLayoutHeight(height);
-                    });
-                    animator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(@NonNull Animator animation) {
-                            // Give the list view the control over it's input back
-                            KeyboardScrollHider.this.list.unblockTouchEvents();
-
-                            // Quickly fade out edge pull effect
-                            KeyboardScrollHider.this.pullEffect.releasePull();
-                        }
-
-                        @Override
-                        public void onAnimationEnd(@NonNull Animator animation) {
-                            KeyboardScrollHider.this.handleResizeDone();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(@NonNull Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(@NonNull Animator animation) {
-                        }
-                    });
-                    animator.start();
-                } else {
-                    this.handleResizeDone();
-                }
-
+                // Skip animation - let adjustResize handle resize naturally
+                this.handleResizeDone();
                 break;
         }
 
