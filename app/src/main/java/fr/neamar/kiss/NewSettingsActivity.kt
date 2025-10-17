@@ -20,17 +20,13 @@ import fr.neamar.kiss.utils.SystemUiVisibilityHelper
  */
 class NewSettingsActivity : AppCompatActivity() {
 
-    companion object {
-        private const val TAG = "NewSettingsActivity"
-    }
-
     private lateinit var prefs: SharedPreferences
     private lateinit var permissionManager: Permission
     private lateinit var systemUiVisibilityHelper: SystemUiVisibilityHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        
+
         // Apply AppCompat-compatible theme based on user preference
         val theme = prefs.getString("theme", "light")
         when {
@@ -38,7 +34,7 @@ class NewSettingsActivity : AppCompatActivity() {
             theme?.contains("dark") == true -> setTheme(R.style.NewSettingThemeDark)
             else -> setTheme(R.style.NewSettingTheme)
         }
-        
+
         InterfaceTweaks.applySystemBarInsets(window.decorView)
 
         systemUiVisibilityHelper = SystemUiVisibilityHelper(this)
@@ -51,7 +47,7 @@ class NewSettingsActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        
+
         // Load SettingsFragment
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -59,7 +55,7 @@ class NewSettingsActivity : AppCompatActivity() {
                 .replace(R.id.settings_container, SettingsFragment())
                 .commit()
         }
-        
+
         // Handle back stack changes to update ActionBar title
         supportFragmentManager.addOnBackStackChangedListener {
             val backStackEntryCount = supportFragmentManager.backStackEntryCount
