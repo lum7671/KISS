@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class AnimatedListView extends BlockableListView {
     private static final int MOVE_DURATION = 100;
     protected final HashMap<Long, ItemInfo> mItemMap = new HashMap<>();
+    private boolean animationsEnabled = true; // Animation control flag
 
     public AnimatedListView(Context context) {
         super(context);
@@ -23,7 +24,25 @@ public class AnimatedListView extends BlockableListView {
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Enable or disable list animations for performance optimization during typing
+     */
+    public void setAnimationsEnabled(boolean enabled) {
+        this.animationsEnabled = enabled;
+        if (!enabled) {
+            mItemMap.clear(); // Clear state when disabling
+        }
+    }
+
+    public boolean areAnimationsEnabled() {
+        return animationsEnabled;
+    }
+
     public void prepareChangeAnim() {
+        if (!animationsEnabled) {
+            return; // Skip if animations are disabled
+        }
+        
         mItemMap.clear();
 
         // store positions before the update
@@ -39,8 +58,9 @@ public class AnimatedListView extends BlockableListView {
     }
 
     public void animateChange() {
-        if (mItemMap.isEmpty())
-            return;
+        if (!animationsEnabled || mItemMap.isEmpty()) {
+            return; // Skip if animations are disabled or no data
+        }
 
         // check if we can use the ViewTreeObserver for animations
         final ViewTreeObserver observer = this.getViewTreeObserver();

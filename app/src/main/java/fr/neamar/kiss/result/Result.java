@@ -386,17 +386,12 @@ public abstract class Result<T extends Pojo> {
      * @param checkViewport 뷰포트 내에 있는지 확인할지 여부
      */
     void setAsyncDrawable(ImageView view, @DrawableRes int resId, boolean checkViewport) {
-        // 뷰포트 체크를 더 관대하게 처리 - 완전히 화면 밖에 있을 때만 스킵
+        // Simplified viewport check - only skip if completely off-screen
+        // Removed retry logic to prevent main thread queue saturation
         if (checkViewport && !isViewInViewport(view)) {
             view.setImageResource(resId);
             view.setTag(null);
-            // 지연 로딩: 잠시 후 다시 시도
-            view.post(() -> {
-                if (isViewInViewport(view)) {
-                    setAsyncDrawable(view, resId, false); // 재시도 시 viewport 체크 비활성화
-                }
-            });
-            return;
+            return; // Skip loading for off-screen items (will load when scrolled into view)
         }
         
         // getting this called multiple times in parallel may result in empty icons

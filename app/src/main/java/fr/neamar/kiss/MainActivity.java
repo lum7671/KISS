@@ -147,6 +147,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     private long lastRecreateTime = 0;
     private boolean isScreenOn = true;
     
+    // Animation control for typing performance
+    private Handler animationHandler = new Handler(Looper.getMainLooper());
+    private Runnable enableAnimationRunnable;
+    private static final int ANIMATION_DEBOUNCE_MS = 300; // Re-enable animations after 300ms of inactivity
+    
     /**
      * 현재 사용자가 보고 있는 화면 상태를 나타내는 enum
      */
@@ -590,6 +595,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                         displayClearOnInput();
                         
                         ActionPerformanceTracker.getInstance().endAction("TEXT_INPUT");
+                        
+                        // Schedule animation re-enable after typing stops
+                        scheduleAnimationReEnable();
                     }
                 }
             }
@@ -600,6 +608,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 // 텍스트 입력 시작 시간 기록
                 textChangeStartTime = SystemClock.elapsedRealtime();
                 ActionPerformanceTracker.getInstance().startAction("TEXT_INPUT");
+                
+                // Disable list animations during typing for performance
+                if (list != null && list.areAnimationsEnabled()) {
+                    list.setAnimationsEnabled(false);
+                }
+                
+                // Cancel any pending animation re-enable
+                if (enableAnimationRunnable != null) {
+                    animationHandler.removeCallbacks(enableAnimationRunnable);
+                }
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -1455,6 +1473,23 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     public boolean isViewingAllApps() {
         return isDisplayingKissBar;
+    }
+
+    /**
+     * Schedule re-enabling of list animations after typing inactivity
+     */
+    private void scheduleAnimationReEnable() {
+        if (enableAnimationRunnable != null) {
+            animationHandler.removeCallbacks(enableAnimationRunnable);
+        }
+        
+        enableAnimationRunnable = () -> {
+            if (list != null && !list.areAnimationsEnabled()) {
+                list.setAnimationsEnabled(true);
+            }
+        };
+        
+        animationHandler.postDelayed(enableAnimationRunnable, ANIMATION_DEBOUNCE_MS);
     }
 
     public void beforeListChange() {

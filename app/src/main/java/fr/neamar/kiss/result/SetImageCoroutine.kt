@@ -102,21 +102,17 @@ object SetImageCoroutine {
         }
 
         return try {
-            // Load drawable with error handling and retry logic
-            var drawable = result.getDrawable(imageView.context)
-
-            // 아이콘이 null이면 여러 번 재시도
-            var retryCount = 0
-            while (drawable == null && retryCount < 3) {
-                retryCount++
-                Thread.sleep((100 * retryCount).toLong()) // 점진적 지연
-                drawable = result.getDrawable(imageView.context)
-                android.util.Log.w("SetImageCoroutine", "Retrying icon load (${retryCount}/3) for ${result.javaClass.simpleName}")
+            // Load drawable with single attempt (no retry blocking)
+            val drawable = result.getDrawable(imageView.context)
+            
+            // Log if drawable is null for debugging purposes
+            if (drawable == null) {
+                android.util.Log.w("SetImageCoroutine", "Icon not ready for ${result.javaClass.simpleName}")
             }
-
+            
             drawable
         } catch (e: Exception) {
-            // 오류 발생 시 로그 남기고 null 반환
+            // Log error and return null - let the system handle icon refresh
             android.util.Log.w("SetImageCoroutine", "Failed to load drawable: ${e.message}")
             null
         }
