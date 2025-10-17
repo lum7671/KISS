@@ -139,7 +139,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0' // Material Design Components (for Snackbar)
 
     // 성능 분석 & 디버깅 도구들 (DEBUG 빌드에만 포함)
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'  // 메모리 누수 탐지
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'  // 메모리 누수 탐지 (최신 안정 버전 유지)
     
     // Flipper 대체: Chrome DevTools와 Android Studio Profiler 사용 권장
     // debugImplementation 'com.facebook.flipper:flipper:0.265.0'             // DEPRECATED - 제거됨
@@ -177,7 +177,7 @@ dependencies {
 
     // R8/R8 minify 오류 해결용 javax.annotation-api 추가
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'org.jetbrains:annotations:24.1.0'
+    implementation 'org.jetbrains:annotations:25.0.0'  // 업데이트: 24.1.0 → 25.0.0
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -213,6 +213,6 @@ detekt {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8"  // 업데이트: 1.23.7 → 1.23.8
 }
 
