@@ -9,16 +9,16 @@ import java.util.PriorityQueue
 
 /**
  * ApplicationsSearcher의 Coroutines 버전
- * 
+ *
  * 시스템의 모든 앱 목록을 반환합니다.
  * App drawer를 표시할 때 사용됩니다.
- * 
+ *
  * Migration Notes:
  * - Custom PriorityQueue: ReversedNameComparator (A→Z sorting, reversed for ListView)
  * - getMaxResultCount() = Integer.MAX_VALUE (모든 앱 표시)
  * - Filter favorites logic 보존
  * - onPostExecuteInternal() override: adapter.buildSections() 호출
- * 
+ *
  * Phase 1: 100% functional equivalence (no optimization)
  */
 class ApplicationsSearcherCoroutine(
@@ -28,7 +28,7 @@ class ApplicationsSearcherCoroutine(
 
     /**
      * getPojoProcessor() override
-     * 
+     *
      * Custom PriorityQueue with ReversedNameComparator.
      * Sort from A to Z, so reverse (last item needs to be A, ListView starts at the bottom).
      */
@@ -38,7 +38,7 @@ class ApplicationsSearcherCoroutine(
 
     /**
      * getMaxResultCount() override
-     * 
+     *
      * Return Integer.MAX_VALUE to show all apps.
      */
     override fun getMaxResultCount(): Int {
@@ -47,11 +47,11 @@ class ApplicationsSearcherCoroutine(
 
     /**
      * doInBackground() - Main search logic
-     * 
+     *
      * 1. Get excluded favorites from DataHandler
      * 2. Add all apps (without excluded favorites)
      * 3. Add pinned shortcuts (PWA, ...)
-     * 
+     *
      * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
@@ -88,7 +88,7 @@ class ApplicationsSearcherCoroutine(
 
     /**
      * onPostExecute() override
-     * 
+     *
      * Build sections for fast scrolling after results are displayed.
      */
     override fun onPostExecute() {
@@ -102,7 +102,7 @@ class ApplicationsSearcherCoroutine(
 
     /**
      * Filter favorites from pojos
-     * 
+     *
      * @param pojos List of pojos
      * @param excludedFavoriteIds IDs of favorites to exclude from pojos
      * @return Pojos without favorites

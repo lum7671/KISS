@@ -10,17 +10,17 @@ import fr.neamar.kiss.pojo.PojoWithTags
 
 /**
  * PojoWithTagSearcher의 Coroutines 버전 (Abstract Base Class)
- * 
+ *
  * 태그를 가진 POJO들을 검색하기 위한 추상 기본 클래스입니다.
  * TagsSearcher와 UntaggedSearcher가 이 클래스를 상속합니다.
- * 
+ *
  * Migration Notes:
  * - Abstract base class for TagsSearcher, UntaggedSearcher
  * - Filter logic in addResults() (only PojoWithTags + acceptPojo())
  * - HistoryMode-based sorting (applyRelevanceFromHistory)
  * - Optimized tag search (requestRecordsByTag for TagsSearcher)
  * - getMaxResultCount() = Integer.MAX_VALUE
- * 
+ *
  * Phase 1: 100% functional equivalence (no optimization)
  */
 abstract class PojoWithTagSearcherCoroutine(
@@ -32,7 +32,7 @@ abstract class PojoWithTagSearcherCoroutine(
 
     /**
      * getMaxResultCount() override
-     * 
+     *
      * Return Integer.MAX_VALUE to show all matching results.
      */
     override fun getMaxResultCount(): Int {
@@ -41,10 +41,10 @@ abstract class PojoWithTagSearcherCoroutine(
 
     /**
      * doInBackground() - Main search logic
-     * 
+     *
      * For TagsSearcher with specific tag query: Use optimized requestRecordsByTag()
      * For other cases (UntaggedSearcher, generic TagsSearcher): Use requestAllRecords()
-     * 
+     *
      * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
@@ -64,12 +64,12 @@ abstract class PojoWithTagSearcherCoroutine(
             override fun doInBackground() {
                 // Not used - only need addResults() bridge
             }
-            
+
             // addResult() is final in Searcher, so we override addResults() which it calls
             override fun addResults(pojos: List<fr.neamar.kiss.pojo.Pojo>): Boolean {
                 return this@PojoWithTagSearcherCoroutine.addResults(pojos)
             }
-            
+
             override fun isCancelled(): Boolean {
                 return this@PojoWithTagSearcherCoroutine.isCancelled()
             }
@@ -90,11 +90,11 @@ abstract class PojoWithTagSearcherCoroutine(
 
     /**
      * addResults() override with filtering
-     * 
+     *
      * 1. Filter: only PojoWithTags that pass acceptPojo() check
      * 2. Apply history-based relevance sorting
      * 3. Call super.addResults()
-     * 
+     *
      * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override fun addResults(pojos: List<Pojo>): Boolean {
@@ -108,7 +108,7 @@ abstract class PojoWithTagSearcherCoroutine(
         for (pojo in pojos) {
             // Phase 2 Step 3: Check cancellation in loop
             if (isCancelled()) return false
-            
+
             if (pojo !is PojoWithTags) {
                 continue
             }
@@ -129,7 +129,7 @@ abstract class PojoWithTagSearcherCoroutine(
 
     /**
      * Get HistoryMode for tagged result sorting
-     * 
+     *
      * Reads "tagged-result-sort-mode" preference.
      * - "default": Use DataHandler's historyMode
      * - Other values: Use specific HistoryMode
@@ -145,11 +145,11 @@ abstract class PojoWithTagSearcherCoroutine(
 
     /**
      * Abstract method: acceptPojo()
-     * 
+     *
      * Subclasses implement this to define filtering logic.
      * - TagsSearcher: Check if pojo has specific tag
      * - UntaggedSearcher: Check if pojo has no tags
-     * 
+     *
      * @param pojoWithTags The pojo to check
      * @return true if pojo should be included in results
      */

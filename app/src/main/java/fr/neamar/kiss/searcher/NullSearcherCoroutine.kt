@@ -4,10 +4,10 @@ import fr.neamar.kiss.MainActivity
 
 /**
  * NullSearcher의 Coroutines 버전
- * 
+ *
  * 아무런 결과도 표시하지 않는 Searcher입니다.
  * Minimalistic mode에서 home을 다시 눌렀을 때 loader를 표시하지 않기 위해 사용됩니다.
- * 
+ *
  * Migration Notes:
  * - Empty doInBackground() 유지
  * - displayActivityLoader() override하여 loader 표시 안 함

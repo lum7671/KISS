@@ -19,7 +19,7 @@ class SaveSingleOreoShortcut private constructor(
 ) {
     companion object {
         private const val TAG = "SaveSingleOreoShortcut"
-        
+
         /**
          * AsyncTask의 execute()를 대체하는 정적 메서드
          * 기존 코드와의 호환성을 위해 동일한 인터페이스 제공
@@ -30,9 +30,9 @@ class SaveSingleOreoShortcut private constructor(
             return instance.executeAsync()
         }
     }
-    
+
     private val contextRef = WeakReference(context)
-    
+
     /**
      * 비동기 실행 메서드
      * 기존 AsyncTask의 doInBackground + onPostExecute 패턴을 구현
@@ -46,7 +46,7 @@ class SaveSingleOreoShortcut private constructor(
                 override fun onResult(result: Boolean) {
                     onPostExecute(result)
                 }
-                
+
                 override fun onError(error: Exception) {
                     Log.e(TAG, "Error saving shortcut", error)
                     showErrorToast()
@@ -54,7 +54,7 @@ class SaveSingleOreoShortcut private constructor(
             }
         )
     }
-    
+
     /**
      * 백그라운드 작업 (기존 doInBackground와 동일한 로직)
      */
@@ -62,42 +62,42 @@ class SaveSingleOreoShortcut private constructor(
         @Suppress("DEPRECATION")
         val pinItemRequest = intent.getParcelableExtra<LauncherApps.PinItemRequest>(LauncherApps.EXTRA_PIN_ITEM_REQUEST)
         val shortcutInfo = pinItemRequest?.shortcutInfo
-        
+
         if (shortcutInfo == null) {
             throw IllegalArgumentException("ShortcutInfo is null")
         }
-        
+
         if (!pinItemRequest.isValid) {
             return false
         }
-        
+
         if (!pinItemRequest.accept()) {
             return false
         }
-        
-        val context = contextRef.get() 
+
+        val context = contextRef.get()
             ?: throw IllegalStateException("Context is null")
-        
+
         val dataHandler = KissApplication.getApplication(context).dataHandler
-        
+
         // Add shortcut to the DataHandler
         return dataHandler.updateShortcut(shortcutInfo, false)
     }
-    
+
     /**
      * UI 업데이트 (기존 onPostExecute와 동일한 로직)
      */
     private fun onPostExecute(success: Boolean) {
         if (success) {
             Log.i(TAG, "Shortcut added to KISS")
-            
+
             val context = contextRef.get()
             if (context != null) {
                 KissApplication.getApplication(context).dataHandler.reloadShortcuts()
             }
         }
     }
-    
+
     /**
      * 에러 발생 시 토스트 표시
      */

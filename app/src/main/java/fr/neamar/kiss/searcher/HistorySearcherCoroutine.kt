@@ -12,17 +12,17 @@ import fr.neamar.kiss.utils.ShortcutUtil
 
 /**
  * HistorySearcher의 Coroutines 버전
- * 
+ *
  * 히스토리에서 POJO들을 검색합니다.
  * 빈 검색어일 때 호출되어 사용자의 앱 사용 히스토리를 표시합니다.
- * 
+ *
  * Migration Notes:
  * - SharedPreferences로 getMaxResultCount() 읽기 (static cache 사용)
  * - Exclude favorites/history 로직 보존
  * - Shortcut handling (API 26+) 보존
  * - Disabled items penalty (-200) 보존
  * - QuerySearcher와 유사한 패턴
- * 
+ *
  * Phase 1: 100% functional equivalence (no optimization)
  */
 class HistorySearcherCoroutine(
@@ -42,10 +42,10 @@ class HistorySearcherCoroutine(
 
     /**
      * getMaxResultCount() override
-     * 
+     *
      * Reads "number-of-display-elements" preference.
      * Converts to double first to avoid NumberFormatException for values > Integer.MAX_VALUE.
-     * 
+     *
      * Phase 2 Step 4: Instance-based caching instead of static
      */
     override fun getMaxResultCount(): Int {
@@ -66,12 +66,12 @@ class HistorySearcherCoroutine(
 
     /**
      * doInBackground() - Main search logic
-     * 
+     *
      * 1. Gather excluded items (from history, favorites)
      * 2. Add shortcuts for excluded apps (API 26+)
      * 3. Get history from DataHandler
      * 4. Add results
-     * 
+     *
      * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
@@ -97,7 +97,7 @@ class HistorySearcherCoroutine(
             for (id in excludedFromHistory) {
                 // Phase 2 Step 3: Check cancellation in loop
                 if (isCancelled()) return
-                
+
                 val pojo = dataHandler.getItemById(id)
                 if (pojo is AppPojo) {
                     val shortcutInfos = ShortcutUtil.getShortcuts(activity, pojo.packageName)
@@ -139,7 +139,7 @@ class HistorySearcherCoroutine(
 
     /**
      * addResults() override
-     * 
+     *
      * Apply relevance penalty for disabled items when not in ALPHABETICALLY mode.
      * Disabled items should not be preferred in history.
      */
@@ -147,7 +147,7 @@ class HistorySearcherCoroutine(
         val activity = activityWeakReference.get() ?: return false
 
         val dataHandler = KissApplication.getApplication(activity).dataHandler
-        
+
         // Apply penalty for disabled items (not in ALPHABETICALLY mode)
         if (dataHandler.historyMode != HistoryMode.ALPHABETICALLY) {
             for (pojo in pojos) {

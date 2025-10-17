@@ -9,13 +9,13 @@ import fr.neamar.kiss.pojo.Pojo
 
 /**
  * Kotlin Coroutines replacement for QuerySearcher
- * 
+ *
  * Phase 1 Goal: Maintain functional equivalence with QuerySearcher.java
  * - Same query execution logic
  * - Same result processing (relevance boosting)
  * - Same history-based ranking
  * - Same MAX_RESULT_COUNT caching
- * 
+ *
  * This is the most critical searcher - handles all user search queries.
  */
 class QuerySearcherCoroutine(
@@ -23,13 +23,13 @@ class QuerySearcherCoroutine(
     query: String,
     isRefresh: Boolean
 ) : SearcherCoroutine(activity, query, isRefresh) {
-    
+
     // Store user preferences (same as QuerySearcher.java)
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-    
+
     // Known IDs from query history (same as QuerySearcher.java)
     private lateinit var knownIds: HashMap<String, Int>
-    
+
     /**
      * Phase 2 Step 4: Changed from static to instance variable
      * - Removed static MAX_RESULT_COUNT and clearMaxResultCountCache()
@@ -37,7 +37,7 @@ class QuerySearcherCoroutine(
      * - No need for manual cache invalidation
      */
     private var maxResultCount: Int? = null
-    
+
     /**
      * Get maximum result count from preferences
      * Phase 2 Step 4: Instance-based caching instead of static
@@ -56,10 +56,10 @@ class QuerySearcherCoroutine(
                 maxResultCount = DEFAULT_MAX_RESULTS
             }
         }
-        
+
         return maxResultCount!!
     }
-    
+
     /**
      * Add results with relevance adjustments
      * Same logic as QuerySearcher.java:
@@ -79,41 +79,41 @@ class QuerySearcherCoroutine(
                 }
             }
         }
-        
+
         // Call super implementation to update the adapter
         return super.addResults(pojos)
     }
-    
+
     /**
      * Background work - called on background thread (searchDispatcher)
      * Same logic as QuerySearcher.java:
      * 1. Load query history from DB
      * 2. Request results from DataHandler
-     * 
+     *
      * Phase 2 Step 3: Added cancellation checks for fast cancellation response
      */
     override suspend fun doInBackground() {
         val activity = activityWeakReference.get() ?: return
-        
+
         // Phase 2 Step 3: Check cancellation before DB query
         if (isCancelled()) return
-        
+
         // Have we ever made the same query and selected something?
         val lastIdsForQuery = DBHelper.getPreviousResultsForQuery(activity, query)
-        
+
         // Phase 2 Step 3: Check cancellation before HashMap creation
         if (isCancelled()) return
-        
+
         knownIds = HashMap()
         for (id in lastIdsForQuery) {
             // Phase 2 Step 3: Check cancellation in loop (for large result sets)
             if (isCancelled()) return
             knownIds[id.record] = id.value
         }
-        
+
         // Phase 2 Step 3: Check cancellation before Provider request
         if (isCancelled()) return
-        
+
         // Request results via "addResult"
         // Create adapter to bridge SearcherCoroutine → Searcher interface
         // Phase 2 improvement: Refactor Provider interface to accept common interface
@@ -121,17 +121,17 @@ class QuerySearcherCoroutine(
             override fun doInBackground() {
                 // Not used - only need addResult() bridge
             }
-            
+
             // addResult() is final in Searcher, so we override addResults() which it calls
             override fun addResults(pojos: List<Pojo>): Boolean {
                 return this@QuerySearcherCoroutine.addResults(pojos)
             }
-            
+
             override fun isCancelled(): Boolean {
                 return this@QuerySearcherCoroutine.isCancelled()
             }
         }
-        
+
         KissApplication.getApplication(activity).dataHandler.requestResults(query, searcherAdapter)
     }
 }

@@ -5,15 +5,15 @@ import fr.neamar.kiss.pojo.PojoWithTags
 
 /**
  * TagsSearcher의 Coroutines 버전
- * 
+ *
  * 특정 태그를 가진 모든 결과를 반환합니다.
  * 태그 검색 메뉴에서 사용됩니다.
- * 
+ *
  * Migration Notes:
  * - Extends PojoWithTagSearcherCoroutine
  * - Override acceptPojo() only: Check if pojo has specific tag
  * - Very simple implementation (19 lines in original)
- * 
+ *
  * Phase 1: 100% functional equivalence (no optimization)
  */
 class TagsSearcherCoroutine(
@@ -23,9 +23,9 @@ class TagsSearcherCoroutine(
 
     /**
      * acceptPojo() implementation
-     * 
+     *
      * Accept pojo if it has tags and contains the query tag.
-     * 
+     *
      * @param pojoWithTags The pojo to check
      * @return true if pojo has the specified tag
      */

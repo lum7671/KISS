@@ -18,38 +18,38 @@ import fr.neamar.kiss.utils.UserHandle
  * Loads shortcut POJOs from both database and system (Android O+)
  */
 class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<ShortcutPojo>(context, ShortcutPojo.SCHEME) {
-    
+
     companion object {
         private const val TAG = "LoadShortcutsPojosCoroutine"
     }
-    
+
     @WorkerThread
     override fun doInBackground(): List<ShortcutPojo> {
         val context = contextRef.get() ?: return emptyList()
-        
+
         val nonOreoPojos = fetchNonOreoPojos(context)
         val oreoPojos = fetchOreoPojos(context)
-        
+
         return mutableListOf<ShortcutPojo>().apply {
             addAll(nonOreoPojos)
             addAll(oreoPojos)
         }
     }
-    
+
     /**
      * Get all Oreo shortcuts from system directly (Android O+)
      */
     @WorkerThread
     private fun fetchOreoPojos(context: Context): List<ShortcutPojo> {
         val oreoPojos = mutableListOf<ShortcutPojo>()
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val dataHandler = KissApplication.getApplication(context).dataHandler
             val excludedApps = dataHandler.excluded
             val excludedShortcutApps = dataHandler.excludedShortcutApps
             val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
             val shortcutInfos = ShortcutUtil.getAllShortcuts(context)
-            
+
             for (shortcutInfo in shortcutInfos) {
                 try {
                     if (ShortcutUtil.isShortcutVisible(context, shortcutInfo, excludedApps, excludedShortcutApps)) {
@@ -58,7 +58,7 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
                             shortcutInfo,
                             !shortcutInfo.isPinned
                         )
-                        
+
                         if (shortcutRecord != null) {
                             val isSuspended = PackageManagerUtils.isAppSuspended(
                                 context,
@@ -67,7 +67,7 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
                             )
                             val isQuietModeEnabled = userManager.isQuietModeEnabled(shortcutInfo.userHandle)
                             val disabled = isSuspended || isQuietModeEnabled
-                            
+
                             val pojo = createPojo(
                                 shortcutRecord,
                                 dataHandler.tagsHandler,
@@ -76,7 +76,7 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
                                 shortcutInfo.isDynamic,
                                 disabled
                             )
-                            
+
                             oreoPojos.add(pojo)
                         }
                     }
@@ -86,10 +86,10 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
                 }
             }
         }
-        
+
         return oreoPojos
     }
-    
+
     /**
      * Get shortcuts from database (pre-Oreo and custom shortcuts)
      */
@@ -99,7 +99,7 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
         val tagsHandler = dataHandler.tagsHandler
         val pojos = mutableListOf<ShortcutPojo>()
         val records = DBHelper.getShortcuts(context)
-        
+
         for (shortcutRecord in records) {
             try {
                 val pojo = createPojo(shortcutRecord, tagsHandler, null, true, false, false)
@@ -112,10 +112,10 @@ class LoadShortcutsPojosCoroutine(context: Context) : LoadPojosCoroutine<Shortcu
                 android.util.Log.w(TAG, "Error processing shortcut record ${shortcutRecord.name}: ${e.message}")
             }
         }
-        
+
         return pojos
     }
-    
+
     private fun createPojo(
         shortcutRecord: ShortcutRecord,
         tagsHandler: TagsHandler,

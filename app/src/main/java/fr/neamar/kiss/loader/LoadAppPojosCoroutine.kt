@@ -18,43 +18,43 @@ import fr.neamar.kiss.utils.UserHandle
  * Loads application POJOs in background using Coroutines
  */
 class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(context, "app://") {
-    
+
     companion object {
         private const val TAG = "LoadAppPojosCoroutine"
     }
-    
+
     private val tagsHandler: TagsHandler by lazy {
         val ctx = contextRef.get()
         ctx?.let { KissApplication.getApplication(it).dataHandler.tagsHandler }
             ?: throw IllegalStateException("Context is null when accessing TagsHandler")
     }
-    
+
     @WorkerThread
     override fun doInBackground(): List<AppPojo> {
         val start = System.currentTimeMillis()
-        
+
         val apps = mutableListOf<AppPojo>()
         val ctx = contextRef.get() ?: return apps
-        
+
         val kissApp = KissApplication.getApplication(ctx)
         val excludedAppList = kissApp.dataHandler.excluded
         val excludedFromHistoryAppList = kissApp.dataHandler.excludedFromHistory
         val excludedShortcutsAppList = kissApp.dataHandler.excludedShortcutApps
-        
+
         // Load apps for each user profile
         loadAppsForAllProfiles(ctx, apps, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList)
-        
+
         // Apply custom information from database
         applyCustomAppInfo(ctx, apps)
-        
+
         val end = System.currentTimeMillis()
         if (BuildConfig.DEBUG) {
             Log.i(TAG, "${end - start} milliseconds to list apps")
         }
-        
+
         return apps
     }
-    
+
     @WorkerThread
     private fun loadAppsForAllProfiles(
         ctx: Context,
@@ -65,29 +65,28 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
     ) {
         val manager = ctx.getSystemService(Context.USER_SERVICE) as UserManager
         val launcherApps = ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
-        
+
         // Get all user profiles - minSdkVersion 33이므로 LOLLIPOP 체크 불필요
         val profiles = manager.userProfiles
-        
+
         for (profile in profiles) {
             val userHandle = UserHandle(ctx, profile)
-            
+
             // Skip quiet mode profiles
             if (isQuietModeEnabled(manager, profile)) {
                 continue
             }
-            
+
             try {
-                loadAppsForProfile(ctx, launcherApps, userHandle, apps, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList)
+                loadAppsForProfile(launcherApps, userHandle, apps, excludedAppList, excludedFromHistoryAppList, excludedShortcutsAppList)
             } catch (e: Exception) {
                 Log.w(TAG, "Error loading apps for profile ${profile}: ${e.message}")
             }
         }
     }
-    
+
     @WorkerThread
     private fun loadAppsForProfile(
-        ctx: Context,
         launcherApps: LauncherApps,
         userHandle: UserHandle,
         apps: MutableList<AppPojo>,
@@ -98,7 +97,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         // minSdkVersion 33이므로 LOLLIPOP 체크 불필요 - 항상 LauncherApps 사용
         // Use LauncherApps for API 21+ - 활성화된 앱들
         val activityList = launcherApps.getActivityList(null, userHandle.realHandle)
-            
+
             for (activityInfo in activityList) {
                 // minSdkVersion 33이므로 SDK 28 체크 불필요
                 val suspended = (activityInfo.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SUSPENDED) != 0
@@ -117,37 +116,37 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                 )
                 apps.add(app)
             }
-            
+
             // 비활성화된 앱 로딩 기능을 임시로 비활성화 (중복 및 실행 오류 방지)
             /*
             // 추가로 비활성화된 앱들도 로드 (PackageManager 사용)
             try {
                 val pm = ctx.packageManager
-                
+
                 // 이미 추가된 앱들의 패키지명을 Set으로 저장 (더 안전한 방법)
                 val existingPackages = activityList.map { it.applicationInfo.packageName }.toSet()
-                
+
                 // 모든 설치된 패키지를 확인 (비활성화된 것 포함)
                 val allPackages = pm.getInstalledPackages(PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_UNINSTALLED_PACKAGES)
-                
+
                 for (packageInfo in allPackages) {
                     try {
                         // 이미 추가된 패키지는 스킵 (중복 방지)
                         if (existingPackages.contains(packageInfo.packageName)) {
                             continue
                         }
-                        
+
                         // LAUNCHER 카테고리가 있는 Activity들을 찾기
                         val mainIntent = Intent(Intent.ACTION_MAIN).apply {
                             addCategory(Intent.CATEGORY_LAUNCHER)
                             setPackage(packageInfo.packageName)
                         }
-                        
-                        val activities = pm.queryIntentActivities(mainIntent, 
+
+                        val activities = pm.queryIntentActivities(mainIntent,
                             PackageManager.MATCH_DISABLED_COMPONENTS or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS)
-                        
+
                         for (activityInfo in activities) {
-                            val isDisabled = !activityInfo.activityInfo.enabled || 
+                            val isDisabled = !activityInfo.activityInfo.enabled ||
                                 (packageInfo.applicationInfo?.enabled == false)
                             val isSuspended = if (android.os.Build.VERSION.SDK_INT >= 28) {
                                 try {
@@ -164,13 +163,13 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
                                     false
                                 }
                             } == true)
-                            
+
                             // 비활성화된 앱이나 실행할 수 없는 앱은 스킵
                             if (isDisabled) {
                                 android.util.Log.d(TAG, "Skipping disabled app: ${activityInfo.activityInfo.packageName}")
                                 continue
                             }
-                            
+
                             val app = createPojo(
                                 userHandle,
                                 activityInfo.activityInfo.packageName,
@@ -198,7 +197,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
     @WorkerThread
     private fun applyCustomAppInfo(ctx: Context, apps: List<AppPojo>) {
         val customApps = DBHelper.getCustomAppData(ctx)
-        
+
         for (app in apps) {
             val customApp = customApps[app.componentName]
             if (customApp != null) {
@@ -211,7 +210,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
             }
         }
     }
-    
+
     private fun isQuietModeEnabled(manager: UserManager, profile: android.os.UserHandle): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             manager.isQuietModeEnabled(profile)
@@ -219,7 +218,7 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
             false
         }
     }
-    
+
     private fun createPojo(
         userHandle: UserHandle,
         packageName: String,
@@ -232,15 +231,15 @@ class LoadAppPojosCoroutine(context: Context) : LoadPojosCoroutine<AppPojo>(cont
         excludedShortcutsAppList: Set<String>
     ): AppPojo {
         val id = userHandle.addUserSuffixToString("$pojoScheme$packageName/$activityName", '/')
-        
+
         val isExcluded = excludedAppList.contains(AppPojo.getComponentName(packageName, activityName, userHandle))
         val isExcludedFromHistory = excludedFromHistoryAppList.contains(id)
         val isExcludedShortcuts = excludedShortcutsAppList.contains(packageName)
-        
+
         val app = AppPojo(id, packageName, activityName, userHandle, isExcluded, isExcludedFromHistory, isExcludedShortcuts, disabled, suspended)
         app.name = label.toString()
         app.tags = tagsHandler.getTags(app.id)
-        
+
         return app
     }
 }

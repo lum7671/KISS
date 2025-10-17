@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference
  * 기존 AsyncTask.execute() 및 Utilities.AsyncRun을 대체
  */
 object CoroutineUtils {
-    
+
     /**
      * 애플리케이션 레벨 CoroutineScope
      * GlobalScope 대신 사용하여 더 나은 구조화된 동시성 제공
@@ -33,15 +33,10 @@ object CoroutineUtils {
     private val applicationScope = CoroutineScope(
         SupervisorJob() + Dispatchers.IO + CoroutineName("CoroutineUtils")
     )
-    
-    /**
-     * 메인 스레드에서 실행하기 위한 Handler
-     */
-    private val mainHandler = Handler(Looper.getMainLooper())
-    
+
     /**
      * 기존 AsyncTask.execute() 대체용 간단한 비동기 실행
-     * 
+     *
      * @param background 백그라운드에서 실행할 작업
      */
     @JvmStatic
@@ -59,10 +54,10 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * 백그라운드 작업 + UI 콜백 패턴 (기존 Utilities.AsyncRun 대체)
-     * 
+     *
      * @param background 백그라운드에서 실행할 작업
      * @param callback UI 스레드에서 실행할 콜백 (nullable)
      */
@@ -83,7 +78,7 @@ object CoroutineUtils {
                 if (BuildConfig.DEBUG) {
                     Log.d("CoroutineUtils", "runAsync() - background task completed")
                 }
-                
+
                 callback?.let {
                     if (BuildConfig.DEBUG) {
                         Log.d("CoroutineUtils", "runAsync() - UI callback started")
@@ -101,11 +96,11 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * LifecycleOwner와 연결된 안전한 비동기 실행
      * Activity/Fragment가 destroy되면 자동으로 취소됨
-     * 
+     *
      * @param lifecycleOwner Activity 또는 Fragment
      * @param background 백그라운드에서 실행할 작업
      * @param callback UI 스레드에서 실행할 콜백 (nullable)
@@ -119,7 +114,7 @@ object CoroutineUtils {
         return lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 background.run()
-                
+
                 callback?.let {
                     withContext(Dispatchers.Main) {
                         it.run()
@@ -133,10 +128,10 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * 제네릭 타입을 지원하는 비동기 작업 실행
-     * 
+     *
      * @param T 결과 타입
      * @param background 백그라운드에서 실행할 작업 (결과 반환)
      * @param callback UI 스레드에서 실행할 콜백
@@ -149,7 +144,7 @@ object CoroutineUtils {
         return applicationScope.launch {
             try {
                 val result = background.call()
-                
+
                 withContext(Dispatchers.Main) {
                     callback.onResult(result)
                 }
@@ -160,7 +155,7 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * LifecycleOwner와 연결된 제네릭 타입 비동기 작업
      */
@@ -173,7 +168,7 @@ object CoroutineUtils {
         return lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val result = background.call()
-                
+
                 withContext(Dispatchers.Main) {
                     callback.onResult(result)
                 }
@@ -186,7 +181,7 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * 기존 AsyncTask의 onPostExecute와 유사한 패턴
      * WeakReference를 사용하여 메모리 누수 방지
@@ -198,13 +193,13 @@ object CoroutineUtils {
         @NonNull callback: WeakAsyncCallback<T, R>
     ): Job where T : Any {
         val weakRef = WeakReference(target)
-        
+
         return applicationScope.launch {
             try {
                 val targetRef = weakRef.get()
                 if (targetRef != null) {
                     val result = background.call(targetRef)
-                    
+
                     withContext(Dispatchers.Main) {
                         val finalTarget = weakRef.get()
                         if (finalTarget != null) {
@@ -222,7 +217,7 @@ object CoroutineUtils {
             }
         }
     }
-    
+
     /**
      * 애플리케이션 종료 시 정리
      */

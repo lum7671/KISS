@@ -13,42 +13,41 @@ import fr.neamar.kiss.utils.Permission
  * Simplified version focusing on basic contact loading functionality
  */
 class LoadContactsPojosCoroutine(context: Context) : LoadPojosCoroutine<ContactsPojo>(context, "contact://") {
-    
+
     companion object {
         private const val TAG = "LoadContactsPojosCoroutine"
     }
-    
+
     @WorkerThread
     override fun doInBackground(): List<ContactsPojo> {
         val start = System.currentTimeMillis()
-        
+
         val contacts = mutableListOf<ContactsPojo>()
         val ctx = contextRef.get() ?: return contacts
-        
+
         // Skip if we don't have permission to list contacts yet
         if (!Permission.checkPermission(ctx, Permission.PERMISSION_READ_CONTACTS)) {
             Log.w(TAG, "No permission to read contacts")
             return contacts
         }
-        
+
         try {
             // Load basic contacts with phone numbers
             contacts.addAll(loadPhoneContacts(ctx))
-            
         } catch (e: Exception) {
             Log.e(TAG, "Error loading contacts", e)
         }
-        
+
         val end = System.currentTimeMillis()
         Log.i(TAG, "${end - start} milliseconds to load ${contacts.size} contacts")
-        
+
         return contacts
     }
-    
+
     @WorkerThread
     private fun loadPhoneContacts(ctx: Context): List<ContactsPojo> {
         val contacts = mutableListOf<ContactsPojo>()
-        
+
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY,
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
@@ -57,7 +56,7 @@ class LoadContactsPojosCoroutine(context: Context) : LoadPojosCoroutine<Contacts
             ContactsContract.CommonDataKinds.Phone.IS_PRIMARY,
             ContactsContract.CommonDataKinds.Phone.STARRED
         )
-        
+
         ctx.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             projection,
@@ -71,7 +70,7 @@ class LoadContactsPojosCoroutine(context: Context) : LoadPojosCoroutine<Contacts
             val phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
             val isPrimaryIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY)
             val isStarredIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.STARRED)
-            
+
             while (cursor.moveToNext()) {
                 try {
                     val contactId = cursor.getLong(contactIdIndex)
@@ -80,15 +79,15 @@ class LoadContactsPojosCoroutine(context: Context) : LoadPojosCoroutine<Contacts
                     val phone = cursor.getString(phoneIndex) ?: ""
                     val isPrimary = cursor.getInt(isPrimaryIndex) != 0
                     val isStarred = cursor.getInt(isStarredIndex) != 0
-                    
+
                     if (phone.isNotEmpty() && displayName.isNotEmpty()) {
                         val id = "$pojoScheme$contactId/$phone"
                         val icon = Uri.EMPTY // Simplified - no icon for now
-                        
+
                         val contact = ContactsPojo(id, lookupKey, contactId, icon, isPrimary, isStarred)
                         contact.setName(displayName)
                         contact.setPhone(phone, false)
-                        
+
                         contacts.add(contact)
                     }
                 } catch (e: Exception) {
@@ -96,7 +95,7 @@ class LoadContactsPojosCoroutine(context: Context) : LoadPojosCoroutine<Contacts
                 }
             }
         }
-        
+
         return contacts
     }
 }

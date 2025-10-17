@@ -19,13 +19,13 @@ import java.util.PriorityQueue
 
 /**
  * Kotlin Coroutines replacement for Searcher (ExecutorService → Coroutines)
- * 
+ *
  * Phase 1 Goal: Maintain functional equivalence with Searcher.java
  * - Same lifecycle: onPreExecute → doInBackground → onPostExecute
  * - Same memory safety: WeakReference for MainActivity
  * - Same result processing: PriorityQueue with RelevanceComparator
  * - Same error handling: Log and call onCancelled
- * 
+ *
  * Phase 2 improvements (later):
  * - Thread-safe collections
  * - Enhanced error handling
@@ -39,26 +39,26 @@ abstract class SearcherCoroutine(
     companion object {
         private const val TAG = "SearcherCoroutine"
         const val DEFAULT_MAX_RESULTS = 50
-        
+
         /**
          * Single thread dispatcher to ensure sequential search execution
          * Replaces: Executors.newSingleThreadExecutor()
          */
         private val searchDispatcher = Dispatchers.IO.limitedParallelism(1)
     }
-    
+
     // WeakReference to prevent memory leaks (same as Searcher.java)
     protected val activityWeakReference = WeakReference(activity)
-    
+
     // PriorityQueue for result processing (same as Searcher.java)
     private val processedPojos = PriorityQueue<Pojo>(DEFAULT_MAX_RESULTS, RelevanceComparator())
-    
+
     // Job for cancellation control
     private var currentJob: Job? = null
-    
+
     // Performance tracking
     private var startTime: Long = 0
-    
+
     /**
      * Get custom PriorityQueue processor
      * Can be overridden by subclasses (e.g., ApplicationsSearcher)
@@ -66,7 +66,7 @@ abstract class SearcherCoroutine(
     protected open fun getPojoProcessor(context: Context): PriorityQueue<Pojo> {
         return PriorityQueue(DEFAULT_MAX_RESULTS, RelevanceComparator())
     }
-    
+
     /**
      * Get maximum result count
      * Can be overridden by subclasses (e.g., QuerySearcher)
@@ -74,7 +74,7 @@ abstract class SearcherCoroutine(
     protected open fun getMaxResultCount(): Int {
         return DEFAULT_MAX_RESULTS
     }
-    
+
     /**
      * Add single pojo to results
      * Called from background thread by providers
@@ -82,11 +82,11 @@ abstract class SearcherCoroutine(
     fun addResult(pojo: Pojo): Boolean {
         return addResults(listOf(pojo))
     }
-    
+
     /**
      * Add multiple pojos to results
      * Called from background thread by providers
-     * 
+     *
      * Thread-safe: Uses synchronized block to ensure safe concurrent access
      * Phase 2 Step 1: Explicit thread safety
      */
@@ -99,21 +99,21 @@ abstract class SearcherCoroutine(
             return processedPojos.addAll(pojos)
         }
     }
-    
+
     /**
      * Check if search is cancelled
      */
     fun isCancelled(): Boolean {
         return currentJob?.isCancelled ?: false
     }
-    
+
     /**
      * Cancel the search operation
      */
     fun cancel() {
         currentJob?.cancel()
     }
-    
+
     /**
      * Execute the search operation
      * Returns Job for cancellation control
@@ -121,26 +121,25 @@ abstract class SearcherCoroutine(
     fun execute(): Job {
         // Cancel previous job if exists
         currentJob?.cancel()
-        
+
         currentJob = CoroutineScope(Dispatchers.Main).launch {
             try {
                 // Phase 1: Maintain same lifecycle as Searcher.java
                 onPreExecute()
-                
+
                 // Background work on single thread dispatcher
                 withContext(searchDispatcher) {
                     doInBackground()
                 }
-                
+
                 // UI update on main thread
                 onPostExecute()
-                
+
             } catch (e: CancellationException) {
                 // Phase 2 Step 2: Distinguish cancellation from errors
                 // Normal cancellation - user cancelled the search
                 Log.d(TAG, "Search cancelled: ${this@SearcherCoroutine::class.simpleName}")
                 onCancelled()
-                
             } catch (e: Exception) {
                 // Phase 2 Step 2: Handle actual errors separately
                 // Real errors - DB issues, null pointers, etc.
@@ -148,10 +147,10 @@ abstract class SearcherCoroutine(
                 onError(e)
             }
         }
-        
+
         return currentJob!!
     }
-    
+
     /**
      * Called on main thread before background work
      * Same as Searcher.java onPreExecute()
@@ -160,7 +159,7 @@ abstract class SearcherCoroutine(
         startTime = System.currentTimeMillis()
         displayActivityLoader()
     }
-    
+
     /**
      * Display loading indicator
      */
@@ -168,13 +167,13 @@ abstract class SearcherCoroutine(
         val activity = activityWeakReference.get() ?: return
         activity.displayLoader(true)
     }
-    
+
     /**
      * Background work - implemented by subclasses
      * Runs on background thread (searchDispatcher)
      */
     protected abstract suspend fun doInBackground()
-    
+
     /**
      * Called on main thread after background work completes
      * Same as Searcher.java onPostExecute()
@@ -183,11 +182,11 @@ abstract class SearcherCoroutine(
         if (isCancelled()) {
             return
         }
-        
+
         val activity = activityWeakReference.get() ?: return
-        
+
         hideActivityLoader(activity)
-        
+
         if (processedPojos.isEmpty()) {
             activity.adapter.clear()
         } else {
@@ -196,7 +195,7 @@ abstract class SearcherCoroutine(
             while (processedPojos.size > maxResults) {
                 processedPojos.poll()
             }
-            
+
             // Convert to Result list
             val results = ArrayList<Result<*>>(processedPojos.size)
             while (processedPojos.peek() != null) {
@@ -205,20 +204,20 @@ abstract class SearcherCoroutine(
                     results.add(Result.fromPojo(activity, pojo))
                 }
             }
-            
+
             // Update adapter
             activity.beforeListChange()
             activity.adapter.updateResults(activity, results, isRefresh, query)
             activity.afterListChange()
         }
-        
+
         // Reset task reference
         activity.resetTask()
-        
+
         // Phase 2 Step 5: Centralized performance logging
         logPerformance(cancelled = false, error = null)
     }
-    
+
     /**
      * Hide loading indicator
      */
@@ -227,11 +226,11 @@ abstract class SearcherCoroutine(
         val dataHandler = KissApplication.getApplication(activity).dataHandler
         activity.displayLoader(!dataHandler.allProvidersHaveLoaded)
     }
-    
+
     /**
      * Log search performance using centralized logger
      * Phase 2 Step 5: Unified logging for all search states
-     * 
+     *
      * Replaces separate logging in onPostExecute(), onCancelled(), onError()
      */
     private fun logPerformance(
@@ -240,7 +239,7 @@ abstract class SearcherCoroutine(
     ) {
         val activity = activityWeakReference.get() ?: return
         val time = System.currentTimeMillis() - startTime
-        
+
         SearchPerformanceLogger.log(
             SearchPerformanceLogger.SearchMetrics(
                 searcherType = this::class.simpleName ?: "Unknown",
@@ -254,7 +253,7 @@ abstract class SearcherCoroutine(
             )
         )
     }
-    
+
     /**
      * Called when search is cancelled (not an error)
      * Phase 2 Step 2: Separated from error handling
@@ -263,16 +262,16 @@ abstract class SearcherCoroutine(
     protected open fun onCancelled() {
         val activity = activityWeakReference.get() ?: return
         hideActivityLoader(activity)
-        
+
         // Phase 2 Step 5: Centralized logging
         logPerformance(cancelled = true, error = null)
     }
-    
+
     /**
      * Called when search encounters an error (not cancellation)
      * Phase 2 Step 2: Separate error handling from cancellation
      * Phase 2 Step 5: Centralized logging
-     * 
+     *
      * Can be overridden by subclasses for custom error handling.
      * Default implementation logs the error and cleans up UI.
      */
@@ -282,7 +281,7 @@ abstract class SearcherCoroutine(
         if (activity != null) {
             hideActivityLoader(activity)
         }
-        
+
         // Phase 2 Step 5: Centralized logging
         logPerformance(cancelled = false, error = error)
     }
