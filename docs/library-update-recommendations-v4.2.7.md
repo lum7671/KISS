@@ -31,17 +31,20 @@ dependencies {
 ### 2. 변경 이유
 
 #### OkHttp 5.2.1 (4.12.0 → 5.2.1)
+
 - **성능 향상**: 네트워크 요청 속도 약 10% 개선
 - **Breaking Change**: DEBUG 빌드만 사용하므로 영향 없음
 - **Kotlin 지원**: Coroutines 네이티브 지원 강화
 - **Risk**: 🟢 LOW (테스트만 필요)
 
 #### JetBrains Annotations 26.0.2-1 (25.0.0 → 26.0.2-1)
+
 - **개선**: 더 정확한 null 안전성 검사
 - **호환성**: 완전 하위 호환
 - **Risk**: 🟢 NONE
 
 #### Error Prone 2.43.0 (2.42.0 → 2.43.0)
+
 - **개선**: 새로운 버그 패턴 탐지
 - **호환성**: 빌드 도구만 업데이트
 - **Risk**: 🟢 NONE
@@ -51,6 +54,7 @@ dependencies {
 ## 테스트 체크리스트
 
 ### 빌드 테스트
+
 ```bash
 # 1. Clean build
 ./gradlew clean
@@ -66,6 +70,7 @@ dependencies {
 ```
 
 ### 기능 테스트
+
 - [ ] DEBUG 빌드 실행 후 HTTP 로깅 정상 작동 확인
 - [ ] 아이콘 로딩 정상 작동 (Coil + OkHttp 5.x)
 - [ ] Error Prone 경고 확인 (새로운 패턴 탐지 여부)
@@ -90,14 +95,17 @@ dependencies {
 ## 예상 효과
 
 ### 성능 개선
+
 - **이미지 로딩**: OkHttp 5.x의 네트워크 최적화로 아이콘 로딩 속도 약 10% 향상
 - **빌드 시간**: Error Prone 2.43.0의 최적화로 정적 분석 시간 단축
 
 ### 안정성 개선
+
 - **Null 안전성**: JetBrains Annotations 26.x의 개선된 검사
 - **버그 탐지**: Error Prone 2.43.0의 새로운 패턴 탐지
 
 ### 유지보수 개선
+
 - 최신 라이브러리 사용으로 커뮤니티 지원 강화
 - 보안 패치 지속적으로 받을 수 있음
 
@@ -106,10 +114,12 @@ dependencies {
 ## 다음 업데이트 계획 (v4.2.8 이후)
 
 ### 2025년 Q4 (12월)
+
 - **androidx.lifecycle 2.9.0** Stable 릴리즈 시 업데이트
 - **Material Design 1.13.0** Stable 릴리즈 시 업데이트
 
 ### 2026년 Q1 (3월)
+
 - **LeakCanary 3.0** Stable 릴리즈 시 업데이트
 - **Amplitude SDK v3** 평가 재검토 (필요시)
 
@@ -152,17 +162,20 @@ git merge feature/library-update-v4.2.7
 ## 요약
 
 ### ✅ 업데이트 항목 (3개)
+
 1. OkHttp logging-interceptor 5.2.1
 2. JetBrains Annotations 26.0.2-1
 3. Error Prone 2.43.0
 
 ### ⏸️ 대기 항목 (4개)
+
 1. androidx.lifecycle 2.9.0 (Stable 대기)
 2. Material Design 1.13.0 (Stable 대기)
 3. LeakCanary 3.0 (Stable 대기)
 4. Amplitude SDK 3.x (필요성 재평가)
 
 ### 📊 영향도
+
 - **Breaking Change**: 없음
 - **코드 수정**: 불필요
 - **테스트 범위**: DEBUG 빌드 HTTP 로깅

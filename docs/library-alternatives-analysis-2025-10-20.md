@@ -8,6 +8,7 @@
 ## 1. 이미지 로딩: Coil (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: Coil 2.7.0
 - **사용 위치**: `IconCacheManager.java` (전체 아이콘 캐싱 시스템)
 - **교체 이력**: v4.1.7에서 Glide → Coil 교체 완료
@@ -38,6 +39,7 @@ Fresco 3.x:        450ms (메모리 캐시), 1.1s (디스크 캐시)
 ### 권장사항: **Coil 유지 ✅**
 
 **이유**:
+
 - Kotlin Coroutines와 완벽한 통합
 - 가장 현대적인 API 설계
 - KISS의 `LoadPojosCoroutine` 패턴과 궁합 우수
@@ -45,6 +47,7 @@ Fresco 3.x:        450ms (메모리 캐시), 1.1s (디스크 캐시)
 - 메모리 효율과 속도의 균형이 우수
 
 **교체 비권장 이유**:
+
 - Glide: Java 기반, 무거운 의존성
 - Picasso: 개발 중단 상태 (2019년 이후 업데이트 없음)
 - Fresco: 과도한 복잡성, APK 크기 3배 증가
@@ -54,6 +57,7 @@ Fresco 3.x:        450ms (메모리 캐시), 1.1s (디스크 캐시)
 ## 2. 분석/텔레메트리: Amplitude SDK (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: Amplitude Android SDK 2.40.3
 - **사용 위치**: 7개 파일 (MainActivity, DataHandler, Provider 등)
 - **용도**: 성능 추적, 사용자 행동 분석
@@ -73,6 +77,7 @@ Fresco 3.x:        450ms (메모리 캐시), 1.1s (디스크 캐시)
 ### 마이그레이션 비용 비교
 
 #### Firebase Analytics로 전환 시
+
 ```kotlin
 // Before (Amplitude)
 Amplitude.getInstance().initialize(this, "API_KEY")
@@ -88,6 +93,7 @@ firebaseAnalytics.logEvent("event_name") {
 ```
 
 #### PostHog로 전환 시
+
 ```kotlin
 // PostHog
 val posthog = PostHog.with(this)
@@ -99,12 +105,14 @@ posthog.capture("Event Name", properties)
 ### 권장사항: **Amplitude 유지 ✅**
 
 **이유**:
+
 - 현재 버전(2.40.3)이 안정적이고 보안 패치 지속 중
 - 무료 티어로 충분 (KISS는 니치 앱, 이벤트 수 적음)
 - v3 업그레이드는 Breaking Change가 크고 이득이 적음
 - 분석 기능이 KISS의 핵심 기능은 아님
 
 **Alternative 평가**:
+
 - **Firebase**: 프라이버시 우려 + Google 의존성 증가 → ❌
 - **PostHog**: 오픈소스이지만 인프라 관리 부담 → ❌
 - **Custom**: 개발 비용 대비 이득 없음 → ❌
@@ -116,6 +124,7 @@ posthog.capture("Event Name", properties)
 ## 3. 권한 상승: Shizuku (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: Shizuku API 13.1.5
 - **사용 위치**: `ShizukuHandler.java` (앱 동면 기능)
 - **용도**: 루트 없이 시스템 API 접근
@@ -156,12 +165,14 @@ dpm.setPackagesSuspended(...);
 ### 권장사항: **Shizuku 유지 ✅**
 
 **이유**:
+
 - **유일한 실용적 대안**: 루트 없이 시스템 API 접근 가능
 - **안전성**: 루트보다 훨씬 안전 (시스템 무결성 유지)
 - **사용자 경험**: 앱 설치만으로 설정 가능
 - **커뮤니티**: 활발히 개발 중, Android 15 지원
 
 **교체 불가능 이유**:
+
 - Root: 보안 위험 + 일반 사용자 진입장벽 높음
 - ADB Shell: 재부팅 시 해제 + PC 필요
 - Device Owner: 설정 복잡도 매우 높음
@@ -171,6 +182,7 @@ dpm.setPackagesSuspended(...);
 ## 4. UI 컴포넌트: Material Design (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: Material Design Components 1.12.0
 - **사용 위치**: `SettingsFragment.java` (Snackbar만 사용)
 - **사용 범위**: 매우 제한적
@@ -199,10 +211,12 @@ Snackbar.make(view, "Message", Snackbar.LENGTH_SHORT).show();
 ### 권장사항: **AndroidX Snackbar로 교체 검토 가능 🟡**
 
 #### 교체 시 이점
+
 - APK 크기 약 2-3MB 감소
 - 의존성 간소화
 
 #### 교체 방법
+
 ```kotlin
 // Before (Material)
 import com.google.android.material.snackbar.Snackbar
@@ -215,6 +229,7 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ```
 
 #### 교체 비용
+
 - **시간**: 30분 (1개 파일만 수정)
 - **리스크**: 🟢 LOW (Snackbar → Toast는 간단한 변경)
 - **APK 감소**: ~2-3MB
@@ -226,8 +241,9 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ## 5. 네트워크: OkHttp (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: OkHttp 4.12.0
-- **사용 방식**: 
+- **사용 방식**:
   - 간접 사용: Coil의 전이 의존성
   - 직접 사용: DEBUG 빌드 HTTP 로깅
 
@@ -244,12 +260,14 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ### 권장사항: **OkHttp 5.x 업그레이드 ✅**
 
 **이유**:
+
 - Coil이 OkHttp를 기본 엔진으로 사용 (교체 불가능)
 - OkHttp 5.x는 4.x와 API 호환성 유지
 - 성능 향상 (네트워크 속도 ~10% 개선)
 - Kotlin Coroutines 네이티브 지원
 
 **Alternative 불가능 이유**:
+
 - Ktor Client: Coil과 통합 어려움
 - HttpURLConnection: 성능 부족, 기능 제한적
 - Retrofit: REST API 클라이언트 (용도 다름)
@@ -259,6 +277,7 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ## 6. 메모리 디버깅: LeakCanary (현재 사용 중)
 
 ### 현재 상태
+
 - **라이브러리**: LeakCanary 2.14
 - **사용 범위**: DEBUG 빌드만
 - **용도**: 메모리 누수 자동 탐지
@@ -276,6 +295,7 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ### 권장사항: **LeakCanary 유지 ✅**
 
 **이유**:
+
 - Android 메모리 누수 탐지의 사실상 표준
 - DEBUG 빌드에만 포함 (프로덕션 영향 없음)
 - 자동 탐지 + 상세 리포트
@@ -286,6 +306,7 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 ## 종합 권장사항
 
 ### ✅ 유지 권장 (교체 불필요)
+
 1. **Coil**: 이미 최적의 선택, 교체 필요 없음
 2. **Amplitude**: 현재 버전 안정적, v3 업그레이드 불필요
 3. **Shizuku**: 대체 불가능한 유일한 솔루션
@@ -293,12 +314,14 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 5. **LeakCanary**: 표준 디버깅 도구
 
 ### 🟡 교체 검토 가능
+
 1. **Material Design → Custom Toast/Dialog**
    - 이점: APK 크기 2-3MB 감소
    - 비용: 30분 (1개 파일 수정)
    - 시점: v4.2.8
 
 ### 📊 전체 평가
+
 - 현재 라이브러리 구성: **최적화 완료 ⭐⭐⭐⭐⭐**
 - 불필요한 의존성: Material Design 제거 검토 가능
 - 교체 필요 라이브러리: **없음**
@@ -310,10 +333,12 @@ Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show()
 v4.1.7에서 Glide → Coil 교체를 포함한 대규모 cleanup 이후, **현재 라이브러리 구성은 이미 최적 상태**입니다.
 
 ### 즉시 실행 가능한 최적화
+
 1. OkHttp logging-interceptor 5.2.1 업그레이드 (v4.2.7)
 2. Material Design 제거 후 Custom Toast 사용 (v4.2.8)
 
 ### 장기 계획
+
 - Amplitude: v3 업그레이드는 v5.0 개발 시점에 재평가
 - androidx.lifecycle, Material Design: Stable 버전 릴리즈 대기
 - LeakCanary: 3.0 Stable 릴리즈 시 업그레이드
