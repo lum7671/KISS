@@ -49,6 +49,7 @@ class Widgets extends Forwarder {
     private static final int REQUEST_APPWIDGET_RECONFIGURED = 13;
 
     private static final int APPWIDGET_HOST_ID = 442;
+    private static final int INITIAL_WIDGET_LINE_SIZE = 2;
 
     private static final String WIDGET_PREF_KEY = "widgets-conf";
 
@@ -57,6 +58,7 @@ class Widgets extends Forwarder {
      */
     private AppWidgetManager mAppWidgetManager;
     private AppWidgetHost mAppWidgetHost;
+    private boolean isListening = false;
 
     /**
      * View widgets are added to
@@ -222,7 +224,7 @@ class Widgets extends Forwarder {
         }
 
         // Start listening for widget update
-        mAppWidgetHost.startListening();
+        startListeningIfNeeded();
     }
 
     /**
@@ -264,8 +266,6 @@ class Widgets extends Forwarder {
         });
 
         widgetArea.addView(hostView);
-        // Start listening for widget update
-        mAppWidgetHost.startListening();
     }
 
     private void buildPopupMenu(Context context, ArrayAdapter<ListPopup.Item> adapter, AppWidgetProviderInfo currentAppWidgetInfo, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
@@ -347,9 +347,15 @@ class Widgets extends Forwarder {
      * @param height   height of widget
      */
     private void setWidgetSize(AppWidgetHostView hostView, int height, @NonNull AppWidgetProviderInfo appWidgetInfo) {
-        hostView.setMinimumHeight(height);
-        hostView.setMinimumWidth(Math.min(appWidgetInfo.minWidth, appWidgetInfo.minResizeWidth));
-        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        int minHeight = Math.max(height, getMinHeight(appWidgetInfo));
+        hostView.setMinimumHeight(minHeight);
+
+        int minWidth = appWidgetInfo.minResizeWidth > 0
+                ? Math.min(appWidgetInfo.minWidth, appWidgetInfo.minResizeWidth)
+                : appWidgetInfo.minWidth;
+        hostView.setMinimumWidth(minWidth);
+
+        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, minHeight);
         hostView.setLayoutParams(params);
     }
 
@@ -362,7 +368,8 @@ class Widgets extends Forwarder {
         if (preventDecreaseLineHeight(height, appWidgetInfo) && preventIncreaseLineHeight(height, appWidgetInfo)) {
             return;
         }
-        setWidgetSize(hostView, height, appWidgetInfo);
+        int clampedHeight = clampHeight(height, appWidgetInfo);
+        setWidgetSize(hostView, clampedHeight, appWidgetInfo);
         serializeState();
     }
 
@@ -374,7 +381,11 @@ class Widgets extends Forwarder {
      * @return true, if widget cannot be resized to given height
      */
     private boolean preventDecreaseLineHeight(int height, AppWidgetProviderInfo appWidgetInfo) {
-        return height <= 0 || appWidgetInfo == null || height < Math.min(appWidgetInfo.minHeight, appWidgetInfo.minResizeHeight);
+        if (height <= 0 || appWidgetInfo == null) {
+            return true;
+        }
+        int minHeight = getMinHeight(appWidgetInfo);
+        return height < minHeight;
     }
 
     /**
@@ -389,7 +400,9 @@ class Widgets extends Forwarder {
             return true;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            return appWidgetInfo.maxResizeHeight >= appWidgetInfo.minHeight && getLineSize(height) > getLineSize(appWidgetInfo.maxResizeHeight);
+            if (appWidgetInfo.maxResizeHeight > 0 && appWidgetInfo.maxResizeHeight >= appWidgetInfo.minHeight) {
+                return getLineSize(height) > getLineSize(appWidgetInfo.maxResizeHeight);
+            }
         }
         return false;
     }
@@ -408,10 +421,15 @@ class Widgets extends Forwarder {
             usedLines += getLineSize(view);
         }
         // calculate max available lines
-        int maxVisibleLines = (int) Math.ceil(widgetArea.getHeight() / getLineHeight());
+        int containerHeight = widgetArea.getHeight();
+        int maxVisibleLines = containerHeight > 0
+            ? (int) Math.ceil(containerHeight / getLineHeight())
+            : Math.max(INITIAL_WIDGET_LINE_SIZE, getLineSize(getMinHeight(appWidgetInfo)));
 
         // calculate new line size
-        int lineSize = Math.max(1, Math.min(maxVisibleLines - usedLines, getLineSize(appWidgetInfo.minHeight)));
+        int availableLines = Math.max(1, maxVisibleLines - usedLines);
+        int minWidgetLines = Math.max(INITIAL_WIDGET_LINE_SIZE, getLineSize(getMinHeight(appWidgetInfo)));
+        int lineSize = Math.max(INITIAL_WIDGET_LINE_SIZE, Math.min(availableLines, minWidgetLines));
 
         addWidget(appWidgetId, lineSize);
 
@@ -533,6 +551,18 @@ class Widgets extends Forwarder {
         return Math.max(1, Math.round(height / getLineHeight()));
     }
 
+    private int getMinHeight(@NonNull AppWidgetProviderInfo appWidgetInfo) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2 && appWidgetInfo.targetCellHeight > 0) {
+            return appWidgetInfo.targetCellHeight;
+        }
+
+        int resizeMin = appWidgetInfo.minResizeHeight > 0 ? appWidgetInfo.minResizeHeight : appWidgetInfo.minHeight;
+        int minHeight = Math.max(appWidgetInfo.minHeight, resizeMin);
+
+        // Fallback to at least one line height to avoid zero-height providers
+        return Math.max(minHeight, (int) getLineHeight());
+    }
+
     /**
      * @return line height in pixel
      */
@@ -543,12 +573,61 @@ class Widgets extends Forwarder {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
     }
 
+    private int clampHeight(int height, AppWidgetProviderInfo appWidgetInfo) {
+        int minHeight = getMinHeight(appWidgetInfo);
+        int maxHeight = getMaxHeight(appWidgetInfo);
+
+        if (maxHeight > 0 && maxHeight >= minHeight) {
+            return Math.min(Math.max(height, minHeight), maxHeight);
+        }
+        return Math.max(height, minHeight);
+    }
+
+    private int getMaxHeight(AppWidgetProviderInfo appWidgetInfo) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && appWidgetInfo != null && appWidgetInfo.maxResizeHeight > 0) {
+            return appWidgetInfo.maxResizeHeight;
+        }
+        return 0;
+    }
+
     public void onStart() {
         // Start listening for widget update
-        mAppWidgetHost.startListening();
+        startListeningIfNeeded();
+    }
+
+    public void onStop() {
+        // In non-widget mode, release host to avoid unnecessary churn when backgrounded
+        if (!prefs.getBoolean("history-hide", false)) {
+            stopListeningSafe();
+        }
     }
 
     public void onDestroy() {
-        mAppWidgetHost.stopListening();
+        stopListeningSafe();
+    }
+
+    private void startListeningIfNeeded() {
+        if (isListening) {
+            return;
+        }
+        try {
+            mAppWidgetHost.startListening();
+            isListening = true;
+        } catch (Resources.NotFoundException | IllegalStateException e) {
+            Log.w(TAG, "Start listening failed", e);
+        }
+    }
+
+    private void stopListeningSafe() {
+        if (!isListening) {
+            return;
+        }
+        try {
+            mAppWidgetHost.stopListening();
+        } catch (Resources.NotFoundException | IllegalStateException e) {
+            Log.w(TAG, "Stop listening failed", e);
+        } finally {
+            isListening = false;
+        }
     }
 }

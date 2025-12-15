@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.os.Build;
 
 /**
  * Source: https://github.com/willli666/Android-Trebuchet-Launcher-Standalone/blob/master/src/com/cyanogenmod/trebuchet/LauncherAppWidgetHostView.java
@@ -109,6 +110,10 @@ public class WidgetView extends AppWidgetHostView {
         float density = getResources().getDisplayMetrics().density;
         int widthDips = (int) (w / density);
         int heightDips = (int) (h / density);
-        updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
+            updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+        } else {
+            updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+        }
     }
 }

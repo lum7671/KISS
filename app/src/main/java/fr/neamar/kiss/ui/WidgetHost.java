@@ -6,12 +6,17 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 public class WidgetHost extends AppWidgetHost {
 
     private final static String TAG = WidgetHost.class.getSimpleName();
 
+    private static final long PROVIDER_CHANGE_DEBOUNCE_MS = 500;
+
     private final WidgetProvidersUpdateCallback mWidgetsUpdateCallback;
+    private final Handler providerChangeHandler = new Handler(Looper.getMainLooper());
 
     public WidgetHost(Context context, int hostId, WidgetProvidersUpdateCallback widgetProvidersUpdateCallback) {
         super(context, hostId);
@@ -30,9 +35,11 @@ public class WidgetHost extends AppWidgetHost {
             super.startListening();
             Log.d(TAG, "Start listening");
         } catch (Resources.NotFoundException e) {
-            Log.d(TAG, "Start listening failed", e);
+            Log.e(TAG, "Start listening failed: provider resources missing (widget may have been updated/removed)", e);
             // Widgets app was just updated?
             // See https://github.com/Neamar/KISS/issues/959
+        } catch (IllegalStateException e) {
+            Log.w(TAG, "Start listening ignored (already listening)", e);
         }
     }
 
@@ -49,6 +56,7 @@ public class WidgetHost extends AppWidgetHost {
             Log.d(TAG, "Stop listening failed", e);
         }
         clearViews();
+        providerChangeHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -56,7 +64,8 @@ public class WidgetHost extends AppWidgetHost {
         super.onProvidersChanged();
         Log.d(TAG, "Providers changed");
         if (mWidgetsUpdateCallback != null) {
-            mWidgetsUpdateCallback.onProvidersUpdated();
+            providerChangeHandler.removeCallbacksAndMessages(null);
+            providerChangeHandler.postDelayed(() -> mWidgetsUpdateCallback.onProvidersUpdated(), PROVIDER_CHANGE_DEBOUNCE_MS);
         }
     }
 
