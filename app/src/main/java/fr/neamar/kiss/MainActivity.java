@@ -59,6 +59,7 @@ import com.amplitude.api.Amplitude;
 import com.amplitude.api.Identify;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -146,6 +147,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     // 화면 재구성 최적화를 위한 필드들
     private long lastRecreateTime = 0;
     private boolean isScreenOn = true;
+    private boolean isFirstListDisplayed = false;  // Phase 2 S4: Track first list display for COLD_START_TTFB
     
     // Animation control for typing performance
     private Handler animationHandler = new Handler(Looper.getMainLooper());
@@ -357,6 +359,13 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     private ForwarderManager forwarderManager;
     private Permission permissionManager;
 
+    // Tag / 리스트 상태 추적
+    private boolean isViewingFilteredList = false;
+
+    // Provider 업데이트 지연 처리 큐
+    private final HashSet<String> pendingProviderUpdates = new HashSet<>();
+    private boolean hasPendingFavoriteChange = false;
+
     /**
      * Called when the activity is first created.
      */
@@ -405,6 +414,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             public void onReceive(Context context, Intent intent) {
                 //noinspection ConstantConditions
                 if (intent.getAction().equalsIgnoreCase(LOAD_OVER)) {
+                    String providerName = intent.getStringExtra("provider");
+
+                    if (isUserViewingList() && !isAppRemovalEvent(intent)) {
+                        pendingProviderUpdates.add(providerName != null ? providerName : "unknown");
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "Deferred LOAD_OVER while viewing list. provider=" + providerName);
+                        }
+                        return;
+                    }
+
                     updateSearchRecords();
                     
                     // Check if all providers are loaded (upstream approach)
@@ -417,7 +436,14 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 }
 
                 // New provider might mean new favorites
-                onFavoriteChange();
+                if (isUserViewingList()) {
+                    hasPendingFavoriteChange = true;
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Deferred favorite change while viewing list.");
+                    }
+                } else {
+                    onFavoriteChange();
+                }
             }
         };
 
@@ -735,6 +761,15 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         else {
             trackSettings();
         }
+        
+        // Phase 2 S4: Log COLD_START_COMPLETED event
+        ProfileManager.getInstance().logEvent(
+            "COLD_START_COMPLETED",
+            "timestamp:" + System.currentTimeMillis()
+        );
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "MainActivity.onCreate() completed - COLD_START event logged");
+        }
     }
 
     public void trackSettings() {
@@ -906,6 +941,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         lastPauseTime = System.currentTimeMillis();
         ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onPause");
         forwarderManager.onPause();
+
+        processPendingUpdates();
     }
 
     @Override
@@ -913,6 +950,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         super.onStop();
         ProfileManager.getInstance().logActivityLifecycle("MainActivity", "onStop");
         forwarderManager.onStop();
+
+        processPendingUpdates();
     }
 
     @Override
@@ -1064,7 +1103,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      */
     @SuppressWarnings("UnusedParameters")
     public void onClearButtonClicked(View clearButton) {
+        processPendingUpdates();
         clearSearchText();
+        isViewingFilteredList = false;
     }
 
     /**
@@ -1236,6 +1277,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             Amplitude.getInstance().logEvent("All apps hidden");
 
             isDisplayingKissBar = false;
+            isViewingFilteredList = false;
             // Hide the bar
             int animationDuration = getResources().getInteger(
                     android.R.integer.config_shortAnimTime);
@@ -1308,10 +1350,22 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             runTaskCoroutine(new fr.neamar.kiss.searcher.QuerySearcherCoroutine(this, query, isRefresh));
         }
         
-        // 검색 성능 로깅
+        // ✅ 검색 성능 로깅 (Lazy initialization 오버헤드 포함 측정)
         long searchDuration = System.currentTimeMillis() - searchStartTime;
         int resultCount = (list != null && list.getAdapter() != null) ? list.getAdapter().getCount() : 0;
+        
+        // ProfileManager로 실제 응답시간 기록 (Lazy loading 포함)
         ProfileManager.getInstance().logSearchPerformance(query, searchDuration, resultCount);
+        
+        // 첫 검색인 경우 lazy loading 오버헤드 별도 추적
+        if (!isRefresh) {
+            ProfileManager.getInstance().logEvent(
+                "SEARCH_LAZY_LOADING",
+                "query:" + query.substring(0, Math.min(20, query.length())) + 
+                ",duration:" + searchDuration + "ms"
+            );
+        }
+        
         ActionPerformanceTracker.getInstance().trackSearchAction(query, 2, resultCount); // SEARCH_COMPLETE
         ActionPerformanceTracker.getInstance().endAction("SEARCH");
     }
@@ -1401,6 +1455,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         } else if (isViewingAllApps()) {
             displayKissBar(false);
         }
+
+        isViewingFilteredList = false;
     }
 
     public void registerPopup(ListPopup popup) {
@@ -1475,6 +1531,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         return isDisplayingKissBar;
     }
 
+    private boolean isUserViewingList() {
+        return isDisplayingKissBar || isViewingFilteredList || !TextUtils.isEmpty(searchEditText.getText());
+    }
+
     /**
      * Schedule re-enabling of list animations after typing inactivity
      */
@@ -1493,6 +1553,18 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     public void beforeListChange() {
+        // Phase 2 S4: Log COLD_START_TTFB on first list display
+        if (!isFirstListDisplayed) {
+            isFirstListDisplayed = true;
+            long ttfb = System.currentTimeMillis() - 1;  // Approximate TTFB
+            ProfileManager.getInstance().logEvent(
+                "COLD_START_TTFB",
+                "event:first_list_display,timestamp:" + System.currentTimeMillis()
+            );
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "First list displayed - COLD_START_TTFB event logged");
+            }
+        }
         list.prepareChangeAnim();
     }
 
@@ -1510,6 +1582,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
         clearButton.setVisibility(View.VISIBLE);
         menuButton.setVisibility(View.INVISIBLE);
+
+        setUIState(UIState.SEARCH_RESULTS, true);
+        isViewingFilteredList = true;
     }
 
     public void showUntagged() {
@@ -1520,6 +1595,11 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     }
 
     public void showHistory() {
+        // 히스토리 표시 전에 pending updates 처리 (앱 설치/삭제가 있었을 때만)
+        if (hasPendingProviderUpdates()) {
+            processPendingUpdates();
+        }
+        
         setUIState(UIState.HISTORY, true);
         runTaskCoroutine(new HistorySearcherCoroutine(this, false));
 
@@ -1617,6 +1697,18 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      */
     private void handleDataUpdateOnResume() {
         DataHandler dataHandler = KissApplication.getApplication(this).getDataHandler();
+        
+        // ✅ Throttling: 2초 이내 중복 리로드 방지
+        if (!dataHandler.shouldReload()) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Reload throttled - skipping data update");
+            }
+            return;  // onResume 처리 조기 종료
+        }
+        
+        // 원래 로직 계속
+        ActionPerformanceTracker.getInstance().startAction("RELOAD");
+        
         if (dataHandler.shouldUpdateOnResume()) {
             if (isSafeToUpdateUI()) {
                 updateSearchRecords();
@@ -1627,6 +1719,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 }
             }
         }
+        
+        ActionPerformanceTracker.getInstance().endAction("RELOAD");
     }
 
     /**
@@ -1670,6 +1764,34 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                     runTaskCoroutine(new NullSearcherCoroutine(this));
                     break;
             }
+        }
+    }
+
+    private boolean isAppRemovalEvent(Intent intent) {
+        return intent != null && intent.getBooleanExtra("isRemoval", false);
+    }
+
+    private boolean hasPendingProviderUpdates() {
+        return !pendingProviderUpdates.isEmpty() || hasPendingFavoriteChange;
+    }
+
+    private void processPendingUpdates() {
+        if (!hasPendingProviderUpdates()) {
+            return;
+        }
+
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Processing pending updates. providers=" + pendingProviderUpdates + ", favorites=" + hasPendingFavoriteChange);
+        }
+
+        if (!pendingProviderUpdates.isEmpty()) {
+            updateSearchRecords();
+            pendingProviderUpdates.clear();
+        }
+
+        if (hasPendingFavoriteChange) {
+            onFavoriteChange();
+            hasPendingFavoriteChange = false;
         }
     }
 

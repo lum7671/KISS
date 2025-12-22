@@ -82,6 +82,9 @@ public class ShortcutsProvider extends Provider<ShortcutPojo> {
 
     @Override
     public void requestResults(String query, Searcher searcher) {
+        // ✅ Lazy initialization: Load shortcuts on first search
+        ensureLoaded();
+        
         Set<String> excludedFavoriteIds = KissApplication.getApplication(this).getDataHandler().getExcludedFavorites();
 
         StringNormalizer.Result queryNormalized = StringNormalizer.normalizeWithResult(query, false);

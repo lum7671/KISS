@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.neamar.kiss.MainActivity;
+import fr.neamar.kiss.profiling.ProfileManager;
 import fr.neamar.kiss.pojo.Pojo;
 
 public abstract class Provider<T extends Pojo> extends Service implements IProvider<T> {
@@ -25,6 +26,14 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
      */
     private List<T> pojos = new ArrayList<>();
     private boolean loaded = false;
+    
+    /**
+     * Lazy initialization support
+     * When true, reload is deferred until ensureLoaded() is called (typically on first search)
+     */
+    private boolean lazyInit = false;
+    private volatile boolean isInitialized = false;
+    
     /**
      * Scheme used to build ids for the pojos created by this provider
      */
@@ -40,8 +49,18 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
     @Override
     public void onCreate() {
         super.onCreate();
-
-        this.reload();
+        
+        // ✅ Lazy Initialization Support
+        if (!lazyInit) {
+            // 즉시 로드 (기본 동작, AppProvider 등)
+            this.reload();
+        } else {
+            // 지연 로드 (ContactsProvider, ShortcutsProvider 등)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                Log.i(TAG, "Lazy init enabled for " + this.getClass().getSimpleName());
+            }
+            isInitialized = false;  // 초기화 미완료 상태
+        }
     }
 
     @Override
@@ -65,6 +84,32 @@ public abstract class Provider<T extends Pojo> extends Service implements IProvi
         this.pojoScheme = loader.getScheme();
         // Store the job for potential cancellation
         this.loaderJob = loader.executeAsync();
+    }
+
+    /**
+     * Set lazy initialization mode
+     * @param lazy If true, reload is deferred until ensureLoaded() is called
+     */
+    public void setLazyInit(boolean lazy) {
+        this.lazyInit = lazy;
+    }
+    
+    /**
+     * Ensure provider is loaded, triggering lazy loading if needed
+     * Called automatically on first search for lazy-initialized providers
+     */
+    protected synchronized void ensureLoaded() {
+        if (!isInitialized && lazyInit) {
+            Log.i(TAG, "Lazy loading triggered for " + this.getClass().getSimpleName());
+            
+            ProfileManager.getInstance().logEvent(
+                "LAZY_LOAD_TRIGGERED",
+                "provider:" + this.getClass().getSimpleName()
+            );
+            
+            this.reload();  // 첫 로드
+            isInitialized = true;
+        }
     }
 
     /**

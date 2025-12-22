@@ -80,6 +80,9 @@ public class ContactsProvider extends Provider<ContactsPojo> {
 
     @Override
     public void requestResults(String query, Searcher searcher) {
+        // ✅ Lazy initialization: Load contacts on first search
+        ensureLoaded();
+        
         StringNormalizer.Result queryNormalized = StringNormalizer.normalizeWithResult(query, false);
 
         if (queryNormalized.codePoints.length == 0) {

@@ -29,8 +29,8 @@ android {
         minSdkVersion 33  // Android 13+ (갤럭시 노트20 울트라 호환) - 사용자 설정 유지
         compileSdk = 35
         targetSdkVersion 35
-    versionCode 427
-    versionName "4.2.7"
+    versionCode 428
+    versionName "4.2.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // BuildConfig에 업스트림 버전 정보 추가
         buildConfigField "String", "UPSTREAM_VERSION", '"3.23.0"'
@@ -82,11 +82,12 @@ android {
             minifyEnabled false
             shrinkResources = false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
+            signingConfig = signingConfigs.debug  // ✅ 명시적 서명 설정
             buildConfigField "String", "BUILD_TYPE", '"profile"'
-            manifestPlaceholders.putAll([
+            manifestPlaceholders = [
                 profileable: "true",
                 enableOnDeviceAbi: "true"
-            ])
+            ]
         }
     }
     compileOptions {

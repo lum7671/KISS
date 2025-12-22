@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.neamar.kiss.BuildConfig;
 import fr.neamar.kiss.normalizer.StringNormalizer;
 import fr.neamar.kiss.result.AppResult;
 import fr.neamar.kiss.result.ContactsResult;
@@ -31,6 +32,7 @@ import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 public class RecordAdapter extends BaseAdapter implements SectionIndexer {
     private final QueryInterface parent;
     private FuzzyScore fuzzyScore;
+    private String lastQuery = null;  // Phase 2 S2: Cache last query for FuzzyScore reuse
 
     /**
      * Array list containing all the results currently displayed
@@ -97,7 +99,16 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        return results.get(position).display(parent.getContext(), convertView, parent, fuzzyScore);
+        // Phase 2 S2: null-guard for fuzzyScore
+        // If fuzzyScore is null (e.g., adapter not yet initialized), create a safe default
+        FuzzyScore score = fuzzyScore;
+        if (score == null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "getView: fuzzyScore is null, creating default");
+            }
+            score = FuzzyFactory.createFuzzyScore(parent.getContext(), null, true);
+        }
+        return results.get(position).display(parent.getContext(), convertView, parent, score);
     }
 
     public void onLongClick(final int pos, View v) {
@@ -130,9 +141,20 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
     public void updateResults(@NonNull Context context, List<Result<?>> results, boolean isRefresh, String query) {
         this.results.clear();
         this.results.addAll(results);
-        StringNormalizer.Result queryNormalized = StringNormalizer.normalizeWithResult(query, false);
-
-        fuzzyScore = FuzzyFactory.createFuzzyScore(context, queryNormalized.codePoints, true);
+        
+        // Phase 2 S2: Reuse FuzzyScore if query hasn't changed
+        // Only regenerate FuzzyScore when query is different
+        if (!query.equals(lastQuery)) {
+            StringNormalizer.Result queryNormalized = StringNormalizer.normalizeWithResult(query, false);
+            fuzzyScore = FuzzyFactory.createFuzzyScore(context, queryNormalized.codePoints, true);
+            lastQuery = query;
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "updateResults: FuzzyScore regenerated for query: " + query);
+            }
+        } else if (BuildConfig.DEBUG) {
+            Log.d(TAG, "updateResults: FuzzyScore reused for query: " + query);
+        }
+        
         notifyDataSetChanged();
 
         if (isRefresh) {

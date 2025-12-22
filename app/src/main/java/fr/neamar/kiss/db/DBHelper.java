@@ -224,8 +224,9 @@ public class DBHelper {
     
     /**
      * 메모리에서 디스크로 비동기 동기화
+     * Public method to allow forced sync when needed (e.g., after app installation)
      */
-    private static void syncMemoryToDisk(Context context) {
+    public static void syncMemoryToDisk(Context context) {
         if (pendingWrites.isEmpty()) {
             return;
         }
@@ -251,7 +252,8 @@ public class DBHelper {
                     "INSERT INTO history (\"query\", record, timeStamp) VALUES (?, ?, ?)");
 
                 for (HistoryEntry historyEntry : toSync) {
-                    statement.bindString(1, historyEntry.query);
+                    // Handle null query (e.g., from app installation)
+                    statement.bindString(1, historyEntry.query != null ? historyEntry.query : "");
                     statement.bindString(2, historyEntry.record);
                     statement.bindLong(3, historyEntry.timestamp);
                     statement.executeInsert();
@@ -328,6 +330,25 @@ public class DBHelper {
     public static void clearHistory(Context context) {
         SQLiteDatabase db = getDatabase(context);
         db.delete("history", "", null);
+    }
+
+    /**
+     * 최근 N일 동안 특정 record의 사용 횟수를 반환
+     */
+    public static int getUsageCountForRecord(Context context, String record, int days) {
+        SQLiteDatabase db = getDatabase(context);
+        long cutoffTime = System.currentTimeMillis() - (days * 24L * 60 * 60 * 1000);
+        String sql = "SELECT COUNT(*) FROM history WHERE record = ? AND timeStamp > ?";
+
+        try (Cursor cursor = db.rawQuery(sql, new String[]{record, String.valueOf(cutoffTime)})) {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error counting usage for record: " + record, e);
+        }
+
+        return 0;
     }
 
     private static Cursor getHistoryByFrecency(SQLiteDatabase db, int limit, Context context) {

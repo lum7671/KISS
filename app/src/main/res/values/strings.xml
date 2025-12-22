@@ -185,6 +185,7 @@
     <string name="menu_favorites_remove">Remove favorite</string>
     <string name="share">Share to…</string>
     <string name="number_of_display_items">Max number of results in search and history</string>
+    <string name="new_app_badge">NEW</string>
     <string name="main_color">Primary color</string>
     <string name="notification_bar_color">Notification bar color</string>
     <string name="color_transparent_dark">Transparently dark</string>

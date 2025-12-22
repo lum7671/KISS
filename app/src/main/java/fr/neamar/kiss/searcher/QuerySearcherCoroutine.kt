@@ -67,10 +67,21 @@ class QuerySearcherCoroutine(
      * - Boost for previously selected items (+25 * selection count)
      */
     override fun addResults(pojos: List<Pojo>): Boolean {
+        val activity = activityWeakReference.get() ?: return false
+
         for (pojo in pojos) {
             if (pojo.isDisabled) {
-                // Give penalty for disabled items, these should not be preferred
-                pojo.relevance -= 200
+                val recentUsageCount = DBHelper.getUsageCountForRecord(activity, pojo.id, 30)
+                if (recentUsageCount >= 1) {
+                    // Frequently used despite being disabled: no penalty, still apply history boost
+                    val value = knownIds[pojo.id]
+                    if (value != null) {
+                        pojo.relevance += 25 * value
+                    }
+                } else {
+                    // Infrequently used disabled app: keep penalty
+                    pojo.relevance -= 200
+                }
             } else {
                 // Give a boost if item was previously selected for this query
                 val value = knownIds[pojo.id]

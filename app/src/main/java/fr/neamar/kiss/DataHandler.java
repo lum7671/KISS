@@ -56,6 +56,7 @@ import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.pojo.NameComparator;
 import fr.neamar.kiss.pojo.Pojo;
 import fr.neamar.kiss.pojo.ShortcutPojo;
+import fr.neamar.kiss.profiling.ProfileManager;
 import fr.neamar.kiss.searcher.Searcher;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.ShortcutUtil;
@@ -285,6 +286,17 @@ public class DataHandler extends BroadcastReceiver
                 entry.provider = provider;
                 entry.connection = this;
 
+                // ✅ Lazy Initialization: Set lazy loading strategy per provider
+                if (provider instanceof Provider) {
+                    Provider<?> providerImpl = (Provider<?>) provider;
+                    boolean shouldLazyLoad = shouldLazyLoadProvider(name);
+                    providerImpl.setLazyInit(shouldLazyLoad);
+                    
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Provider " + name + " lazy init: " + shouldLazyLoad);
+                    }
+                }
+
                 if (provider.isLoaded()) {
                     handleProviderLoaded();
                 }
@@ -297,6 +309,26 @@ public class DataHandler extends BroadcastReceiver
 
         // Add empty provider object to list of providers
         this.providers.put(name, entry);
+    }
+    
+    /**
+     * Determine if a provider should use lazy initialization
+     * @param providerName Provider name (e.g., "app", "contacts", "shortcuts")
+     * @return true if lazy loading should be used
+     */
+    private boolean shouldLazyLoadProvider(String providerName) {
+        // AppProvider: must load immediately (essential for home screen)
+        if ("app".equals(providerName)) {
+            return false;  // 즉시 로드
+        }
+        
+        // ContactsProvider, ShortcutsProvider: defer until first search
+        if ("contacts".equals(providerName) || "shortcuts".equals(providerName)) {
+            return true;  // 지연 로드
+        }
+        
+        // Simple providers: load immediately
+        return false;
     }
 
     /**
@@ -511,6 +543,51 @@ public class DataHandler extends BroadcastReceiver
      */
     public String getTagCacheStatus() {
         return "Tag cache: " + tagCache.size() + " entries";
+    }
+    // Refresh Throttling (Mutex 기반 중복 방지)
+    private volatile long lastReloadTime = 0;
+    private static final long RELOAD_THROTTLE_MS = 2000;  // 2초 절대 제한
+    
+    /**
+     * Throttling을 고려한 리로드 가능 여부 확인
+     * @return 리로드 진행 가능하면 true, 최근에 리로드했으면 false
+     */
+    public boolean shouldReload() {
+        long now = System.currentTimeMillis();
+        
+        // Phase 2 S4: Log RELOAD_REQUESTED event
+        ProfileManager.getInstance().logEvent(
+            "RELOAD_REQUESTED",
+            "time_since_last_ms:" + (now - lastReloadTime)
+        );
+        
+        if (now - lastReloadTime < RELOAD_THROTTLE_MS) {
+            // 최근 리로드로부터 충분한 시간이 지나지 않음 - 스킵
+            long elapsedMs = now - lastReloadTime;
+            
+            ProfileManager.getInstance().logEvent(
+                "RELOAD_THROTTLED",
+                "reason:frequency_limit,elapsed_ms:" + elapsedMs
+            );
+            
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Reload throttled - only " + elapsedMs + "ms since last reload");
+            }
+            return false;
+        }
+        
+        lastReloadTime = now;
+        return true;  // 리로드 진행
+    }
+    
+    /**
+     * 강제 리로드 (설정 변경 후 즉시 반영)
+     */
+    public void forceReload() {
+        lastReloadTime = 0;  // 임계값 리셋
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Force reload triggered");
+        }
     }
     
     /**
@@ -1151,6 +1228,10 @@ public class DataHandler extends BroadcastReceiver
 
         if (!frozen && !excludedFromHistory.contains(id)) {
             DBHelper.insertHistory(this.context, currentQuery, id);
+            // Force immediate sync for newly installed apps
+            if (currentQuery == null || currentQuery.isEmpty()) {
+                DBHelper.syncMemoryToDisk(this.context);
+            }
         }
     }
 

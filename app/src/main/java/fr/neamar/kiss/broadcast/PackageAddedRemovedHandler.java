@@ -11,10 +11,12 @@ import androidx.annotation.Nullable;
 
 import java.util.Set;
 
+import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.UserHandle;
+import fr.neamar.kiss.utils.NewAppTracker;
 
 /**
  * This class gets called when an application is created or removed on the
@@ -53,6 +55,16 @@ public class PackageAddedRemovedHandler extends BroadcastReceiver {
 
         if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
             if (!replacing) {
+                // First reload apps so they are available in DataHandler
+                KissApplication.getApplication(ctx).resetIconsHandler();
+                boolean isAnyPackageVisible = isAnyPackageVisible(ctx, packageNames, user);
+                
+                if (isAnyPackageVisible) {
+                    KissApplication.getApplication(ctx).getDataHandler().reloadApps();
+                    KissApplication.getApplication(ctx).getDataHandler().reloadShortcuts();
+                }
+                
+                // Then add to history after apps are loaded
                 for (String packageName : packageNames) {
                     if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("enable-app-history", true)) {
                         KissApplication.getApplication(ctx).getDataHandler().addPackageToHistory(ctx, user, packageName);
@@ -69,12 +81,21 @@ public class PackageAddedRemovedHandler extends BroadcastReceiver {
                 // Reload application list
                 KissApplication.getApplication(ctx).getDataHandler().reloadApps();
                 // Remove all installed shortcuts
+                NewAppTracker tracker = new NewAppTracker(ctx);
                 for (String packageName : packageNames) {
                     KissApplication.getApplication(ctx).getDataHandler().removeShortcuts(packageName);
                     KissApplication.getApplication(ctx).getDataHandler().removeFromExcluded(packageName);
+                    tracker.removePackage(packageName);
                 }
+
+                // Broadcast removal event immediately so UI can refresh even when deferred
+                Intent loadOverIntent = new Intent(MainActivity.LOAD_OVER);
+                loadOverIntent.putExtra("provider", "apps");
+                loadOverIntent.putExtra("isRemoval", true);
+                ctx.sendBroadcast(loadOverIntent);
             }
-        } else {
+        } else if (!Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+            // For other actions (e.g., PACKAGE_CHANGED), reload apps
             KissApplication.getApplication(ctx).resetIconsHandler();
 
             boolean isAnyPackageVisible = isAnyPackageVisible(ctx, packageNames, user);

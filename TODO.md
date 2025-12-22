@@ -1,8 +1,111 @@
 # KISS Launcher TODO List
 
-## 📅 Updated: 2025-08-14
+## 📅 Updated: 2025-12-19
+
+## 🚨 High Priority Issues
+
+### ✅ COMPLETED: Tag 목록 보기 중 의도하지 않은 홈 화면 이동 (Phase 3)
+
+**발견일**: 2025-12-19  
+**완료일**: 2025-12-22  
+**우선순위**: 🔴 HIGH (사용성 치명적)  
+**상태**: ✅ 완료 - v4.3.0에 포함
+
+#### 문제 설명
+
+사용자가 custom tag (예: "즐겨찾기")를 클릭하여 필터링된 앱 목록을 보고 있을 때, 백그라운드에서 앱이 설치/업데이트되면 화면이 예기치 않게 홈으로 이동하여 홈 화면 위젯을 잘못 터치하게 되는 문제.
+
+**재현 방법**:
+1. Custom tag 생성 (예: "즐겨찾기")
+2. 여러 앱을 해당 tag에 추가
+3. Tag 클릭하여 필터링된 목록 보기
+4. 백그라운드에서 앱 설치/업데이트 발생
+5. → 화면이 홈으로 이동하며 사용자 혼란 발생
+
+#### 근본 원인 (Root Cause Analysis)
+
+```
+Tag View Active → App Update → LOAD_OVER broadcast
+→ MainActivity.mReceiver (line 408)
+→ updateSearchRecords()
+→ resetTask() (cancels TagsSearcherCoroutine)
+→ query.isEmpty() branch (no new searcher launched)
+→ List appears empty / returns to home
+```
+
+**핵심 문제점**:
+1. `showMatchingTags()`가 `isDisplayingKissBar` 플래그를 설정하지 않음
+2. Tag-filtered 상태를 추적하는 UIState가 없음
+3. `LOAD_OVER` broadcast가 무조건 `updateSearchRecords()` 호출
+4. `resetTask()`가 진행 중인 searcher를 취소하고 replacement가 없으면 빈 화면
+
+#### 해결 방안
+
+**요구사항**:
+- ✅ 사용자가 목록(tag filtered, search results, all apps)을 보고 있으면 UI 업데이트를 나중으로 연기
+- ✅ 백그라운드로 전환될 때 pending updates 처리
+- ✅ 속도 우선 (로딩 화면 없음)
+- ✅ 앱 삭제는 예외: 즉시 UI 업데이트 필요
+- ✅ 터치 오류를 줄이는 것이 최우선
+
+**구현 전략** (Phase 3):
+
+1. **상태 추적 강화**
+   - [ ] `showMatchingTags()`에서 `isDisplayingKissBar = true` 설정
+   - [ ] 또는 새로운 플래그 `isViewingFilteredList` 추가
+   - [ ] UIState에 `TAG_FILTERED` 상태 추가 고려
+
+2. **Pending Updates Queue**
+   - [ ] `MainActivity`에 `HashSet<String> pendingProviderUpdates` 추가
+   - [ ] `LOAD_OVER` 수신 시 사용자가 목록 보는 중이면 queue에 저장
+   - [ ] `onPause()`/`onStop()`에서 pending updates 처리
+
+3. **조건부 UI 업데이트**
+   - [ ] `LOAD_OVER` receiver에 조건 추가:
+     ```java
+     if (isUserViewingList() && !isAppRemovalEvent()) {
+         pendingProviderUpdates.add(providerName);
+         return; // Skip immediate update
+     }
+     updateSearchRecords();
+     ```
+
+4. **앱 삭제 이벤트 우선 처리**
+   - [ ] `PackageRemoved` 이벤트는 즉시 UI 업데이트
+   - [ ] 현재 보고 있는 앱이 삭제된 경우 특별 처리
+
+#### 영향 받는 파일
+
+- `app/src/main/java/fr/neamar/kiss/MainActivity.java` (line 408-421, 1542-1547)
+- `app/src/main/java/fr/neamar/kiss/DataHandler.java`
+- `app/src/main/java/fr/neamar/kiss/broadcast/PackageAddedRemovedHandler.java`
+- `app/src/main/java/fr/neamar/kiss/forwarder/TagsMenu.java` (line 262)
+
+#### 관련 문서
+
+- 상세 분석: `docs/phase-3-tag-navigation-fix.md` (예정)
+- 구현 계획: Phase 3 roadmap 참조
+
+---
 
 ## ✅ 완료된 작업들
+
+### Phase 3: 사용자 경험 개선 (v4.3.0)
+
+- [x] **Phase 3.1: Tag 네비게이션 버그 수정**
+  - 태그 필터링 중 앱 업데이트 시 홈 화면 이동 방지
+  - Pending updates queue로 UI 상태 보존
+  - 삭제 이벤트는 즉시 처리
+
+- [x] **Phase 3.2: Hibernated 앱 검색 랭킹 개선**
+  - 최근 30일 내 1회 이상 사용한 hibernated 앱 패널티 면제
+  - 사용 빈도 기반 스마트 랭킹
+
+- [x] **Phase 3.3: 새로 설치한 앱 표시**
+  - NEW 배지로 새로 설치한 앱 표시
+  - History에 자동 추가
+  - 앱 실행 시 배지 제거
+  - 메모리 DB ↔ 디스크 DB 동기화 안정화
 
 ### 주요 버그 수정
 

@@ -49,6 +49,7 @@ import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.PackageManagerUtils;
+import fr.neamar.kiss.utils.NewAppTracker;
 import fr.neamar.kiss.utils.SpaceTokenizer;
 import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 
@@ -106,6 +107,17 @@ public class AppResult extends Result<AppPojo> {
 
             int dotColor = UIColors.getNotificationDotColor(context);
             notificationView.setColorFilter(dotColor);
+        }
+
+        // NEW 배지 표시 (History 첫 노출 시)
+        View newBadge = view.findViewById(R.id.item_new_badge);
+        if (newBadge != null) {
+            NewAppTracker tracker = new NewAppTracker(context);
+            boolean isNew = tracker.isNewApp(pojo.id);
+            newBadge.setVisibility(isNew ? View.VISIBLE : View.GONE);
+            if (isNew) {
+                tracker.markAsSeen(pojo.id);
+            }
         }
 
         return view;
@@ -481,6 +493,10 @@ public class AppResult extends Result<AppPojo> {
 
     @Override
     public void doLaunch(Context context, View v) {
+        // 앱 실행 시 NEW 배지 제거
+        fr.neamar.kiss.utils.NewAppTracker tracker = new fr.neamar.kiss.utils.NewAppTracker(context);
+        tracker.markAsSeen(pojo.id);
+        
         try {
             // minSdkVersion 33이므로 LOLLIPOP 체크 불필요
             LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);

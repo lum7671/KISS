@@ -152,8 +152,11 @@ class HistorySearcherCoroutine(
         if (dataHandler.historyMode != HistoryMode.ALPHABETICALLY) {
             for (pojo in pojos) {
                 if (pojo.isDisabled) {
-                    // Give penalty for disabled items, these should not be preferred
-                    pojo.relevance -= 200
+                    val recentUsageCount = fr.neamar.kiss.db.DBHelper.getUsageCountForRecord(activity, pojo.id, 30)
+                    if (recentUsageCount < 1) {
+                        // Infrequently used disabled app: keep penalty
+                        pojo.relevance -= 200
+                    }
                 }
             }
         }

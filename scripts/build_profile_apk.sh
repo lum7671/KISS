@@ -5,14 +5,7 @@
 
 set -e  # 에러 시 스크립트 중단
 
-echo "🚀 echo -e "${GREEN}✅ 빌드 완료!${NC}"
-echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요.${NC}"
-echo -e "${BLUE}📄 빌드 정보:${NC}"
-echo "   버전: KISS $VERSION ($VERSION_NAME)"
-echo "   빌드 번호: $VERSION_CODE"
-echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
-echo "   APK 크기: $APK_SIZE"
-echo "   파일명: $(basename "$APK_SIGNED")"file APK 빌드 시작..."
+echo "🚀 Profile APK 빌드 시작..."
 
 # 색상 정의
 RED='\033[0;31m'
@@ -51,10 +44,13 @@ if [ ! -f "$DEBUG_KEYSTORE" ]; then
 fi
 
 echo -e "${BLUE}📱 ADB 연결 확인...${NC}"
-if ! adb devices | grep -q "device$"; then
-    echo -e "${RED}❌ 에뮬레이터 또는 디바이스가 연결되지 않았습니다${NC}"
-    echo "Android Studio 에뮬레이터를 시작하거나 디바이스를 연결해주세요"
-    exit 1
+INSTALL_APK=false
+if adb devices 2>/dev/null | grep -q "device$"; then
+    INSTALL_APK=true
+    echo -e "${GREEN}✅ ADB 디바이스 발견${NC}"
+else
+    INSTALL_APK=false
+    echo -e "${YELLOW}⚠️  ADB 디바이스 미연결. APK만 빌드합니다${NC}"
 fi
 
 echo -e "${BLUE}🔧 Gradle 빌드 시작...${NC}"
@@ -106,35 +102,45 @@ cp "$APK_RENAMED" "$APK_SIGNED"
 "$APKSIGNER" sign --ks "$DEBUG_KEYSTORE" --ks-pass pass:android --key-pass pass:android "$APK_SIGNED"
 
 echo -e "${BLUE}📦 APK 설치 중...${NC}"
-# 기존 앱이 있으면 제거
-adb shell pm list packages | grep -q "fr.neamar.kiss.lum7671" && {
-    echo -e "${YELLOW}⚠️  기존 앱 제거 중...${NC}"
-    adb uninstall fr.neamar.kiss.lum7671 || true
-}
-
-# 새 APK 설치
-adb install "$APK_SIGNED"
-
-echo -e "${BLUE}🏠 런처로 설정...${NC}"
-# 디폴트 런처 설정 (사용자가 수동으로 선택해야 함)
-adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
+# ADB 연결 시에만 설치
+if [ "$INSTALL_APK" = true ]; then
+    PACKAGE_NAME='kr.lum7671.kiss'
+    
+    # 기존 앱이 있으면 제거
+    if adb shell pm list packages | grep -q "^package:$PACKAGE_NAME$"; then
+        echo -e "${YELLOW}⚠️  기존 앱 제거 중...${NC}"
+        adb uninstall "$PACKAGE_NAME" || true
+    fi
+    
+    # 새 APK 설치
+    adb install "$APK_SIGNED"
+    
+    echo -e "${BLUE}🏠 런처로 설정...${NC}"
+    # 디폴트 런처 설정 (사용자가 수동으로 선택해야 함)
+    adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
+else
+    echo -e "${YELLOW}⚠️  ADB 미연결 상태이므로 APK 설치를 스킵합니다${NC}"
+    echo -e "${YELLOW}   수동으로 APK를 설치해주세요: $APK_SIGNED${NC}"
+fi
 
 echo -e "${GREEN}✅ 빌드 완료!${NC}"
 echo -e "${GREEN}📱 앱이 설치되었습니다. 런처로 설정해주세요.${NC}"
 echo -e "${BLUE}� 빌드 정보:${NC}"
 echo "   버전: KISS $VERSION Profile Edition"
-echo "   빌드 번호: 401"  
+echo "   빌드 번호: $VERSION_CODE"
 echo "   빌드 날짜: $(date '+%Y년 %m월 %d일 %H:%M:%S')"
 echo "   APK 크기: $APK_SIZE"
 echo "   파일명: $(basename "$APK_SIGNED")"
-echo -e "${BLUE}�📊 프로파일 로그는 다음 경로에 저장됩니다:${NC}"
-echo "   /storage/emulated/0/Android/data/fr.neamar.kiss.lum7671/files/kiss_profile_logs/"
+echo -e "${BLUE}📊 프로파일 로그는 다음 경로에 저장됩니다:${NC}"
+echo "   /storage/emulated/0/Android/data/kr.lum7671.kiss/files/kiss_profile_logs/"
 
-# 로그 모니터링 시작 여부 묻기
-echo ""
-read -p "실시간 로그 모니터링을 시작하시겠습니까? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${BLUE}📋 로그 모니터링 시작... (Ctrl+C로 중단)${NC}"
-    adb logcat | grep -E "(lum7671|KISS_PERF|ProfileManager)"
+# 로그 모니터링 시작 여부 묻기 (ADB 연결 시에만)
+if [ "$INSTALL_APK" = true ]; then
+    echo ""
+    read -p "실시간 로그 모니터링을 시작하시겠습니까? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${BLUE}📋 로그 모니터링 시작... (Ctrl+C로 중단)${NC}"
+        adb logcat | grep -E "(kr.lum7671|KISS_PERF|ProfileManager)"
+    fi
 fi

@@ -228,7 +228,27 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         if (savedInstanceState == null) {
             // Run asynchronously to open settings fast
-            CoroutineUtils.execute(runnable);
+            // But ensure UI work executes on main thread
+            CoroutineUtils.runAsync(
+                () -> {
+                    // Background preparation
+                },
+                () -> {
+                    // UI work on main thread
+                    SettingsFragment.this.fixSummaries();
+
+                    if (iconsPack != null) {
+                        SettingsFragment.this.setListPreferenceIconsPacksData(iconsPack);
+                        SettingsFragment.this.requireActivity().runOnUiThread(() -> iconsPack.setEnabled(true));
+                    }
+
+                    SettingsFragment.this.setAdditionalContactsData();
+                    SettingsFragment.this.addCustomSearchProvidersPreferences(prefs);
+
+                    SettingsFragment.this.addHiddenTagsTogglesInformation(prefs);
+                    SettingsFragment.this.addTagsFavInformation();
+                }
+            );
             asyncInitItemToRunList();
         } else {
             // Run synchronously to ensure preferences can be restored from state
@@ -242,7 +262,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 }
             }
         }
-        CoroutineUtils.execute(alwaysAsync);
+        // Ensure UI updates for dynamically added screens run on main thread
+        CoroutineUtils.runAsync(
+            () -> {
+                // Background work
+                SettingsFragment.this.addExcludedAppSettings();
+                SettingsFragment.this.addExcludedFromHistoryAppSettings();
+                SettingsFragment.this.addExcludedShortcutAppSettings();
+            },
+            () -> {
+                // No additional UI work needed, already done above
+            }
+        );
         
         // 버전 정보 설정
         setupVersionInfo();
