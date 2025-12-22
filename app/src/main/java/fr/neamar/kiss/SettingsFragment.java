@@ -40,6 +40,7 @@ import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.pojo.NameComparator;
 import fr.neamar.kiss.pojo.Pojo;
 import fr.neamar.kiss.pojo.TagDummyPojo;
+import fr.neamar.kiss.preference.DefaultLauncherPreferenceDialogFragmentCompat;
 import fr.neamar.kiss.preference.ExcludePreferenceScreenCompat;
 import fr.neamar.kiss.preference.SwitchPreferenceCompat;
 import fr.neamar.kiss.utils.CoroutineUtils;
@@ -386,6 +387,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
             return;
         } else if (preference instanceof fr.neamar.kiss.preference.RestartPreferenceCompat) {
             handleRestartApp();
+            return;
+        } else if (preference instanceof fr.neamar.kiss.preference.DefaultLauncherPreferenceCompat) {
+            dialogFragment = DefaultLauncherPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        } else if (preference instanceof fr.neamar.kiss.preference.NotificationPreferenceCompat) {
+            // NotificationPreferenceCompat opens system settings, not a dialog
+            startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
             return;
         }
         
