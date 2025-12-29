@@ -1,5 +1,44 @@
 # KISS
 
+> 💾 간단하고 빠른 안드로이드 런처 | Simple & fast Android launcher
+
+---
+
+## 📚 문서 구조 개선 (2025-12-29)
+
+**프로젝트 문서 및 관리 시스템이 개선되었습니다.**
+
+### 📖 문서 구성
+프로젝트 문서는 이제 주제별로 체계적으로 분류되어 있습니다:
+
+| 폴더 | 목적 | 예시 문서 |
+|------|------|----------|
+| `ARCHITECTURE/` | 아키텍처 & 설계 | Shizuku 통합, ListView 선택 이유 |
+| `DEVELOPMENT/` | 개발 가이드 | Phase 진행 현황, AsyncTask 마이그레이션 |
+| `PERFORMANCE/` | 성능 최적화 | 프로파일 빌드, 스크롤 최적화 |
+| `DEPLOYMENT/` | 배포 & CI/CD | Fastlane 가이드, 배포 프로세스 |
+| `TESTING/` | 테스트 & QA | 테스트 가이드, QA 체크리스트 |
+| `FEATURES/` | 기능 가이드 | 히스토리 정렬, 비활성 앱 표시 |
+| `DECISIONS/` | 아키텍처 결정 | 라이브러리 선택, Java 17 마이그레이션 |
+| `archive/` | 과거 문서 | 완료된 Phase 보고서 (참고용) |
+
+### 🚀 신규 추가 문서
+- **[docs/DEPLOYMENT/fastlane-guide.md](docs/DEPLOYMENT/fastlane-guide.md)** - Fastlane을 통한 자동 배포
+- **[docs/DEPLOYMENT/ci-cd-pipeline.md](docs/DEPLOYMENT/ci-cd-pipeline.md)** - GitHub Actions CI/CD 파이프라인 설계
+- **[docs/DEPLOYMENT/deployment-process.md](docs/DEPLOYMENT/deployment-process.md)** - 단계별 배포 절차
+
+### 📋 개선 사항
+- ✅ 문서 93개 중 70개를 주제별 폴더로 분류
+- ✅ 활동적 개발 문서와 아카이브 분리
+- ✅ Phase 3 진행 현황 추적 문서 최신화
+- ✅ 배포 프로세스 완전 문서화
+
+**📖 자세한 내용**:
+- [프로젝트 관리 개선 마스터 플랜](docs/PROJECT-MANAGEMENT-IMPROVEMENT-PLAN.md) - 구현 계획 및 진행 현황
+- [문서 개선 완료 보고서](docs/DOCUMENTATION-IMPROVEMENT-COMPLETION.md) - 최종 성과 및 다음 단계
+
+---
+
 ## 🚀 v4.3.0 - Phase 3: User Experience Enhancement Edition (2025-12-22)
 
 ### 🎯 사용자 경험 치명적 버그 수정 및 기능 개선
